@@ -34,6 +34,11 @@ listOf(
     // project(":platforms:fabric"),
 ).forEach { proj ->
     proj.afterEvaluate {
+        // Show more errors in intellij
+        proj.tasks.withType<JavaCompile>() {
+            options.compilerArgs.add("-Xmaxerrs")
+            options.compilerArgs.add("5000")
+        }
         universalJar {
             val tree = zipTree(proj.the<OTGPlatformExtension>().productionJar)
             from(tree)
