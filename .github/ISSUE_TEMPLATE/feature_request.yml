@@ -1,0 +1,51 @@
+
+name: Feature Request
+description: Suggest an improvement or request a feature.
+title: "[Feature Request]: "
+labels: ["Feature", "Needs validation"]
+assignees:
+  - SXRWahrheit
+
+body:
+  - type: 'markdown'
+    attributes:
+      value: |-
+        ## Important! 
+        This issue template is for feature requests *only.* 
+
+        - To report a bug or crash, use [the appropriate form](https://github.com/PG85/OpenTerrainGenerator/issues/new/choose).
+        - For support using OpenTerrainGenerator, please contact us on [Discord](https://discord.gg/UXzdVTH). 
+
+        Please complete the entire form so we can best consider your suggestion!
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+      - label: I have searched the existing issues
+        required: true
+
+  - type: textarea
+    attributes:
+      label: Suggested Feature
+      description: A concise description of what you would like to see added to OpenTerrainGenerator.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Suggested Implementation
+      description: A concise description of how you suggest we implement (add, make available) your suggestion.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about your suggestion!
+
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false

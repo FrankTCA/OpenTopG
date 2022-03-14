@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Wiki
+    about: Read about how to use OpenTerrainGenerator on our Wiki.
+    url: https://openterraingen.fandom.com/wiki/Home
+  - name: Discord
+    about: Join our Discord server for help using OpenTerrainGenerator, contribution inquiries, and more.
+    url: https://discord.gg/UXzdVTH
+  - name: Downloads
+    about: Download the latest published builds of OpenTerrainGenerator that are suitable for use on live servers from CurseForge.
+    url: https://www.curseforge.com/minecraft/mc-mods/open-terrain-generator/
+  - name: Developer Builds
+    about: Download the latest bleeding-edge builds of OpenTerrainGenerator for use in bug testing and preset development. These builds are not recommended for use on live servers. Please ensure you download your build from the correct branch.
+    url: https://github.com/PG85/OpenTerrainGenerator/actions/workflows/gradle.yml

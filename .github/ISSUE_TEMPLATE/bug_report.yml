@@ -1,0 +1,106 @@
+
+name: Bug report
+description: Report a bug with OpenTerrainGenerator, including crashes or other errors.
+title: "[Bug]: "
+labels: ["Bug", "Needs validation"]
+assignees:
+  - SXRWahrheit
+
+body:
+  - type: 'markdown'
+    attributes:
+      value: |-
+        ## Important! 
+        This issue template is for bug reports *only.* 
+
+        - For support using the plugin, please contact us on [Discord](https://discord.gg/UXzdVTH). 
+
+        Please complete the entire form so we can best help resolve your issue!
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+      - label: I have searched the existing issues
+        required: true
+
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: Platform
+    attributes:
+      label: Which platforms have you reproduced this issue using?
+      multiple: true
+      options:
+        - Forge Single Player
+        - Forge Multiplayer
+        - Spigot/Paper
+    validations:
+      required: true
+
+  - type: input
+    id: otgversion
+    attributes:
+      label: OTG Version
+      description: What version of OTG are you using? Use the "/otg version" command in-game or in your console ("otg version", no slash) and paste the output here.
+      placeholder: ex. OTG 1.18.2 0.0.24
+    validations:
+      required: true
+
+  - type: input
+    id: platformversion
+    attributes:
+      label: Platform Version
+      description: What version of your platform are you using? Use the `/version`
+
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: | 
+        Please include the steps necessary to create a [Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example)
+
+        You can attach files by clicking this area to highlight it and then dragging the files in.
+      placeholder: |
+        1. Using this platform...
+        2. With this command or preset...
+        3. Attempt to...
+        4. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logfile
+    attributes:
+      label: Log file
+      description: | 
+        Please provide the full latest.log file from your server or game client; this is especially important if you are reporting an issue that includes stacktrace output. 
+
+        You can attach log files by clicking this area to highlight it and then dragging files in.
+
+        If your log file is too long to include, restart your server, connect to it, and reproduce the behavior at issue. Then, you can upload your log to https://paste.denizenscript.com/New/Log
+      placeholder: https://paste.denizenscript.com/New/Log
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
