@@ -6,12 +6,13 @@ import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.pg85.otg.paper.util.ObfuscationHelper;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.generator.CustomChunkGenerator;
+import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.generator.CustomChunkGenerator;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
@@ -84,7 +85,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		// Does this go here?
 		OTG.getEngine().getPresetLoader().registerBiomes();
 
-		WritableRegistry<Biome> biome_registry = ((CraftServer) Bukkit.getServer()).getServer().registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+		Registry<Biome> biome_registry = ((CraftServer) Bukkit.getServer()).getServer().registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
 		int i = 0;
 
 		if(OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.BIOME_REGISTRY))
@@ -161,11 +162,13 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		// of a race condition.
 		if (OTGGen.generator == null)
 		{
+			RegistryAccess registryAccess = ((CraftServer) Bukkit.getServer()).getServer().registryAccess();
 			OTGDelegate = new OTGNoiseChunkGenerator(
 				OTGGen.getPreset().getFolderName(),
-				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, ((CraftServer) Bukkit.getServer()).getServer().registryAccess().registryOrThrow(Registry.BIOME_REGISTRY)),
+				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
+				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
 				world.getSeed(),
-				NoiseGeneratorSettings::bootstrap
+				NoiseGeneratorSettings.bootstrap()
 			);
 		} else {
 			OTGDelegate = OTGGen.generator;
