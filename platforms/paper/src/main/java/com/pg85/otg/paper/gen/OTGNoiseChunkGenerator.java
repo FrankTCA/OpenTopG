@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.*;
@@ -65,6 +63,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawJunction;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.storage.LevelResource;
 
 public class OTGNoiseChunkGenerator extends ChunkGenerator
@@ -76,6 +75,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 				Codec.STRING.fieldOf("preset_folder_name").forGetter(p -> p.presetFolderName),
 				BiomeSource.CODEC.fieldOf("biome_source").forGetter(p -> p.biomeSource),
 				RegistryOps.retrieveRegistry(Registry.STRUCTURE_SET_REGISTRY).forGetter(p -> p.structureSets),
+				RegistryOps.retrieveRegistry(Registry.NOISE_REGISTRY).forGetter(p -> p.noises),
 				Codec.LONG.fieldOf("seed").stable().forGetter(p -> p.worldSeed),
 				NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(p -> p.generatorSettings)
 			).apply(
@@ -95,6 +95,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	private final OTGChunkDecorator chunkDecorator;
 	private final String presetFolderName;
 	private final Preset preset;
+	private final NoiseRouter router;
 	//protected final WorldgenRandom random;
 
 	// TODO: Move this to WorldLoader when ready?
@@ -103,19 +104,21 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Used to specify which chunk to regen biomes and structures for
 	// Necessary because Spigot calls those methods before we have the chance to inject
 	private ChunkCoordinate fixBiomesForChunk = null;
+	private Climate.Sampler sampler;
+	private Registry<NormalNoise.NoiseParameters> noises;
 
-	public OTGNoiseChunkGenerator (BiomeSource biomeSource, long seed, Registry<StructureSet> structureSetRegistry, Holder<NoiseGeneratorSettings> generatorSettings)
+	public OTGNoiseChunkGenerator (BiomeSource biomeSource, long seed, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
-		this("default", biomeSource, structureSetRegistry, seed, generatorSettings);
+		this("default", biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);
 	}
 
-	public OTGNoiseChunkGenerator (String presetName, BiomeSource biomeSource, Registry<StructureSet> structureSetRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
+	public OTGNoiseChunkGenerator (String presetName, BiomeSource biomeSource, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
-		this(presetName, biomeSource, biomeSource, structureSetRegistry, seed, generatorSettings);
+		this(presetName, biomeSource, biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);
 	}
 
 	// Vanilla has two biome sources, where the first is population and the second is runtime. Don't know the practical difference this makes.
-	private OTGNoiseChunkGenerator (String presetFolderName, BiomeSource populationSource, BiomeSource runtimeSource, Registry<StructureSet> structureSetRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
+	private OTGNoiseChunkGenerator (String presetFolderName, BiomeSource populationSource, BiomeSource runtimeSource, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
 		super(structureSetRegistry, Optional.of(getEnabledStructures(structureSetRegistry, presetFolderName)), populationSource, runtimeSource, seed);
 		if (!(populationSource instanceof ILayerSource))
@@ -125,18 +128,22 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 		this.presetFolderName = presetFolderName;
 		this.worldSeed = seed;
-		NoiseGeneratorSettings dimensionsettings = generatorSettings.value();
+		NoiseGeneratorSettings settings = generatorSettings.value();
 		this.generatorSettings = generatorSettings;
-		NoiseSettings noisesettings = dimensionsettings.noiseSettings();
+		NoiseSettings noisesettings = settings.noiseSettings();
 		this.noiseHeight = noisesettings.height();
-
-		this.defaultBlock = dimensionsettings.defaultBlock();
-		this.defaultFluid = dimensionsettings.defaultFluid();
+		this.noises = noiseRegistry;
+		this.defaultBlock = settings.defaultBlock();
+		this.defaultFluid = settings.defaultFluid();
 
 		this.preset = OTG.getEngine().getPresetLoader().getPresetByFolderName(presetFolderName);
 		this.shadowChunkGenerator = new ShadowChunkGenerator();
 		this.internalGenerator = new OTGChunkGenerator(this.preset, seed, (ILayerSource) populationSource, ((PaperPresetLoader) OTG.getEngine().getPresetLoader()).getGlobalIdMapping(presetFolderName), OTG.getEngine().getLogger());
 		this.chunkDecorator = new OTGChunkDecorator();
+
+		this.router = settings.createNoiseRouter(this.noises, seed);
+		this.sampler = new Climate.Sampler(this.router.temperature(), this.router.humidity(), this.router.continents(), this.router.erosion(), this.router.depth(), this.router.ridges(), this.router.spawnTarget());
+
 	}
 
 	// Method to remove structures which have been disabled in the world config
@@ -679,16 +686,6 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		return 0;
 	}
 
-	// MC's NoiseChunkGenerator returns defaultBlock and defaultFluid here, so callers
-	// apparently don't rely on any blocks (re)placed after base terrain gen, only on
-	// the default block/liquid set for the dimension (stone/water for overworld,
-	// netherrack/lava for nether), that MC uses for base terrain gen.
-	// We can do the same, no need to pass biome config and fetch replaced blocks etc.
-	// OTG does place blocks other than defaultBlock/defaultLiquid during base terrain gen
-	// (for replaceblocks/sagc), but that shouldn't matter for the callers of this method.
-	// Actually, it's probably better if they don't see OTG's replaced blocks, and just see
-	// the default blocks instead, as vanilla MC would do.
-	//protected IBlockData getBlockState(double density, int y, IBiomeConfig config)
 	private BlockState getBlockState(double density, int y)
 	{
 		if (density > 0.0D)
@@ -708,20 +705,18 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	@Override
 	public ChunkGenerator withSeed(long seed)
 	{
-		return new OTGNoiseChunkGenerator(this.biomeSource.withSeed(seed), seed, this.generatorSettings);
-	}
-
-	protected final OTGNoiseSampler sampler = new OTGNoiseSampler();
-
-	@Override
-	public Climate.Sampler climateSampler() {
-		return sampler;
+		return new OTGNoiseChunkGenerator(this.biomeSource.withSeed(seed), seed, this.structureSets, this.noises, this.generatorSettings);
 	}
 
 	@Override
 	protected Codec<? extends ChunkGenerator> codec()
 	{
 		return CODEC;
+	}
+
+	@Override
+	public Climate.Sampler climateSampler() {
+		return this.sampler;
 	}
 
 	@Override
@@ -733,18 +728,17 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	@Override
 	public int getSeaLevel ()
 	{
-		// TODO: remove supplier
-		return this.generatorSettings.get().seaLevel();
-	}
-
-	@Override
-	public int getMinY() {
-		return 0;
+		return this.generatorSettings.value().seaLevel();
 	}
 
 	public Preset getPreset()
 	{
 		return preset;
+	}
+
+	@Override
+	public int getMinY() {
+		return generatorSettings.value().noiseSettings().minY();
 	}
 
 	public CustomStructureCache getStructureCache(Path worldSaveFolder)
@@ -770,7 +764,9 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	public Boolean checkHasVanillaStructureWithoutLoading(ServerLevel world, ChunkCoordinate chunkCoord)
 	{
-		return this.shadowChunkGenerator.checkHasVanillaStructureWithoutLoading(world, this, this.biomeSource, this.getSettings(), chunkCoord, this.internalGenerator.getCachedBiomeProvider(), false);
+		// This method needs updating to 1.18.2 in the right way. For now, has been replaced by this.checkForVanillaStructure()
+		return false;
+		//return this.shadowChunkGenerator.checkHasVanillaStructureWithoutLoading(world, this, this.biomeSource, this., chunkCoord, this.internalGenerator.getCachedBiomeProvider(), false);
 	}
 
 	public int getHighestBlockYInUnloadedChunk(Random worldRandom, int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, ServerLevel level)
@@ -787,21 +783,55 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	{
 		return this.shadowChunkGenerator.getChunkWithoutLoadingOrCaching(this.internalGenerator, this.preset.getWorldConfig().getWorldHeightCap(), random, chunkCoord, level);
 	}
-
-	public class OTGNoiseSampler implements Climate.Sampler
-	{
-		@Override
-		public Climate.TargetPoint sample(int p_186975_, int p_186976_, int p_186977_)
-		{
-			return null;
+	// Uses the vanilla method of checking if there is a vanilla structure in range
+	// Might be slower than old solution in ShadowChunkGenerator
+	public boolean checkForVanillaStructure(ChunkCoordinate chunkCoordinate) {
+		int x = chunkCoordinate.getChunkX();
+		int z = chunkCoordinate.getChunkZ();
+		// Structures with a radius of 4
+		PaperBiome biome = (PaperBiome) getCachedBiomeProvider().getNoiseBiome((x << 2) + 2, (z << 2) + 2);
+		if (biome.getBiomeConfig().getVillageType() != SettingsEnums.VillageType.disabled)
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.VILLAGES, worldSeed, x, z, 4))
+				return true;
+		if (biome.getBiomeConfig().getBastionRemnantEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.NETHER_COMPLEXES, worldSeed, x, z, 4))
+				return true;
+		if (biome.getBiomeConfig().getEndCityEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.END_CITIES, worldSeed, x, z, 4))
+				return true;
+		if (biome.getBiomeConfig().getOceanMonumentsEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.OCEAN_MONUMENTS, worldSeed, x, z, 4))
+				return true;
+		if (biome.getBiomeConfig().getWoodlandMansionsEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.WOODLAND_MANSIONS, worldSeed, x, z, 4))
+				return true;
+		switch (biome.getBiomeConfig().getRareBuildingType()) {
+			case disabled -> {}
+			case desertPyramid -> {
+				if (this.hasFeatureChunkInRange(BuiltinStructureSets.DESERT_PYRAMIDS, worldSeed, x, z, 1))
+					return true;
+			}
+			case jungleTemple -> {
+				if (this.hasFeatureChunkInRange(BuiltinStructureSets.JUNGLE_TEMPLES, worldSeed, x, z, 1))
+					return true;
+			}
+			case swampHut -> {
+				if (this.hasFeatureChunkInRange(BuiltinStructureSets.SWAMP_HUTS, worldSeed, x, z, 1))
+					return true;
+			}
+			case igloo -> {
+				if (this.hasFeatureChunkInRange(BuiltinStructureSets.IGLOOS, worldSeed, x, z, 1))
+					return true;
+			}
 		}
-	}
-
-	/** @deprecated */
-	@Deprecated
-	public Optional<BlockState> topMaterial(CarvingContext p_188669_, Function<BlockPos, Biome> p_188670_, ChunkAccess p_188671_, NoiseChunk p_188672_, BlockPos p_188673_, boolean p_188674_)
-	{
-		//return this.surfaceSystem.topMaterial(this.settings.get().surfaceRule(), p_188669_, p_188670_, p_188671_, p_188672_, p_188673_, p_188674_);
-		return Optional.empty();
-	}
+		if (biome.getBiomeConfig().getShipWreckEnabled() || biome.getBiomeConfig().getShipWreckBeachedEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.SHIPWRECKS, worldSeed, x, z, 1))
+				return true;
+		if (biome.getBiomeConfig().getPillagerOutpostEnabled())
+			if (this.hasFeatureChunkInRange(BuiltinStructureSets.PILLAGER_OUTPOSTS, worldSeed, x, z, 1))
+				return true;
+		if (biome.getBiomeConfig().getOceanRuinsType() != SettingsEnums.OceanRuinsType.disabled)
+			return this.hasFeatureChunkInRange(BuiltinStructureSets.OCEAN_RUINS, worldSeed, x, z, 1);
+		return false;
+    }
 }

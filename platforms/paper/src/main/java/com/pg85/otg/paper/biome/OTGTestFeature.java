@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import java.util.Random;
 
 public class OTGTestFeature extends Feature<CountConfiguration> {
-
+    /*
     public static final Feature<CountConfiguration> FEATURE = Registry.register(Registry.FEATURE, "otg_test", new OTGTestFeature(CountConfiguration.CODEC));
     public static final ConfiguredFeature<?, ?> CONFIGURED = Registry
             .register(
@@ -38,6 +38,7 @@ public class OTGTestFeature extends Feature<CountConfiguration> {
                     "otg_test",
                     CONFIGURED.placed(RarityFilter.onAverageOnceEvery(16), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BiomeFilter.biome()));
 
+     */
     public OTGTestFeature(Codec<CountConfiguration> configCodec) {
         super(configCodec);
     }

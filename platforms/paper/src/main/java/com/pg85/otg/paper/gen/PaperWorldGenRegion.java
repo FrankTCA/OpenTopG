@@ -49,7 +49,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 // TODO: Split up worldgenregion into separate classes, one for decoration/worldgen, one for non-worldgen.
@@ -512,82 +514,84 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 			// Features -> BiomeDecoratorGroups
 			// ConfiguredFeature.feature -> WorldGenFeatureConfigured.e
 			// ConfiguredFeature.config -> WorldGenFeatureConfigured.f
-			PlacedFeature tree;
+			PlacedFeature tree = null;
+			ConfiguredFeature<?, ?> other = null;
 			switch (type)
 			{
 				case Acacia:
-					tree = TreePlacements.ACACIA_CHECKED;
+					tree = TreePlacements.ACACIA_CHECKED.value();
 					break;
 				case BigTree:
-					tree = TreePlacements.FANCY_OAK_CHECKED;
+					tree = TreePlacements.FANCY_OAK_CHECKED.value();
 					break;
 				case Forest:
 				case Birch:
-					tree = TreePlacements.BIRCH_CHECKED;
+					tree = TreePlacements.BIRCH_CHECKED.value();
 					break;
 				case JungleTree:
-					tree = TreePlacements.MEGA_JUNGLE_TREE_CHECKED;
+					tree = TreePlacements.MEGA_JUNGLE_TREE_CHECKED.value();
 					break;
 				case CocoaTree:
-					tree = TreePlacements.JUNGLE_TREE_CHECKED;
+					tree = TreePlacements.JUNGLE_TREE_CHECKED.value();
 					break;
 				case DarkOak:
-					tree = TreePlacements.DARK_OAK_CHECKED;
+					tree = TreePlacements.DARK_OAK_CHECKED.value();
 					break;
 				case GroundBush:
-					tree = TreePlacements.JUNGLE_BUSH;
+					tree = TreePlacements.JUNGLE_BUSH.value();
 					break;
 				case HugeMushroom:
 					if (rand.nextBoolean())
 					{
-						tree = TreeFeatures.HUGE_BROWN_MUSHROOM.placed();
+						other = TreeFeatures.HUGE_BROWN_MUSHROOM.value();
 					} else {
-						tree = TreeFeatures.HUGE_RED_MUSHROOM.placed();
+						other = TreeFeatures.HUGE_RED_MUSHROOM.value();
 					}
 					break;
 				case HugeRedMushroom:
-					tree = TreeFeatures.HUGE_RED_MUSHROOM.placed();
+					other = TreeFeatures.HUGE_RED_MUSHROOM.value();
 					break;
 				case HugeBrownMushroom:
-					tree = TreeFeatures.HUGE_BROWN_MUSHROOM.placed();
+					other = TreeFeatures.HUGE_BROWN_MUSHROOM.value();
 					break;
 				case SwampTree:
-					tree = TreeFeatures.SWAMP_OAK.placed();
+					other = TreeFeatures.SWAMP_OAK.value();
 					break;
 				case Taiga1:
-					tree = TreePlacements.PINE_CHECKED;
+					tree = TreePlacements.PINE_CHECKED.value();
 					break;
 				case Taiga2:
-					tree = TreePlacements.SPRUCE_CHECKED;
+					tree = TreePlacements.SPRUCE_CHECKED.value();
 					break;
 				case HugeTaiga1:
-					tree = TreePlacements.MEGA_PINE_CHECKED;
+					tree = TreePlacements.MEGA_PINE_CHECKED.value();
 					break;
 				case HugeTaiga2:
-					tree = TreePlacements.MEGA_SPRUCE_CHECKED;
+					tree = TreePlacements.MEGA_SPRUCE_CHECKED.value();
 					break;
 				case TallBirch:
-					tree = TreePlacements.SUPER_BIRCH_BEES_0002;
+					tree = TreePlacements.SUPER_BIRCH_BEES_0002.value();
 					break;
 				case Tree:
-					tree = TreePlacements.OAK_CHECKED;
+					tree = TreePlacements.OAK_CHECKED.value();
 					break;
 				case CrimsonFungi:
-					tree = TreePlacements.CRIMSON_FUNGI;
+					tree = TreePlacements.CRIMSON_FUNGI.value();
 					break;
 				case WarpedFungi:
-					tree = TreePlacements.WARPED_FUNGI;
+					tree = TreePlacements.WARPED_FUNGI.value();
 					break;
 				case ChorusPlant:
-					tree = EndPlacements.CHORUS_PLANT;
+					tree = EndPlacements.CHORUS_PLANT.value();
 					break;	
 				case Azalea:
-					tree = TreeFeatures.AZALEA_TREE.placed();
+					other = TreeFeatures.AZALEA_TREE.value();
 					break;	
 				default:
 					throw new RuntimeException("Failed to handle tree of type " + type);
 			}
-			tree.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
+			if (tree != null ) tree.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
+			else other.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 			return true;
 		}
 		catch (NullPointerException ex)
@@ -721,7 +725,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void placeDungeon (Random random, int x, int y, int z)
 	{
-		Feature.MONSTER_ROOM.configured(FeatureConfiguration.NONE).place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+		Feature.MONSTER_ROOM.place(FeatureConfiguration.NONE, this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 	}
 
 	@Override
@@ -729,9 +733,9 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	{
 		if(y >= 0)
 		{
-			CavePlacements.FOSSIL_UPPER.place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+			CavePlacements.FOSSIL_UPPER.value().place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 		} else {
-			CavePlacements.FOSSIL_LOWER.place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+			CavePlacements.FOSSIL_LOWER.value().place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 		}
 	}
 
@@ -826,7 +830,9 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		{
 			return hasDefaultStructure;
 		}
-		hasDefaultStructure = this.chunkGenerator.checkHasVanillaStructureWithoutLoading(this.worldGenRegion.getMinecraftWorld(), chunkCoordinate);
+		//hasDefaultStructure = this.chunkGenerator.hasFeatureChunkInRange(BuiltinStructureSets.VILLAGES, getSeed(), chunkCoordinate.getChunkX(), chunkCoordinate.getChunkZ(), 4);
+		hasDefaultStructure = this.chunkGenerator.checkForVanillaStructure(chunkCoordinate);
+		//hasDefaultStructure = this.chunkGenerator.checkHasVanillaStructureWithoutLoading(this.worldGenRegion.getMinecraftWorld(), chunkCoordinate);
 		cachedHasDefaultStructureChunks.put(chunkCoordinate, hasDefaultStructure);
 		return hasDefaultStructure;
 	}

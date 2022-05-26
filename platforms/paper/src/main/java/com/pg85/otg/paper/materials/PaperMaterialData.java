@@ -8,6 +8,7 @@ import com.pg85.otg.util.materials.MaterialProperty;
 
 import net.minecraft.core.Direction;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -331,7 +332,7 @@ public class PaperMaterialData extends LocalMaterialData
 				return true;
 			}
 			
-			Tag<Block> blockTag = spigotTag.getTag();
+			TagKey<Block> blockTag = spigotTag.getTag();
 			if(blockTag != null)
 			{
 				return this.blockData.is(blockTag);

@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     id("platform-conventions")
-    id("io.papermc.paperweight.userdev") version "1.3.5"
+    id("io.papermc.paperweight.userdev") version "1.3.6"
     id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
@@ -15,12 +15,6 @@ java {
 }
 
 dependencies {
-    /*
-    * Not sure why, but the below line does not work for me
-    * The line after it does seem to work
-    * Idk if it's a thing with my system or what, but if it doesn't work on your system change it back I suppose.
-    * - Frank
-     */
     //paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.2-R0.1-SNAPSHOT")

@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.pg85.otg.paper.util.ObfuscationHelper;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
@@ -167,6 +168,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 				OTGGen.getPreset().getFolderName(),
 				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
 				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
+				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
 				world.getSeed(),
 				NoiseGeneratorSettings.bootstrap()
 			);

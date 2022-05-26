@@ -6,7 +6,7 @@ defaultTasks = arrayListOf("build", "publishToMavenLocal")
 
 allprojects {
     group = "com.pg85.otg"
-    version = "1.18.1-0.0.25"
+    version = "1.18.2-0.0.26"
     description = "Open Terrain Generator: Generate anything!"
 }
 
@@ -43,7 +43,7 @@ listOf(
             val tree = zipTree(proj.the<OTGPlatformExtension>().productionJar)
             from(tree)
             val manifestFile = tree.elements.map { files ->
-                files.find { it.asFile.path.endsWith("META-INF/MANIFEST.MF") }
+                files.find { it.asFile.path.endsWith("META-INF/MANIFEST.MF") }!!
             }
             manifest.from(manifestFile)
         }

@@ -81,8 +81,9 @@ public class TpCommand extends BaseCommand
 		ResourceLocation key = new ResourceLocation(new OTGBiomeResourceLocation(preset.getPresetFolder(),
 				preset.getShortPresetName(), preset.getMajorVersion(), biome).toResourceLocationString());
 
-		BlockPos pos = world.findNearestBiome(world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).get(key),
+		var t = world.findNearestBiome(p -> p.is(key),
 				new BlockPos(source.getPosition()), range, 8);
+		BlockPos pos = t != null ? t.getFirst() : null;
 
 		if (pos == null)
 		{

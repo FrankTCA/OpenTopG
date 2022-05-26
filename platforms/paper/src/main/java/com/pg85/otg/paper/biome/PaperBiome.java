@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.config.standard.BiomeStandardValues;
 import com.pg85.otg.constants.Constants;
-import com.pg85.otg.constants.SettingsEnums;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.config.biome.BiomeConfig;
 import com.pg85.otg.gen.resource.GlowLichenResource;
@@ -19,7 +18,6 @@ import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.paper.materials.PaperMaterialData;
 import com.pg85.otg.paper.materials.PaperMaterialTag;
-import com.pg85.otg.util.biome.OTGBiomeResourceLocation;
 import com.pg85.otg.util.biome.WeightedMobSpawnGroup;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
@@ -28,16 +26,16 @@ import com.pg85.otg.util.materials.LocalMaterialBase;
 import com.pg85.otg.util.minecraft.EntityCategory;
 import com.pg85.otg.util.minecraft.LegacyRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.worldgen.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
@@ -45,11 +43,10 @@ import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.*;
 import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.structure.OceanRuinFeature;
+import org.bukkit.Bukkit;
 
 public class PaperBiome implements IBiome
 {
@@ -73,7 +70,7 @@ public class PaperBiome implements IBiome
 		return this.biomeConfig;
 	}
 
-	public static Biome createOTGBiome (boolean isOceanBiome, IWorldConfig worldConfig, IBiomeConfig biomeConfig)
+	public static Biome createOTGBiome (boolean isOceanBiome, IWorldConfig worldConfig, IBiomeConfig biomeConfig, RegistryAccess registryAccess)
 	{
 		BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder = new BiomeGenerationSettings.Builder();
 
@@ -106,13 +103,13 @@ public class PaperBiome implements IBiome
 						if (registry == null) {
 							OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Somehow you broke the universe! Feature: "+newResourceLocation+" is not in the registry");
 						} else {
-							biomeGenerationSettingsBuilder.addFeature(stage, registry);
+							biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
 						}
 					} else {
 						OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Could not find feature " + registryResource.getFeatureKey() + " in the registry, please check spelling");
 					}
 				} else {
-					biomeGenerationSettingsBuilder.addFeature(stage, registry);
+					biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
 				}
 			}
 			if (res instanceof GlowLichenResource glow)
@@ -126,7 +123,9 @@ public class PaperBiome implements IBiome
 						{
 							list.addAll(Arrays.stream(tag.getOtgBlockTag()).map(Block::defaultBlockState).collect(Collectors.toList()));
 						} else {
-							list.addAll(tag.getTag().getValues().stream().map(Block::defaultBlockState).collect(Collectors.toList()));
+							// Cannot find an easy way of getting a list of blocks from a tag :/
+							OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Vanilla tags are currently unsuported for GlowLichen");
+							//list.addAll(tag.getTag().getValues().stream().map(Block::defaultBlockState).collect(Collectors.toList()));
 						}
 					}
 					else if (base instanceof PaperMaterialData data)
@@ -134,7 +133,7 @@ public class PaperBiome implements IBiome
 						list.add(data.internalBlock());
 					}
 				}
-				// Commenting out for now - Frank
+				// Requires replacing the Glow Lichen feature, as configred() doesn't exist any more
 				/*GlowLichenConfiguration config = new GlowLichenConfiguration(glow.nearbyAttempts, glow.canPlaceOnFloor, glow.canPlaceOnCeiling, glow.canPlaceOnWall, glow.chanceOfSpreading, list);
 				biomeGenerationSettingsBuilder
 					.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Feature.GLOW_LICHEN.configured(config).squared()

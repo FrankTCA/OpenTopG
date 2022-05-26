@@ -1,6 +1,7 @@
 package com.pg85.otg.paper.presets;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +12,10 @@ import java.util.Map.Entry;
 import java.util.OptionalInt;
 import java.util.Set;
 
+import com.pg85.otg.paper.util.ObfuscationHelper;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
@@ -76,15 +80,44 @@ public class PaperPresetLoader extends LocalPresetLoader
 	@Override
 	public void registerBiomes()
 	{
+		DedicatedServer server = ((CraftServer)Bukkit.getServer()).getServer();
+		WritableRegistry<Biome> biomeRegistry = (WritableRegistry<Biome>) server.registryAccess().ownedRegistryOrThrow(BIOME_KEY);
+
+		Field frozen = null;
+		try
+		{
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			// Make the frozen boolean accessible
+			frozen.setAccessible(true);
+			// Set the 'frozen' boolean to false for this registry
+			frozen.set(biomeRegistry, false);
+		}
+		catch (NoSuchFieldException | IllegalAccessException e)
+		{
+			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.BIOME_REGISTRY, "Failed to unfreeze registry");
+			e.printStackTrace();
+		}
+
 		for(Preset preset : this.presets.values())
 		{
-			registerBiomesForPreset(false, preset);
+			registerBiomesForPreset(false, preset, biomeRegistry);
+		}
+
+		try
+		{
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			// Set the 'frozen' boolean to true for this registry
+			frozen.set(biomeRegistry, true);
+		}
+		catch (NoSuchFieldException | IllegalAccessException e)
+		{
+			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.BIOME_REGISTRY, "Failed to re-freeze registry");
+			e.printStackTrace();
 		}
 	}
 
-	private void registerBiomesForPreset(boolean refresh, Preset preset)
+	private void registerBiomesForPreset(boolean refresh, Preset preset, WritableRegistry<Biome> biomeRegistry)
 	{
-		WritableRegistry<Biome> biomeRegistry = ((CraftServer)Bukkit.getServer()).getServer().registryHolder.ownedRegistryOrThrow(BIOME_KEY);
 		// Index BiomeColors for FromImageMode and /otg map
 		HashMap<Integer, Integer> biomeColorMap = new HashMap<Integer, Integer>();
 		
@@ -148,7 +181,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 			biomeConfig.getValue().setOTGBiomeId(otgBiomeId);
 			registryKey = ResourceKey.create(BIOME_KEY, resourceLocation);
 			presetBiomes.add(registryKey);
-			biome = PaperBiome.createOTGBiome(isOceanBiome, preset.getWorldConfig(), biomeConfig.getValue());
+			biome = PaperBiome.createOTGBiome(isOceanBiome, preset.getWorldConfig(), biomeConfig.getValue(), ((CraftServer)Bukkit.getServer()).getServer().registryHolder);
 
 			if(!refresh) {
 				biomeRegistry.register(registryKey, biome, Lifecycle.experimental());

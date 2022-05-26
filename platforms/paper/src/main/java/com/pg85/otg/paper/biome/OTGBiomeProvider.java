@@ -18,6 +18,7 @@ import com.pg85.otg.paper.presets.PaperPresetLoader;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
@@ -75,7 +76,7 @@ public class OTGBiomeProvider extends BiomeSource implements ILayerSource
 		}
 	}
 
-	private static Stream<Supplier<Biome>> getAllBiomesByPreset (String presetFolderName, Registry<Biome> registry)
+	private static Stream<Holder<Biome>> getAllBiomesByPreset (String presetFolderName, Registry<Biome> registry)
 	{
 		List<ResourceKey<Biome>> biomesForPreset = ((PaperPresetLoader) OTG.getEngine().getPresetLoader()).getBiomeRegistryKeys(presetFolderName);
 		if (biomesForPreset == null)
@@ -86,9 +87,7 @@ public class OTGBiomeProvider extends BiomeSource implements ILayerSource
 		{
 			biomesForPreset = new ArrayList<>();
 		}
-		return biomesForPreset.stream().map(
-			(p_242638_1_) -> () -> registry.getOrThrow(p_242638_1_)
-		);
+		return biomesForPreset.stream().map(p -> Holder.direct(registry.getOrThrow(p)));
 	}
 
 	protected Codec<? extends BiomeSource> codec ()
@@ -99,9 +98,9 @@ public class OTGBiomeProvider extends BiomeSource implements ILayerSource
 	// TODO: This is only used by MC internally, OTG fetches all biomes via CachedBiomeProvider.
 	// Could make this use the cache too?
 	@Override
-	public Biome getNoiseBiome(int biomeX, int biomeY, int biomeZ, Climate.Sampler p_186738_)
+	public Holder<Biome> getNoiseBiome(int biomeX, int biomeY, int biomeZ, Climate.Sampler p_186738_)
 	{
-		return registry.get(keyLookup.get(this.layer.get().sample(biomeX, biomeZ)));
+		return Holder.direct(registry.get(keyLookup.get(this.layer.get().sample(biomeX, biomeZ))));
 	}
 
 	@Override

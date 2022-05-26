@@ -18,6 +18,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.random.WeightedRandomList;
@@ -66,7 +68,7 @@ public class BiomeCommand extends BaseCommand
 		}
 
 		Biome biome = source.getLevel()
-				.getBiome(new BlockPos(source.getPosition().x, source.getPosition().y, source.getPosition().z));
+				.getBiome(new BlockPos(source.getPosition().x, source.getPosition().y, source.getPosition().z)).value();
 		IBiomeConfig config = ((OTGNoiseChunkGenerator) source.getLevel().getChunkSource().getGenerator())
 				.getCachedBiomeProvider().getBiomeConfig((int) source.getPosition().x, (int) source.getPosition().z);
 
@@ -104,23 +106,22 @@ public class BiomeCommand extends BaseCommand
 	private void showBiomeFeatures(CommandSourceStack source, Biome biome, IBiomeConfig config)
 	{
 		source.sendSuccess(new TextComponent("Vanilla features in this biome: ").withStyle(ChatFormatting.GREEN), false);
-		List<List<Supplier<PlacedFeature>>> featureList = biome.getGenerationSettings().features();
+		List<HolderSet<PlacedFeature>> featureList = biome.getGenerationSettings().features();
 		for (int i = 0; i < featureList.size(); i++)
 		{
-			List<Supplier<PlacedFeature>> innerList = featureList.get(i);
+			HolderSet<PlacedFeature> innerList = featureList.get(i);
 			source.sendSuccess(new TextComponent(" "+GenerationStep.Decoration.values()[i].toString().toLowerCase(Locale.ROOT)+":").withStyle(ChatFormatting.GOLD), false);
-			for (Supplier<PlacedFeature> supplier : innerList)
+			for (Holder<PlacedFeature> holder : innerList)
 			{
-				source.sendSuccess(new TextComponent(" - "+supplier.get().toString()).withStyle(ChatFormatting.GREEN), false);
+				source.sendSuccess(new TextComponent(" - "+holder.value().toString()).withStyle(ChatFormatting.GREEN), false);
 			}
 		}
 	}
 
 	private void showBiomeInfo(CommandSourceStack source, Biome biome, IBiomeConfig config)
 	{
-
-		source.sendSuccess(createComponent("Biome Category: ", biome.getBiomeCategory().toString(), ChatFormatting.GOLD,
-				ChatFormatting.GREEN), false);
+		// Biome Category seems to be deprecated?
+		//source.sendSuccess(createComponent("Biome Category: ", biome.getBiomeCategory().toString(), ChatFormatting.GOLD, ChatFormatting.GREEN), false);
 		source.sendSuccess(createComponent("Inherit Mobs: ", config.getInheritMobsBiomeName(), ChatFormatting.GOLD,
 				ChatFormatting.GREEN), false);
 

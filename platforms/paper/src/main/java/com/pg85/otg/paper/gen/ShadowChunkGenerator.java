@@ -1,17 +1,10 @@
 package com.pg85.otg.paper.gen;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Supplier;
+import java.util.*;
 
 import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMultimap;
-import com.pg85.otg.paper.util.ObfuscationHelper;
+import com.pg85.otg.paper.biome.PaperBiome;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -22,13 +15,15 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 
+import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import org.bukkit.craftbukkit.v1_18_R2.generator.CraftChunkData;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.gen.OTGChunkGenerator;
 import com.pg85.otg.interfaces.IBiome;
 import com.pg85.otg.interfaces.ICachedBiomeProvider;
-import com.pg85.otg.paper.biome.PaperBiome;
 import com.pg85.otg.paper.materials.PaperMaterialData;
 import com.pg85.otg.util.BlockPos2D;
 import com.pg85.otg.util.ChunkCoordinate;
@@ -215,7 +210,11 @@ public class ShadowChunkGenerator
 	// Unfortunately this requires fetching structure data in a non-thread-safe manner, so we can't do async
 	// chunkgen (base terrain) for these chunks and have to avoid them.
 
-	public boolean checkHasVanillaStructureWithoutLoading(ServerLevel serverWorld, ChunkGenerator chunkGenerator, BiomeSource biomeProvider, StructureSettings dimensionStructuresSettings, ChunkCoordinate chunkCoordinate, ICachedBiomeProvider cachedBiomeProvider, boolean noiseAffectingStructuresOnly)
+	// Has been modified so it compiles, but is not currently in use
+	// has been (temporarily?) replaced by OTGNoiseChunkGenerator::checkHasVanillaStructure
+	// It has not been tested whether this approach or that approach is faster
+	// -auth
+	public boolean checkHasVanillaStructureWithoutLoading(ServerLevel serverWorld, ChunkGenerator chunkGenerator, BiomeSource biomeProvider, ChunkCoordinate chunkCoordinate, ICachedBiomeProvider cachedBiomeProvider, boolean noiseAffectingStructuresOnly)
 	{
 		// Since we can't check for structure components/references, only structure starts,
 		// we'll keep a safe distance away from any vanilla structure start points.
@@ -271,6 +270,14 @@ public class ShadowChunkGenerator
 				}
 			));
 			structuresPerDistance[0] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
+			Set<Biome> biomesInArea = new HashSet<>();
+
+			for(ChunkCoordinate chunkToHandle : chunksToHandle)
+			{
+				chunk = new ProtoChunk(new ChunkPos(chunkToHandle.getChunkX(), chunkToHandle.getChunkZ()), null, serverWorld, serverWorld.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), null);
+				chunkpos = chunk.getPos();
+				biomesInArea.add(((PaperBiome) cachedBiomeProvider.getNoiseBiome((chunkpos.x << 2) + 2, (chunkpos.z << 2) + 2)).getBiome());
+			}
 
 			for(ChunkCoordinate chunkToHandle : chunksToHandle)
 			{
@@ -286,18 +293,17 @@ public class ShadowChunkGenerator
 				// TODO: Should we store this in the biomes? Would save creating them anew here -auth
 				ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(biome.getBiomeConfig().getRegistryKey().toResourceLocationString()));
 				// TODO: This only checks for villages for now, needs reworking. The forge approach won't work.
-				ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> structureMap =  chunkGenerator.getSettings().structures(StructureFeature.VILLAGE);
-				ImmutableCollection<ConfiguredStructureFeature<?, ?>> structures = structureMap.inverse().get(key);
-				for (ConfiguredStructureFeature<?, ?> structure : structures)
+				ArrayList<ResourceKey<StructureSet>> structures = new ArrayList<>();
+				for (ResourceKey<StructureSet> structure : structures)
 				{
-					if(structure.feature.step() == Decoration.SURFACE_STRUCTURES)
+					//if(structure.feature.step() == Decoration.SURFACE_STRUCTURES)
 					{
 						for(int i = structuresPerDistance.length - 1; i > 0; i--)
 						{
 							ArrayList<StructureFeature<?>> structuresAtDistance = structuresPerDistance[i];
-							if(structuresAtDistance.contains(structure.feature))
+							//if(structuresAtDistance.contains(structure.feature))
 							{
-								if(hasStructureStart(structure, dimensionStructuresSettings, serverWorld.getSeed(), chunkpos))
+								if(hasStructureStart(structure, chunkGenerator, serverWorld.getSeed(), chunkpos, i))
 								{
 									chunksHandled.put(chunkToHandle, i);
 									if(i >= distance)
@@ -363,15 +369,9 @@ public class ShadowChunkGenerator
 	}
 
 	// Taken from PillagerOutpostStructure.isNearVillage
-	private boolean hasStructureStart(ConfiguredStructureFeature<?, ?> structureFeature, StructureSettings dimensionStructuresSettings, long seed, ChunkPos chunkPos)
+	private boolean hasStructureStart(ResourceKey<StructureSet> structureFeature, ChunkGenerator chunkGenerator, long seed, ChunkPos chunkPos, int radius)
 	{
-		StructureFeatureConfiguration structureFeatureConfiguration = dimensionStructuresSettings.getConfig(structureFeature.feature);
-		if (structureFeatureConfiguration != null)
-		{
-			ChunkPos chunkPosPotential = structureFeature.feature.getPotentialFeatureChunk(structureFeatureConfiguration, seed, chunkPos.x, chunkPos.z);
-			return chunkPos.x == chunkPosPotential.x && chunkPos.z == chunkPosPotential.z;
-		}
-		return false;
+		return chunkGenerator.hasFeatureChunkInRange(structureFeature, seed, chunkPos.x, chunkPos.z, radius);
 	}
 
 	// /otg mapterrain
