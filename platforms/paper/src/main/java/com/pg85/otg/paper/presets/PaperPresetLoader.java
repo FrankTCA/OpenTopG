@@ -83,7 +83,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 		DedicatedServer server = ((CraftServer)Bukkit.getServer()).getServer();
 		WritableRegistry<Biome> biomeRegistry = (WritableRegistry<Biome>) server.registryAccess().ownedRegistryOrThrow(BIOME_KEY);
 
-		Field frozen = null;
+		Field frozen;
 		try
 		{
 			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
@@ -107,6 +107,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 		{
 			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
 			// Set the 'frozen' boolean to true for this registry
+			frozen.setAccessible(true);
 			frozen.set(biomeRegistry, true);
 		}
 		catch (NoSuchFieldException | IllegalAccessException e)
@@ -119,7 +120,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 	private void registerBiomesForPreset(boolean refresh, Preset preset, WritableRegistry<Biome> biomeRegistry)
 	{
 		// Index BiomeColors for FromImageMode and /otg map
-		HashMap<Integer, Integer> biomeColorMap = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> biomeColorMap = new HashMap<>();
 		
 		// Start at 1, 0 is the fallback for the biome generator (the world's ocean biome).
 		int currentId = 1;
@@ -313,7 +314,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 
 			float totalTemp = 0;
 
-			HashMap<String, IBiomeConfig> groupBiomes = new LinkedHashMap<String, IBiomeConfig>();
+			HashMap<String, IBiomeConfig> groupBiomes = new LinkedHashMap<>();
 			for (String biomeEntry : group.getBiomes())
 			{
 				IBiomeConfig config = biomeConfigsByName.get(biomeEntry);
@@ -387,6 +388,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 
 	public IBiomeConfig getBiomeConfig(Biome biome)
 	{
+		// This map is never filled?
 		return this.biomeConfigsByBiome.get(biome);
 	}	
 
@@ -410,7 +412,6 @@ public class PaperPresetLoader extends LocalPresetLoader
 		return clonedData;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void mergeVanillaBiomeMobSpawnSettings (BiomeConfigFinder.BiomeConfigStub biomeConfigStub, String biomeResourceLocation)
 	{

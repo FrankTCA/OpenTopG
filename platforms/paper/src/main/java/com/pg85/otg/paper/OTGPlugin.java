@@ -1,14 +1,25 @@
 package com.pg85.otg.paper;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.locks.ReentrantLock;
-
+import com.pg85.otg.constants.Constants;
+import com.pg85.otg.core.OTG;
+import com.pg85.otg.core.presets.Preset;
+import com.pg85.otg.paper.biome.OTGBiomeProvider;
+import com.pg85.otg.paper.commands.OTGCommandExecutor;
+import com.pg85.otg.paper.events.OTGHandler;
+import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
+import com.pg85.otg.paper.gen.OTGPaperChunkGen;
+import com.pg85.otg.paper.networking.NetworkingListener;
 import com.pg85.otg.paper.util.ObfuscationHelper;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
@@ -20,25 +31,10 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.pg85.otg.constants.Constants;
-import com.pg85.otg.core.OTG;
-import com.pg85.otg.core.presets.Preset;
-import com.pg85.otg.paper.biome.OTGBiomeProvider;
-import com.pg85.otg.paper.commands.OTGCommandExecutor;
-import com.pg85.otg.paper.events.OTGHandler;
-import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
-import com.pg85.otg.paper.gen.OTGPaperChunkGen;
-import com.pg85.otg.paper.networking.NetworkingListener;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-
-import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.biome.Biome;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class OTGPlugin extends JavaPlugin implements Listener
@@ -49,7 +45,6 @@ public class OTGPlugin extends JavaPlugin implements Listener
 
 	@SuppressWarnings("unused")
 	private OTGHandler handler;
-	private static Field field;
 
 	public static OTGPlugin plugin;
 
@@ -57,7 +52,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 	{
 		try
 		{
-			field = CustomChunkGenerator.class.getDeclaredField("delegate");
+			Field field = CustomChunkGenerator.class.getDeclaredField("delegate");
 			field.setAccessible(true);
 		} catch (ReflectiveOperationException ex)
 		{
@@ -76,8 +71,37 @@ public class OTGPlugin extends JavaPlugin implements Listener
 	public void onEnable ()
 	{
 		plugin = this;
+		Field frozen;
+		try
+		{
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			// Make the frozen boolean accessible
+			frozen.setAccessible(true);
+			// Set the 'frozen' boolean to false for this registry
+			frozen.set(Registry.BIOME_SOURCE, false);
+			frozen.set(Registry.CHUNK_GENERATOR, false);
+		}
+		catch (NoSuchFieldException | IllegalAccessException e)
+		{
+			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.BIOME_REGISTRY, "Failed to unfreeze registry");
+			e.printStackTrace();
+		}
 		Registry.register(Registry.BIOME_SOURCE, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGBiomeProvider.CODEC);
 		Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGNoiseChunkGenerator.CODEC);
+
+		// Re-freeze the two registries
+		try
+		{
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			frozen.setAccessible(true);
+			frozen.set(Registry.BIOME_SOURCE, true);
+			frozen.set(Registry.CHUNK_GENERATOR, true);
+		}
+		catch (NoSuchFieldException | IllegalAccessException e)
+		{
+			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.BIOME_REGISTRY, "Failed to re-freeze registry");
+			e.printStackTrace();
+		}
 
 		OTG.startEngine(new PaperEngine(this));
 		
@@ -150,13 +174,12 @@ public class OTGPlugin extends JavaPlugin implements Listener
 			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, "Mission failed, we'll get them next time");
 			return;
 		}
-		if (!(world.getGenerator() instanceof OTGPaperChunkGen))
+		if (!(world.getGenerator() instanceof OTGPaperChunkGen OTGGen))
 		{
 			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, "World generator was not an OTG generator, cannot take over, something has gone wrong");
 			return;
 		}
 		// We have a CustomChunkGenerator and a NoiseChunkGenerator
-		OTGPaperChunkGen OTGGen = (OTGPaperChunkGen) world.getGenerator();
 		OTGNoiseChunkGenerator OTGDelegate;
 		// If generator is null, it has not been initialized yet. Initialize it.
 		// The lock is used to avoid the accidental creation of two separate objects, in case
@@ -172,6 +195,8 @@ public class OTGPlugin extends JavaPlugin implements Listener
 				world.getSeed(),
 				NoiseGeneratorSettings.bootstrap()
 			);
+			// add the weird Spigot config; it was complaining about this
+			OTGDelegate.conf = serverWorld.spigotConfig;
 		} else {
 			OTGDelegate = OTGGen.generator;
 		}
@@ -179,7 +204,8 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		try
 		{
 			
-			Field finalGenerator = ObfuscationHelper.getField(ChunkMap.class, "generator", "t");
+			//Field finalGenerator = ObfuscationHelper.getField(ChunkMap.class, "generator", "t");
+			Field finalGenerator = ObfuscationHelper.getField(ChunkMap.class, "generator", "u");
 			finalGenerator.setAccessible(true);
 
 			finalGenerator.set(serverWorld.getChunkSource().chunkMap, OTGDelegate);
