@@ -193,7 +193,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
 				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
 				world.getSeed(),
-				NoiseGeneratorSettings.bootstrap()
+				NoiseGeneratorSettings.bootstrap(registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY))
 			);
 			// add the weird Spigot config; it was complaining about this
 			OTGDelegate.conf = serverWorld.spigotConfig;
