@@ -46,6 +46,8 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.*;
 import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import org.bukkit.Bukkit;
 
 public class PaperBiome implements IBiome
@@ -234,7 +236,8 @@ public class PaperBiome implements IBiome
 			builder.temperatureAdjustment(TemperatureModifier.FROZEN);
 		}
 
-		builder.biomeCategory(Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory()));
+		// TODO: Replace this!
+		//builder.biomeCategory(Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory()));
 
 		return builder.build();
 	}
@@ -478,9 +481,9 @@ public class PaperBiome implements IBiome
 	}
 
 	// StructureFeatures.register()
-	private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> ConfiguredStructureFeature<FC, F> register (String name, ConfiguredStructureFeature<FC, F> structure)
+	private static Structure register (String name, Structure structure)
 	{
-		return Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, name, structure);
+		return Registry.register(BuiltinRegistries.STRUCTURES, name, structure);
 	}
 
 	private static MobSpawnSettings.Builder createMobSpawnInfo (IBiomeConfig biomeConfig)
