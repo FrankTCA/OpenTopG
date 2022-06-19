@@ -15,6 +15,7 @@ import com.pg85.otg.util.minecraft.BlockNames;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -141,7 +142,7 @@ public class PaperMaterialReader implements IMaterialReader
 		try
 		{
 			String newInput = blockNameCorrected.contains(":") ? blockNameCorrected : "minecraft:" + blockNameCorrected;
-			blockdata = new BlockStateParser(new StringReader(newInput), true).parse(true).getState();
+			blockdata = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(newInput), true).blockState();
 		}
 		catch (CommandSyntaxException ignored) { }
 		if (blockdata != null)

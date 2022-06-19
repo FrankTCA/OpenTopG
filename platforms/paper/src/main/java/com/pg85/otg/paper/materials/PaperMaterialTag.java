@@ -5,7 +5,6 @@ import com.pg85.otg.util.materials.LocalMaterialTag;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
@@ -98,7 +97,6 @@ public class PaperMaterialTag extends LocalMaterialTag
 		if (BlockTags.STONE_BRICKS.location().equals(loc)) return BlockTags.STONE_BRICKS;
 		if (BlockTags.WOODEN_BUTTONS.location().equals(loc)) return BlockTags.WOODEN_BUTTONS;
 		if (BlockTags.BUTTONS.location().equals(loc)) return BlockTags.BUTTONS;
-		if (BlockTags.CARPETS.location().equals(loc)) return BlockTags.CARPETS;
 		if (BlockTags.WOODEN_DOORS.location().equals(loc)) return BlockTags.WOODEN_DOORS;
 		if (BlockTags.WOODEN_STAIRS.location().equals(loc)) return BlockTags.WOODEN_STAIRS;
 		if (BlockTags.WOODEN_SLABS.location().equals(loc)) return BlockTags.WOODEN_SLABS;
@@ -220,7 +218,6 @@ public class PaperMaterialTag extends LocalMaterialTag
 		if (BlockTags.GOATS_SPAWNABLE_ON.location().equals(loc)) return BlockTags.GOATS_SPAWNABLE_ON;
 		if (BlockTags.MOOSHROOMS_SPAWNABLE_ON.location().equals(loc)) return BlockTags.MOOSHROOMS_SPAWNABLE_ON;
 		if (BlockTags.PARROTS_SPAWNABLE_ON.location().equals(loc)) return BlockTags.PARROTS_SPAWNABLE_ON;
-		if (BlockTags.POLAR_BEARS_SPAWNABLE_ON_IN_FROZEN_OCEAN.location().equals(loc)) return BlockTags.POLAR_BEARS_SPAWNABLE_ON_IN_FROZEN_OCEAN;
 		if (BlockTags.RABBITS_SPAWNABLE_ON.location().equals(loc)) return BlockTags.RABBITS_SPAWNABLE_ON;
 		if (BlockTags.FOXES_SPAWNABLE_ON.location().equals(loc)) return BlockTags.FOXES_SPAWNABLE_ON;
 		if (BlockTags.WOLVES_SPAWNABLE_ON.location().equals(loc)) return BlockTags.WOLVES_SPAWNABLE_ON;
