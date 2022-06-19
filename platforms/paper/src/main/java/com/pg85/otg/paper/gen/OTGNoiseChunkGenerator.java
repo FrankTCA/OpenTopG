@@ -240,14 +240,14 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 			ChunkAccess chunkAccess = world.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
 			ChunkPos pos = new ChunkPos(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
-			findNoiseStructures(pos, chunkAccess, , structures, junctions);
+			findNoiseStructures(pos, chunkAccess, world.structureManager(), structures, junctions);
 
 			this.internalGenerator.populateNoise(this.preset.getWorldConfig().getWorldHeightCap(), random, buffer, buffer.getChunkCoordinate(), structures, junctions);
 			this.shadowChunkGenerator.setChunkGenerated(chunkCoord);			
 		}
 	}
 
-	public static void findNoiseStructures(ChunkPos pos, ChunkAccess chunk, StructureFeatureManager manager, ObjectList<JigsawStructureData> structures, ObjectList<JigsawStructureData> junctions) {
+	public static void findNoiseStructures(ChunkPos pos, ChunkAccess chunk, StructureManager manager, ObjectList<JigsawStructureData> structures, ObjectList<JigsawStructureData> junctions) {
 
 		int chunkX = pos.x;
 		int chunkZ = pos.z;
@@ -257,9 +257,10 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		// Iterate through all of the jigsaw structures (villages, pillager outposts, nether fossils)
 
 		// Get all structure starts in this chunk
-		List<StructureStart> structureStarts = manager.startsForFeature(
-				SectionPos.bottomOf(chunk),
-				(Structure) -> configuredStructureFeature.adaptNoise);
+		List<StructureStart> structureStarts = manager.startsForStructure(
+				chunk.getPos(),
+				// Last line I ain't too sure about
+				(struct) -> struct.terrainAdaptation().equals(TerrainAdjustment.NONE));
 
 		for(StructureStart start : structureStarts) {
 			// Iterate through the pieces in the structure
