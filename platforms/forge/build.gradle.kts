@@ -3,8 +3,8 @@ plugins {
     id("dev.architectury.loom") version "0.10.0-SNAPSHOT"
 }
 
-val mcVersion = "1.18"
-val forgeVersion = "38.0.16"
+val mcVersion = "1.19"
+val forgeVersion = "41.0.38"
 
 loom {
     silentMojangMappingsLicense()

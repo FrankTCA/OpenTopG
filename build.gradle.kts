@@ -6,7 +6,7 @@ defaultTasks = arrayListOf("build", "publishToMavenLocal")
 
 allprojects {
     group = "com.pg85.otg"
-    version = "1.18.2-0.0.26"
+    version = "1.19-0.0.27"
     description = "Open Terrain Generator: Generate anything!"
 }
 
@@ -30,7 +30,7 @@ tasks.build {
 
 listOf(
     project(":platforms:paper"),
-    project(":platforms:forge"),
+    //project(":platforms:forge"),
     // project(":platforms:fabric"),
 ).forEach { proj ->
     proj.afterEvaluate {

@@ -17,7 +17,7 @@ java {
 dependencies {
     //paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
-    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.2-R0.1-SNAPSHOT")
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.19-R0.1-SNAPSHOT")
 
     implementation(project(":common:common-core"))
 
@@ -25,6 +25,7 @@ dependencies {
         exclude("org.yaml")
     }
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.7")
+    // May need to temporarily shutdown worldedit as not available for 1.19 yet
 }
 
 tasks {
