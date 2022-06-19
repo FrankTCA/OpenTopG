@@ -108,10 +108,11 @@ public class OTGBiomeProvider extends BiomeSource implements ILayerSource
 	{
 		return this.layer.get();
 	}
-	
-	@Override
+
+	// No longer used?
+	/*@Override
 	public BiomeSource withSeed(long seed)
 	{
 		return new OTGBiomeProvider(this.presetFolderName, seed, this.legacyBiomeInitLayer, this.largeBiomes, this.registry);
-	}
+	}*/
 }

@@ -551,14 +551,14 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		int chunkX = region.getCenter().x;
 		int chunkZ = region.getCenter().z;
 		IBiome biome = this.internalGenerator.getCachedBiomeProvider().getBiome(chunkX * Constants.CHUNK_SIZE + DecorationArea.DECORATION_OFFSET, chunkZ * Constants.CHUNK_SIZE + DecorationArea.DECORATION_OFFSET);
-		WorldgenRandom sharedseedrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.seedUniquifier()));
+		WorldgenRandom sharedseedrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.generateUniqueSeed()));
 		sharedseedrandom.setDecorationSeed(region.getSeed(), chunkX << 4, chunkZ << 4);
 		NaturalSpawner.spawnMobsForChunkGeneration(region, Holder.direct(((PaperBiome)biome).getBiome()), region.getCenter(), sharedseedrandom);
 	}
 
 	// Mob spawning on chunk tick
 	@Override
-	public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureFeatureManager structureManager, MobCategory entityClassification, BlockPos blockPos)
+	public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager structureManager, MobCategory entityClassification, BlockPos blockPos)
 	{
 		/*if (structureManager.getStructureAt(blockPos, StructureFeature.SWAMP_HUT).isValid())
 		{
@@ -602,14 +602,18 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	// Noise
 	@Override
-	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world)
+	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world, RandomState noiseConfig)
 	{
+		return getBaseHeight(x, z, heightmap, world);
+	}
+
+	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world) {
 		return this.sampleHeightmap(x, z, null, heightmap.isOpaque());
 	}
 
 	// Provides a sample of the full column for structure generation.
 	@Override
-	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world)
+	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState noiseConfig)
 	{
 		BlockState[] ablockstate = new BlockState[256];
 		this.sampleHeightmap(x, z, ablockstate, null);
@@ -617,7 +621,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void addDebugScreenInfo(List<String> text, BlockPos pos) {
+	public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos) {
 		// TODO: what does this do?
 	}
 
@@ -720,11 +724,12 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	// Getters / misc
 
-	@Override
+	// No longer used?
+	/*@Override
 	public ChunkGenerator withSeed(long seed)
 	{
 		return new OTGNoiseChunkGenerator(this.biomeSource.withSeed(seed), seed, this.structureSets, this.noises, this.generatorSettings);
-	}
+	}*/
 
 	@Override
 	protected Codec<? extends ChunkGenerator> codec()
@@ -732,7 +737,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		return CODEC;
 	}
 
-	@Override
+	// TODO: Comment out if not needed?
 	public Climate.Sampler climateSampler() {
 		return this.sampler;
 	}
@@ -804,6 +809,9 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Uses the vanilla method of checking if there is a vanilla structure in range
 	// Might be slower than old solution in ShadowChunkGenerator
 	public boolean checkForVanillaStructure(ChunkCoordinate chunkCoordinate) {
+		// TODO: This is jank, but we'll do this temporarily
+		return false;
+		/*
 		int x = chunkCoordinate.getChunkX();
 		int z = chunkCoordinate.getChunkZ();
 		// Structures with a radius of 4
@@ -850,6 +858,6 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 				return true;
 		if (biome.getBiomeConfig().getOceanRuinsType() != SettingsEnums.OceanRuinsType.disabled)
 			return this.hasFeatureChunkInRange(BuiltinStructureSets.OCEAN_RUINS, worldSeed, x, z, 1);
-		return false;
+		return false;*/
     }
 }
