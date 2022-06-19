@@ -344,7 +344,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	// Replaces surface and ground blocks in base terrain and places bedrock.
 	@Override
-	public void buildSurface(WorldGenRegion worldGenRegion, StructureFeatureManager structures, ChunkAccess chunk)
+	public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structures, RandomState noiseConfig, ChunkAccess chunk)
 	{
 		// OTG handles surface/ground blocks during base terrain gen. For non-OTG biomes used
 	}
@@ -352,7 +352,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Carvers: Caves and ravines
 
 	@Override
-	public void applyCarvers(WorldGenRegion chunkRegion, long seed, BiomeManager biomeManager, StructureFeatureManager structureAccess, ChunkAccess chunk, GenerationStep.Carving stage)
+	public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeManager, StructureManager structureAccess, ChunkAccess chunk, GenerationStep.Carving stage)
 	{
 		if (stage == GenerationStep.Carving.AIR)
 		{
@@ -392,7 +392,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Population / decoration
 
 	@Override
-	public void applyBiomeDecoration(WorldGenLevel worldGenLevel, ChunkAccess chunk, StructureFeatureManager manager)
+	public void applyBiomeDecoration(WorldGenLevel worldGenLevel, ChunkAccess chunk, StructureManager manager)
 	{
 		if(!OTG.getEngine().getPluginConfig().getDecorationEnabled())
 		{
@@ -400,22 +400,31 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		}
 
 		ChunkPos chunkpos = chunk.getPos();
-		if (!SharedConstants.debugVoidTerrain(chunkpos))
-		{
+		if (!SharedConstants.debugVoidTerrain(chunkpos)) {
 			WorldGenRegion worldGenRegion = ((WorldGenRegion)worldGenLevel);
 			SectionPos sectionpos = SectionPos.of(chunkpos, worldGenRegion.getMinSection());
 			BlockPos blockpos = sectionpos.origin();
-			Registry<Structure<?, ?>> structureRegistry = worldGenLevel.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
-			Map<Integer, List<Structure<?, ?>>> configuredStructureMap = structureRegistry.stream()
-					.collect(Collectors.groupingBy(p -> p.feature.step().ordinal()));
-			List<BiomeSource.StepFeatureData> list = this.biomeSource.featuresPerStep();
-			WorldgenRandom worldgenrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.seedUniquifier()));
-			long decorationSeed = worldgenrandom.setDecorationSeed(worldGenRegion.getSeed(), blockpos.getX(), blockpos.getZ());
+			// NOTE: Whole section removed, updated with vanilla code changes, comment beneath section shows this.
+			// Comment beneath written by authvin on March 15th, 2022, so we can assume not much has changed since.
+			org.bukkit.World world = worldGenLevel.getMinecraftWorld().getWorld();
+			// only call when a populator is present (prevents unnecessary entity conversion)
+			if (!world.getPopulators().isEmpty()) {
+				org.bukkit.craftbukkit.v1_19_R1.generator.CraftLimitedRegion limitedRegion = new org.bukkit.craftbukkit.v1_19_R1.generator.CraftLimitedRegion(worldGenLevel, chunk.getPos());
+				int x = chunk.getPos().x;
+				int z = chunk.getPos().z;
+				for (org.bukkit.generator.BlockPopulator populator : world.getPopulators()) {
+					WorldgenRandom seededrandom = new WorldgenRandom(new net.minecraft.world.level.levelgen.LegacyRandomSource(worldGenLevel.getSeed()));
+					seededrandom.setDecorationSeed(worldGenLevel.getSeed(), x, z);
+					populator.populate(world, new org.bukkit.craftbukkit.v1_19_R1.util.RandomSourceWrapper.RandomWrapper(seededrandom), x, z, limitedRegion);
+				}
+				limitedRegion.saveEntities();
+				limitedRegion.breakLink();
+			}
 
 			// This section is the only part that diverges from vanilla, but it probably has to stay this way for now
 			//
 			int worldX = worldGenRegion.getCenter().x * Constants.CHUNK_SIZE;
-			int worldZ =worldGenRegion.getCenter().z * Constants.CHUNK_SIZE;
+			int worldZ = worldGenRegion.getCenter().z * Constants.CHUNK_SIZE;
 			ChunkCoordinate chunkBeingDecorated = ChunkCoordinate.fromBlockCoords(worldX, worldZ);
 			IBiome noiseBiome = this.internalGenerator.getCachedBiomeProvider().getNoiseBiome((worldGenRegion.getCenter().x << 2) + 2, (worldGenRegion.getCenter().z << 2) + 2);
 			PaperWorldGenRegion forgeWorldGenRegion = new PaperWorldGenRegion(this.preset.getFolderName(), this.preset.getWorldConfig(), worldGenRegion, this);
@@ -434,7 +443,11 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 			});
 			set.retainAll(this.biomeSource.possibleBiomes().stream().map(Holder::value).collect(Collectors.toSet()));
 
-			int length = list.size();
+			/*
+			* For now, we can assume this code is unneeded
+			* Thank you, 1.19, for not having to make us handle the messy crap
+			 */
+			/*int length = list.size();
 
 			try {
 				Registry<PlacedFeature> placedRegistry = worldGenRegion.registryAccess().registryOrThrow(Registry.PLACED_FEATURE_REGISTRY);
@@ -514,10 +527,11 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 				CrashReport crashreport = CrashReport.forThrowable(exception2, "Biome decoration");
 				crashreport.addCategory("Generation").setDetail("CenterX", chunkpos.x).setDetail("CenterZ", chunkpos.z).setDetail("Seed", decorationSeed);
 				throw new ReportedException(crashreport);
-			}
+			}*/
 		}
 	}
 
+	// TODO: Do we need this?
 	private static BoundingBox getWritableArea(ChunkAccess p_187718_)
 	{
 		ChunkPos chunkpos = p_187718_.getPos();
