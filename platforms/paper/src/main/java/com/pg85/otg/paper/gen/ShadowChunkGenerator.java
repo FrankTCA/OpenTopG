@@ -17,6 +17,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import org.bukkit.craftbukkit.v1_19_R1.generator.CraftChunkData;
 
@@ -41,8 +42,6 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 //import net.minecraft.world.level.levelgen.StructureSettings;
 //import net.minecraft.world.level.levelgen.WorldgenRandom;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 //import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
@@ -221,7 +220,7 @@ public class ShadowChunkGenerator
 		int radiusInChunks = 5;
 		ProtoChunk chunk;
 		ChunkPos chunkpos;
-		if (serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())
+		if (serverWorld.getServer().getWorldData().worldGenSettings().generateStructures())
 		{
 			List<ChunkCoordinate> chunksToHandle = new ArrayList<>();
 			Map<ChunkCoordinate,Integer> chunksHandled = new HashMap<>();
@@ -245,31 +244,28 @@ public class ShadowChunkGenerator
 			}
 
 			@SuppressWarnings("unchecked")
-			ArrayList<StructureFeature<?>>[] structuresPerDistance = new ArrayList[radiusInChunks];
-			structuresPerDistance[4] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-				new StructureFeature<?>[] {
-					StructureFeature.VILLAGE,
-					StructureFeature.END_CITY,
-					StructureFeature.BASTION_REMNANT,
-					StructureFeature.OCEAN_MONUMENT,
-					StructureFeature.WOODLAND_MANSION
+			ArrayList<StructureType<?>>[] structuresPerDistance = new ArrayList[radiusInChunks];
+			structuresPerDistance[4] = new ArrayList<StructureType<?>>(Arrays.asList(
+				new StructureType<?>[] {
+					StructureType.END_CITY,
+					StructureType.OCEAN_MONUMENT,
+					StructureType.WOODLAND_MANSION
 				}
 			));
-			structuresPerDistance[3] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
-			structuresPerDistance[2] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
-			structuresPerDistance[1] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-				new StructureFeature<?>[] {
-					StructureFeature.JUNGLE_TEMPLE,
-					StructureFeature.DESERT_PYRAMID,
-					StructureFeature.RUINED_PORTAL,
-					StructureFeature.SWAMP_HUT,
-					StructureFeature.IGLOO,
-					StructureFeature.SHIPWRECK,
-					StructureFeature.PILLAGER_OUTPOST,
-					StructureFeature.OCEAN_RUIN
+			structuresPerDistance[3] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
+			structuresPerDistance[2] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
+			structuresPerDistance[1] = new ArrayList<StructureType<?>>(Arrays.asList(
+				new StructureType<?>[] {
+					StructureType.JUNGLE_TEMPLE,
+					StructureType.DESERT_PYRAMID,
+					StructureType.RUINED_PORTAL,
+					StructureType.SWAMP_HUT,
+					StructureType.IGLOO,
+					StructureType.SHIPWRECK,
+					StructureType.OCEAN_RUIN
 				}
 			));
-			structuresPerDistance[0] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
+			structuresPerDistance[0] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
 			Set<Biome> biomesInArea = new HashSet<>();
 
 			for(ChunkCoordinate chunkToHandle : chunksToHandle)
@@ -300,7 +296,7 @@ public class ShadowChunkGenerator
 					{
 						for(int i = structuresPerDistance.length - 1; i > 0; i--)
 						{
-							ArrayList<StructureFeature<?>> structuresAtDistance = structuresPerDistance[i];
+							ArrayList<StructureType<?>> structuresAtDistance = structuresPerDistance[i];
 							//if(structuresAtDistance.contains(structure.feature))
 							{
 								if(hasStructureStart(structure, chunkGenerator, serverWorld.getSeed(), chunkpos, i))
@@ -371,7 +367,9 @@ public class ShadowChunkGenerator
 	// Taken from PillagerOutpostStructure.isNearVillage
 	private boolean hasStructureStart(ResourceKey<StructureSet> structureFeature, ChunkGenerator chunkGenerator, long seed, ChunkPos chunkPos, int radius)
 	{
-		return chunkGenerator.hasFeatureChunkInRange(structureFeature, seed, chunkPos.x, chunkPos.z, radius);
+		// TODO: Don't take the lazy way out
+		return true;
+		//return chunkGenerator.hasFeatureChunkInRange(structureFeature, seed, chunkPos.x, chunkPos.z, radius);
 	}
 
 	// /otg mapterrain
