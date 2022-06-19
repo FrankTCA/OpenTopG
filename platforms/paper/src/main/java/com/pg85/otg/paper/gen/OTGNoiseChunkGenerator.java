@@ -294,15 +294,15 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager accessor, ChunkAccess chunk)
+	public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState noiseConfig, StructureManager accessor, ChunkAccess chunk)
 	{
-		buildNoise(accessor, chunk, executor, blender);
+		buildNoise(accessor, chunk, executor, blender, noiseConfig);
 
 		return CompletableFuture.completedFuture(chunk);
 	}
 
 	// Generates the base terrain for a chunk.
-	public void buildNoise (StructureFeatureManager manager, ChunkAccess chunk, Executor executor, Blender blender)
+	public void buildNoise (StructureManager manager, ChunkAccess chunk, Executor executor, Blender blender, RandomState noiseConfig)
 	{
 		// If we've already generated and cached this
 		// chunk while it was unloaded, use cached data.
@@ -319,7 +319,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 			// Should only run when first creating the world, on a single chunk
 			// TODO: we need a ServerLevel or similar for this
 			//this.createStructures(world.getMinecraftWorld().registryAccess(), world.getMinecraftWorld().structureFeatureManager(), chunk, world.getMinecraftWorld().getStructureManager(), worldSeed);
-			this.createBiomes(chunk.biomeRegistry, executor, blender, manager, chunk);
+			this.createBiomes(chunk.biomeRegistry, executor, noiseConfig, blender, manager, chunk);
 			fixBiomesForChunk = null;
 		}
 		ChunkBuffer buffer = new PaperChunkBuffer(chunk);
