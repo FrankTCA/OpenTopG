@@ -73,7 +73,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		Field frozen;
 		try
 		{
-			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
 			// Make the frozen boolean accessible
 			frozen.setAccessible(true);
 			// Set the 'frozen' boolean to false for this registry
