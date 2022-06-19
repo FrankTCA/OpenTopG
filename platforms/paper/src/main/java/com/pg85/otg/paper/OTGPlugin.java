@@ -4,7 +4,6 @@ import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.presets.Preset;
 import com.pg85.otg.paper.biome.OTGBiomeProvider;
-import com.pg85.otg.paper.commands.OTGCommandExecutor;
 import com.pg85.otg.paper.events.OTGHandler;
 import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.paper.gen.OTGPaperChunkGen;
@@ -104,9 +103,10 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		}
 
 		OTG.startEngine(new PaperEngine(this));
-		
-		OTGCommandExecutor.registerArguments();
-		OTGCommandExecutor.register(((CraftServer)Bukkit.getServer()).getServer().vanillaCommandDispatcher.getDispatcher());
+
+		// TODO: Fix
+		/*OTGCommandExecutor.registerArguments();
+		OTGCommandExecutor.register(((CraftServer)Bukkit.getServer()).getServer().vanillaCommandDispatcher.getDispatcher());*/
 		// Does this go here?
 		OTG.getEngine().getPresetLoader().registerBiomes();
 
