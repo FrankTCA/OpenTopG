@@ -4,14 +4,15 @@ import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.Random;
 
+import net.kyori.adventure.text.Component;
 import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.data.worldgen.placement.CavePlacements;
 import net.minecraft.data.worldgen.placement.EndPlacements;
 import net.minecraft.data.worldgen.placement.TreePlacements;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,6 +53,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
+import org.bukkit.craftbukkit.v1_19_R1.util.RandomSourceWrapper;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 // TODO: Split up worldgenregion into separate classes, one for decoration/worldgen, one for non-worldgen.
@@ -100,8 +102,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		return this.worldGenRegion.getSeed();
 	}
 
-	@Override
-	public Random getWorldRandom()
+	public RandomSource getWorldRandom()
 	{
 		return this.worldGenRegion.getRandom();
 	}
@@ -495,8 +496,9 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	}
 
 	@Override
-	public boolean placeTree(TreeType type, Random rand, int x, int y, int z)
+	public boolean placeTree(TreeType type, Random rd, int x, int y, int z)
 	{
+		RandomSource rand = new RandomSourceWrapper(rd);
 		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return false;
@@ -687,7 +689,9 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 			String nameTag = entityData.getNameTagOrNBTFileName();
 			if (nameTag != null && !nameTag.toLowerCase().trim().endsWith(".txt") && !nameTag.toLowerCase().trim().endsWith(".nbt"))
 			{
-				entity.setCustomName(new TextComponent(nameTag));
+				// I think this will work? It's using some weird classes tho.
+				Component customName = net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserializeOrNull(nameTag);
+				entity.setCustomName(customName != null ? io.papermc.paper.adventure.PaperAdventure.asVanilla(customName) : null);
 			}
 		
 			// TODO: Non-mob entities, aren't those handled via Block(nbt), chests, armor stands etc?
@@ -723,14 +727,16 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	}
 
 	@Override
-	public void placeDungeon (Random random, int x, int y, int z)
+	public void placeDungeon (Random rm, int x, int y, int z)
 	{
+		RandomSource random = new RandomSourceWrapper(rm);
 		Feature.MONSTER_ROOM.place(FeatureConfiguration.NONE, this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 	}
 
 	@Override
-	public void placeFossil(Random random, int x, int y, int z)
+	public void placeFossil(Random rm, int x, int y, int z)
 	{
+		RandomSource random = new RandomSourceWrapper(rm);
 		if(y >= 0)
 		{
 			CavePlacements.FOSSIL_UPPER.value().place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
@@ -784,7 +790,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		// isAtLeast() -> b()
 		if ((chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)))
 		{
-			return this.chunkGenerator.getMaterialInUnloadedChunk(this.getWorldRandom(), x, y, z, this.worldGenRegion.getLevel());
+			return this.chunkGenerator.getMaterialInUnloadedChunk((Random) this.getWorldRandom(), x, y, z, this.worldGenRegion.getLevel());
 		}
 
 		// Get internal coordinates for block in chunk
@@ -812,7 +818,8 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		// decoration sequence, return the material without loading the chunk.
 		if ((chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)))
 		{
-			return this.chunkGenerator.getHighestBlockYInUnloadedChunk(this.getWorldRandom(), x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, this.worldGenRegion.getLevel());
+			Random r = new RandomSourceWrapper.RandomWrapper(this.getWorldRandom());
+			return this.chunkGenerator.getHighestBlockYInUnloadedChunk(r, x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, this.worldGenRegion.getLevel());
 		}
 
 		// Get internal coordinates for block in chunk

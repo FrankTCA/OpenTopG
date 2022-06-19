@@ -16,7 +16,8 @@ public interface IWorldGenRegion extends ISurfaceGeneratorNoiseProvider
 	IWorldConfig getWorldConfig();
 	String getPresetFolderName();
 	long getSeed();
-	Random getWorldRandom();
+	// Now requires RandomSource :/
+	//Random getWorldRandom();
 	ChunkCoordinate getSpawnChunk();
 	
 	// Any getBiome/getBiomeConfig requests done as a part
