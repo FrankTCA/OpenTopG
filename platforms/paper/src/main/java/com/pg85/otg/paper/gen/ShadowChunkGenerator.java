@@ -18,7 +18,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
-import org.bukkit.craftbukkit.v1_18_R2.generator.CraftChunkData;
+import org.bukkit.craftbukkit.v1_19_R1.generator.CraftChunkData;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.gen.OTGChunkGenerator;

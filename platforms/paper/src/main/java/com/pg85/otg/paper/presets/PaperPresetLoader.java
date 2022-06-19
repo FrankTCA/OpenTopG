@@ -18,7 +18,7 @@ import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
 import com.mojang.serialization.Lifecycle;
 import com.pg85.otg.config.biome.BiomeConfigFinder;
 import com.pg85.otg.config.biome.BiomeGroup;
