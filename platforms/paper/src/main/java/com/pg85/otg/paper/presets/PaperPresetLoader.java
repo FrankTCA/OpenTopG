@@ -86,7 +86,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 		Field frozen;
 		try
 		{
-			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
 			// Make the frozen boolean accessible
 			frozen.setAccessible(true);
 			// Set the 'frozen' boolean to false for this registry
@@ -105,7 +105,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 
 		try
 		{
-			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
 			// Set the 'frozen' boolean to true for this registry
 			frozen.setAccessible(true);
 			frozen.set(biomeRegistry, true);
