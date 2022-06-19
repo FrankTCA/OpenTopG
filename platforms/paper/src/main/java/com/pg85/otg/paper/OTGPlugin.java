@@ -91,7 +91,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		// Re-freeze the two registries
 		try
 		{
-			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "bL");
+			frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
 			frozen.setAccessible(true);
 			frozen.set(Registry.BIOME_SOURCE, true);
 			frozen.set(Registry.CHUNK_GENERATOR, true);
