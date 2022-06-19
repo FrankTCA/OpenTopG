@@ -26,7 +26,6 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.*;
@@ -241,7 +240,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 			ChunkAccess chunkAccess = world.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
 			ChunkPos pos = new ChunkPos(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
-			findNoiseStructures(pos, chunkAccess, world.structureFeatureManager(), structures, junctions);
+			findNoiseStructures(pos, chunkAccess, , structures, junctions);
 
 			this.internalGenerator.populateNoise(this.preset.getWorldConfig().getWorldHeightCap(), random, buffer, buffer.getChunkCoordinate(), structures, junctions);
 			this.shadowChunkGenerator.setChunkGenerated(chunkCoord);			
@@ -260,7 +259,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		// Get all structure starts in this chunk
 		List<StructureStart> structureStarts = manager.startsForFeature(
 				SectionPos.bottomOf(chunk),
-				(configuredStructureFeature) -> configuredStructureFeature.adaptNoise);
+				(Structure) -> configuredStructureFeature.adaptNoise);
 
 		for(StructureStart start : structureStarts) {
 			// Iterate through the pieces in the structure
@@ -405,8 +404,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 			WorldGenRegion worldGenRegion = ((WorldGenRegion)worldGenLevel);
 			SectionPos sectionpos = SectionPos.of(chunkpos, worldGenRegion.getMinSection());
 			BlockPos blockpos = sectionpos.origin();
-			Registry<ConfiguredStructureFeature<?, ?>> structureRegistry = worldGenLevel.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
-			Map<Integer, List<ConfiguredStructureFeature<?, ?>>> configuredStructureMap = structureRegistry.stream()
+			Registry<Structure<?, ?>> structureRegistry = worldGenLevel.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
+			Map<Integer, List<Structure<?, ?>>> configuredStructureMap = structureRegistry.stream()
 					.collect(Collectors.groupingBy(p -> p.feature.step().ordinal()));
 			List<BiomeSource.StepFeatureData> list = this.biomeSource.featuresPerStep();
 			WorldgenRandom worldgenrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.seedUniquifier()));
@@ -445,7 +444,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 					int n = 0;
 					if (manager.shouldGenerateFeatures())
 					{
-						for(ConfiguredStructureFeature<?, ?> feature : configuredStructureMap.getOrDefault(step, Collections.emptyList()))
+						for(Structure<?, ?> feature : configuredStructureMap.getOrDefault(step, Collections.emptyList()))
 						{
 							worldgenrandom.setFeatureSeed(decorationSeed, n, step);
 							Supplier<String> supplier = () -> structureRegistry
