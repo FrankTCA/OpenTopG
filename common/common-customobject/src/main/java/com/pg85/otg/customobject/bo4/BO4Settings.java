@@ -32,8 +32,8 @@ class BO4Settings extends Settings
 
 	static final Setting<Integer>
 		FREQUENCY = intSetting("Frequency", 0, 0, 9999),
-		MIN_HEIGHT = intSetting("MinHeight", 0, Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1),
-		MAX_HEIGHT = intSetting("MaxHeight", 256, Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1),
+		MIN_HEIGHT = intSetting("MinHeight", Constants.WORLD_DEFAULT_MIN_Y, Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y),
+		MAX_HEIGHT = intSetting("MaxHeight", Constants.WORLD_DEFAULT_MAX_Y, Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y),
 		BRANCH_FREQUENCY = intSetting("BranchFrequency", 0, 0, 9999),
 		HEIGHT_OFFSET = intSetting("HeightOffset", 0, -255, 255),
 		SMOOTH_HEIGHT_OFFSET = intSetting("SmoothHeightOffset", 0, -255, 255),

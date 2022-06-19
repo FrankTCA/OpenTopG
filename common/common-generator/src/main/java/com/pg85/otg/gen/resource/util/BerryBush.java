@@ -17,10 +17,10 @@ public class BerryBush {
         Decorated
     }
 
-    public static void spawnBerryBushes(IWorldGenRegion worldGenregion, Random random, int centerX, int centerZ, PlantType plant, int frequency, int minAltitude, int maxAltitude, MaterialSet sourceBlocks, SparseOption sparseOption) {
-        int centerY = worldGenregion.getHighestBlockAboveYAt(centerX, centerZ);
+    public static void spawnBerryBushes(IWorldGenRegion world, Random random, int centerX, int centerZ, PlantType plant, int frequency, int minAltitude, int maxAltitude, MaterialSet sourceBlocks, SparseOption sparseOption) {
+        int centerY = world.getHighestBlockAboveYAt(centerX, centerZ);
 
-        if (centerY < Constants.WORLD_DEPTH) {
+        if (centerY < world.getWorldMinY()) {
             return;
         }
 
@@ -30,15 +30,15 @@ public class BerryBush {
         while (
                 (
                         //stay in y bounds
-                        (centerY >= Constants.WORLD_DEPTH && centerY < Constants.WORLD_HEIGHT) &&
+                        (centerY >= world.getWorldMinY() && centerY < world.getWorldMaxY()) &&
                                 //null check
-                                (worldMaterial = worldGenregion.getMaterial(centerX, centerY, centerZ)) != null &&
+                                (worldMaterial = world.getMaterial(centerX, centerY, centerZ)) != null &&
                                 //if air or leaves
                                 (
                                         worldMaterial.isAir() ||
                                                 worldMaterial.isLeaves()
                                 ) &&
-                                worldGenregion.getMaterial(centerX, centerY - 1, centerZ) != null
+                                world.getMaterial(centerX, centerY - 1, centerZ) != null
                 ) && (
                         centerY > 0
                 )
@@ -63,10 +63,10 @@ public class BerryBush {
             z = centerZ + random.nextInt(xzBounds) - random.nextInt(xzBounds);
             //spawn if the block is in min/max altitude and block below is a source block
             if (
-                    (worldMaterial = worldGenregion.getMaterial(x, y, z)) != null &&
+                    (worldMaterial = world.getMaterial(x, y, z)) != null &&
                             worldMaterial.isAir() &&
                             (
-                                    (worldMaterial = worldGenregion.getMaterial(x, y - 1, z)) != null &&
+                                    (worldMaterial = world.getMaterial(x, y - 1, z)) != null &&
                                             sourceBlocks.contains(worldMaterial)
                             ) &&
                             (
@@ -76,9 +76,9 @@ public class BerryBush {
                 //set block directly so we can set the age of the berry bush
                 if (plant == PlantType.BerryBush) {
                     //set block directly so we can set the age of the berry bush
-                    worldGenregion.setBlock(x, y, z, LocalMaterials.BERRY_BUSH.withProperty(MaterialProperties.AGE_0_3, random.nextInt(4)));
+                    world.setBlock(x, y, z, LocalMaterials.BERRY_BUSH.withProperty(MaterialProperties.AGE_0_3, random.nextInt(4)));
                 } else {
-                    plant.spawn(worldGenregion, x, y, z);
+                    plant.spawn(world, x, y, z);
                 }            }
         }
 

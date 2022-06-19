@@ -3,6 +3,7 @@ package com.pg85.otg.paper;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.presets.Preset;
+import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.paper.biome.OTGBiomeProvider;
 import com.pg85.otg.paper.commands.OTGCommandExecutor;
 import com.pg85.otg.paper.events.OTGHandler;
@@ -12,14 +13,21 @@ import com.pg85.otg.paper.networking.NetworkingListener;
 import com.pg85.otg.paper.util.ObfuscationHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.data.worldgen.TerrainProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
@@ -187,13 +195,14 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		if (OTGGen.generator == null)
 		{
 			RegistryAccess registryAccess = ((CraftServer) Bukkit.getServer()).getServer().registryAccess();
+			NoiseSettings noiseSettings = getNoiseSettings(OTGGen.getPreset().getWorldConfig());
 			OTGDelegate = new OTGNoiseChunkGenerator(
 				OTGGen.getPreset().getFolderName(),
 				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
 				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
 				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
 				world.getSeed(),
-				NoiseGeneratorSettings.bootstrap()
+				Holder.direct(new NoiseGeneratorSettings(noiseSettings, Blocks.STONE.defaultBlockState(), Blocks.WATER.defaultBlockState(), getNoiseRouter(noiseSettings), SurfaceRuleData.overworld(), 63, false, true, true, false))
 			);
 			// add the weird Spigot config; it was complaining about this
 			OTGDelegate.conf = serverWorld.spigotConfig;
@@ -231,5 +240,44 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		processedWorlds.add(world.getName());
 
 		initLock.unlock();
+	}
+
+	// Taken from vanilla NoiseRouterData::overworldWithoutCaves
+	private NoiseRouterWithOnlyNoises getNoiseRouter(NoiseSettings noiseSettings) {
+		DensityFunction shiftX = getFunction("shift_x");
+		DensityFunction shiftZ = getFunction("shift_z");
+		return new NoiseRouterWithOnlyNoises(
+				DensityFunctions.zero(),
+				DensityFunctions.zero(),
+				DensityFunctions.zero(),
+				DensityFunctions.zero(),
+				DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, BuiltinRegistries.NOISE.getHolderOrThrow(Noises.TEMPERATURE)),
+				DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, BuiltinRegistries.NOISE.getHolderOrThrow(Noises.VEGETATION)),
+				getFunction("overworld/continents"),
+				getFunction("overworld/erosion"),
+				getFunction("overworld/depth"),
+				getFunction("overworld/ridges"),
+				DensityFunctions.mul(DensityFunctions.constant(4.0D), DensityFunctions.mul(getFunction("overworld/depth"), DensityFunctions.cache2d(getFunction("overworld/factor"))).quarterNegative()),
+				DensityFunctions.mul(DensityFunctions.interpolated(DensityFunctions.blendDensity(DensityFunctions.slide(noiseSettings, getFunction("overworld/sloped_cheese")))), DensityFunctions.constant(0.64D)).squeeze(),
+				DensityFunctions.zero(),
+				DensityFunctions.zero(),
+				DensityFunctions.zero()
+		);
+	}
+
+	private DensityFunction getFunction(String string) {
+		return BuiltinRegistries.DENSITY_FUNCTION.getHolderOrThrow(ResourceKey.create(Registry.DENSITY_FUNCTION_REGISTRY, new ResourceLocation(string))).value();
+	}
+
+	private NoiseSettings getNoiseSettings(IWorldConfig worldConfig) {
+		return NoiseSettings.create(
+				worldConfig.getWorldMinY(),
+				worldConfig.getWorldHeight(),
+				new NoiseSamplingSettings(1.0D, 1.0D, 80.0D, 160.0D),
+				new NoiseSlider(-0.078125D, 2, 8),
+				new NoiseSlider(0.1171875D, 3, 0),
+				1,
+				2,
+				TerrainProvider.overworld(false));
 	}
 }

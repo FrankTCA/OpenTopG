@@ -27,8 +27,8 @@ public class BoulderResource extends FrequencyResourceBase
 		this.material = materialReader.readMaterial(args.get(0));
 		this.frequency = readInt(args.get(1), 1, 5000);
 		this.rarity = readRarity(args.get(2));
-		this.minAltitude = readInt(args.get(3), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
-		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.WORLD_HEIGHT - 1);
+		this.minAltitude = readInt(args.get(3), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
+		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.MAX_POSSIBLE_Y);
 		this.sourceBlocks = readMaterials(args, 5, materialReader);
 	}
 

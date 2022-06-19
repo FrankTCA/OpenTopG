@@ -49,9 +49,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 // TODO: Split up worldgenregion into separate classes, one for decoration/worldgen, one for non-worldgen.
@@ -70,6 +68,8 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		super(presetFolderName, OTG.getEngine().getPluginConfig(), worldConfig, OTG.getEngine().getLogger(), worldGenRegion.getCenter().x, worldGenRegion.getCenter().z, chunkGenerator.getCachedBiomeProvider());
 		this.worldGenRegion = worldGenRegion;
 		this.chunkGenerator = chunkGenerator;
+		this.maxY = worldConfig.getWorldMaxY();
+		this.minY = worldConfig.getWorldMinY();
 	}
 
 	/** Creates a LocalWorldGenRegion to be used for OTG worlds outside of decoration, only used for /otg spawn/edit/export. */
@@ -92,8 +92,8 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	public ILogger getLogger()
 	{
 		return OTG.getEngine().getLogger();
-	}	
-	
+	}
+
 	@Override
 	public long getSeed()
 	{
@@ -164,7 +164,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterial(int x, int y, int z)
 	{
-		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
+		if (y < minY || y > maxY)
 		{
 			return null;
 		}
@@ -193,52 +193,6 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		return PaperMaterialData.ofBlockData(chunk.getBlockState(internalX, y, internalZ));
 	}
 
-	@Override
-	public int getBlockAboveLiquidHeight (int x, int z)
-	{
-		int highestY = getHighestBlockYAt(x, z, false, true, false, false, false);
-		if (highestY >= 0)
-		{
-			return highestY + 1;
-		} else {
-			return -1;
-		}
-	}
-
-	@Override
-	public int getBlockAboveSolidHeight (int x, int z)
-	{
-		int highestY = getHighestBlockYAt(x, z, true, false, true, true, false);
-		if (highestY >= 0)
-		{
-			return highestY + 1;
-		} else {
-			return -1;
-		}
-	}
-
-	@Override
-	public int getHighestBlockAboveYAt (int x, int z)
-	{
-		int highestY = getHighestBlockYAt(x, z, true, true, false, false, false);
-		if (highestY >= 0)
-		{
-			return highestY + 1;
-		} else {
-			return -1;
-		}
-	}
-
-	@Override
-	public int getHighestBlockAboveYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves) {
-		int highestY = getHighestBlockYAt(x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, ignoreLeaves);
-		if(highestY >= 0)
-		{
-			return highestY + 1;
-		} else {
-			return -1;
-		}
-	}
 
 	@Override
 	public int getHighestBlockYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
@@ -276,7 +230,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		BlockState blockState;
 		Block block;
 
-		for (int i = heightMapY; i >= 0; i--)
+		for (int i = heightMapY; i >= getWorldMinY(); i--)
 		{
 			// TODO: mutable
 			blockState = chunk.getBlockState(new BlockPos(internalX, i, internalZ));
@@ -329,13 +283,13 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 				}
 				if ((findSolid && isLiquid) || (findLiquid && isSolid))
 				{
-					return -1;
+					return getWorldMinY()-1;
 				}
 			}
 		}
 
 		// Can happen if this is a chunk filled with air
-		return -1;
+		return getWorldMinY()-1;
 	}	
 
 	@Override
@@ -347,7 +301,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public int getLightLevel (int x, int y, int z)
 	{
-		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
+		if (y < minY || y > maxY)
 		{
 			return -1;
 		}
@@ -399,7 +353,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void setBlock (int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
 	{
-		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
+		if (y < minY || y > maxY)
 		{
 			return;
 		}
@@ -497,7 +451,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public boolean placeTree(TreeType type, Random rand, int x, int y, int z)
 	{
-		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
+		if (y < minY || y > maxY)
 		{
 			return false;
 		}
@@ -609,7 +563,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void spawnEntity (IEntityFunction entityData)
 	{
-		if (entityData.getY() < Constants.WORLD_DEPTH || entityData.getY() >= Constants.WORLD_HEIGHT)
+		if (entityData.getY() < minY || entityData.getY() > maxY)
 		{
 			if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
 			{
@@ -765,7 +719,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterialWithoutLoading(int x, int y, int z)
 	{
-		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
+		if (y < minY || y > maxY)
 		{
 			return null;
 		}

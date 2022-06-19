@@ -39,21 +39,17 @@ public class CoralMushroomResource extends FrequencyResourceBase
 				for (int z1 = 0; z1 <= zRadius; ++z1)
 				{
 
-					// TODO: this is how it was in the decompiled source but FernFlower is most likely lying to us, needs cleanup
-					if (
-						(x1 != 0 && x1 != yRadius || y1 != 0 && y1 != xRadius) &&
-						(z1 != 0 && z1 != zRadius || y1 != 0 && y1 != xRadius) &&
-						(x1 != 0 && x1 != yRadius || z1 != 0 && z1 != zRadius) &&
-						(x1 == 0 || x1 == yRadius || y1 == 0 || y1 == xRadius || z1 == 0 || z1 == zRadius) &&
-						!(random.nextFloat() < 0.1F) &&
-						(
-							y + y1 - yOffset < Constants.WORLD_DEPTH || 
-							y + y1 - yOffset > Constants.WORLD_HEIGHT -1 || 
-							!CoralHelper.placeCoralBlock(world, random, x + x1, y + y1 - yOffset, z + z1, coral)
-						)
-					)
+					if ((x1 != 0 && x1 != yRadius || y1 != 0 && y1 != xRadius) &&
+							(z1 != 0 && z1 != zRadius || y1 != 0 && y1 != xRadius) &&
+							(x1 != 0 && x1 != yRadius || z1 != 0 && z1 != zRadius) &&
+							(x1 == 0 || x1 == yRadius || y1 == 0 || y1 == xRadius || z1 == 0 || z1 == zRadius) &&
+							!(random.nextFloat() < 0.1F))
 					{
-						// Lol
+						if (y + y1 - yOffset >= world.getWorldMinY() &&
+								y + y1 - yOffset <= world.getWorldMaxY())
+						{
+							CoralHelper.placeCoralBlock(world, random, x + x1, y + y1 - yOffset, z + z1, coral);
+						}
 					}
 				}
 			}

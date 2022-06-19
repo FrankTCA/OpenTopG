@@ -160,7 +160,7 @@ public class EditCommand extends BaseCommand
 			PaperWorldGenRegion worldGenRegion = ObjectUtils.getWorldGenRegion(preset, source.getLevel().getWorld());
 
 			BlockPos pos = source.getEntity().blockPosition();
-			RegionCommand.Region region = ObjectUtils.getRegionFromObject(new Location(source.getBukkitWorld(), pos.getX(), pos.getY(), pos.getZ()), inputObject);
+			RegionCommand.Region region = ObjectUtils.getRegionFromObject(new Location(source.getBukkitWorld(), pos.getX(), pos.getY(), pos.getZ()), inputObject, worldGenRegion.getWorldMinY(), worldGenRegion.getWorldMaxY());
 			Corner center = region.getCenter();
 
 			// Prepare area for spawning

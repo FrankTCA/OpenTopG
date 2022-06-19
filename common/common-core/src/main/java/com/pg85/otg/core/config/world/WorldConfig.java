@@ -59,7 +59,6 @@ public class WorldConfig extends WorldConfigBase
 	// Private fields, only used when reading/writing
 	
 	private int worldHeightScaleBits;
-	private int worldHeightCapBits;
 	
 	public WorldConfig(Path settingsDir, SettingsMap settingsReader, ArrayList<String> biomes, IConfigFunctionProvider biomeResourcesManager, ILogger logger, IMaterialReader materialReader, String presetFolderName)
 	{
@@ -152,6 +151,26 @@ public class WorldConfig extends WorldConfigBase
 		this.ravineMaxAltitude = higherThanOrEqualTo(this.ravineMaxAltitude, this.ravineMinAltitude);
 		this.ravineMaxLength = higherThanOrEqualTo(this.ravineMaxLength, this.ravineMinLength);
 		this.waterLevelMax = higherThanOrEqualTo(this.waterLevelMax, this.waterLevelMin);
+		if (this.worldMaxY-this.worldMinY > 2032)
+		{
+			logger.log(LogLevel.ERROR, LogCategory.CONFIGS, "World height is too large, increasing minimum Y");
+			this.worldMinY += (2032-(this.worldMaxY-this.worldMinY));
+		}
+		if (this.worldMinY % 16 != 0)
+		{
+			logger.log(LogLevel.ERROR, LogCategory.CONFIGS, "Min world height is not a multiple of 16, altering it");
+			this.worldMinY += this.worldMinY % 16;
+		}
+		if ((this.worldMaxY+1) % 16 != 0)
+		{
+			logger.log(LogLevel.ERROR, LogCategory.CONFIGS, "Max world height ("+this.worldMaxY+") +1 is not a multiple of 16, altering it");
+			this.worldMaxY -= (this.worldMaxY+1) % 16;
+		}
+		if (this.worldMaxY < this.worldMinY)
+		{
+			logger.log(LogLevel.ERROR, LogCategory.CONFIGS, "Max world height cannot be smaller than min world height");
+			this.worldMaxY += 16;
+		}
 	}
 
 	@Override
@@ -228,10 +247,9 @@ public class WorldConfig extends WorldConfigBase
 
 		this.fractureHorizontal = reader.getSetting(WorldStandardValues.FRACTURE_HORIZONTAL, logger);
 		this.fractureVertical = reader.getSetting(WorldStandardValues.FRACTURE_VERTICAL, logger);
-		this.worldHeightCapBits = reader.getSetting(WorldStandardValues.WORLD_HEIGHT_CAP_BITS, logger);
-		this.worldHeightCap = 1 << this.worldHeightCapBits;
+		this.worldMinY = reader.getSetting(WorldStandardValues.WORLD_MIN_Y, logger);
+		this.worldMaxY = reader.getSetting(WorldStandardValues.WORLD_MAX_Y, logger);
 		this.worldHeightScaleBits = reader.getSetting(WorldStandardValues.WORLD_HEIGHT_SCALE_BITS, logger);
-		this.worldHeightScaleBits = lowerThanOrEqualTo(this.worldHeightScaleBits, this.worldHeightCapBits);
 		this.worldHeightScale = 1 << this.worldHeightScaleBits;
 		this.betterSnowFall = reader.getSetting(WorldStandardValues.BETTER_SNOW_FALL, logger);
 		this.waterLevelMax = reader.getSetting(WorldStandardValues.WATER_LEVEL_MAX, logger);
@@ -373,7 +391,7 @@ public class WorldConfig extends WorldConfigBase
 		this.piglinSafe = reader.getSetting(WorldStandardValues.PIGLIN_SAFE, logger);
 		this.bedWorks = reader.getSetting(WorldStandardValues.BED_WORKS, logger);
 		this.respawnAnchorWorks = reader.getSetting(WorldStandardValues.RESPAWN_ANCHOR_WORKS, logger);
-		this.hasRaids = reader.getSetting(WorldStandardValues.HAS_RAIDS, logger); 
+		this.hasRaids = reader.getSetting(WorldStandardValues.HAS_RAIDS, logger);
 		this.logicalHeight = reader.getSetting(WorldStandardValues.LOGICAL_HEIGHT, logger);
 		this.infiniburn = reader.getSetting(WorldStandardValues.INFINIBURN, logger);
 		this.effectsLocation = reader.getSetting(WorldStandardValues.EFFECTS_LOCATION, logger);
@@ -722,14 +740,19 @@ public class WorldConfig extends WorldConfigBase
 		writer.header1("Terrain Height and Volatility",
 			"The settings in this section control terrain settings that are not specific to any biome."
 		);
-		
-		writer.putSetting(WorldStandardValues.WORLD_HEIGHT_SCALE_BITS, this.worldHeightScaleBits,
-			"The height scale of the world. Increasing this by one doubles the terrain height of the world, substracting one halves the terrain height. Values must be between 5 and 8, inclusive."
+
+		writer.putSetting(WorldStandardValues.WORLD_MIN_Y, this.worldMinY,
+				"The minimum build height possible. Defaults to "+Constants.WORLD_DEFAULT_MIN_Y+", must be between "+Constants.MIN_POSSIBLE_Y+" and "+Constants.MAX_POSSIBLE_Y,
+				"Must be a multiple of 16."
 		);
 
-		writer.putSetting(WorldStandardValues.WORLD_HEIGHT_CAP_BITS, this.worldHeightCapBits,
-			"The height cap of the world. A cap of 7 will make sure that there is no terrain above 128 (y=2^7). Near this cap less and less terrain generates with no terrain above this cap.", 
-			"Values must be between 5 and 8 (inclusive), and may not be lower that WorldHeightScaleBits."
+		writer.putSetting(WorldStandardValues.WORLD_MAX_Y, this.worldMaxY,
+				"The maximum build height possible. Defaults to "+Constants.WORLD_DEFAULT_MAX_Y+", must be between "+Constants.MIN_POSSIBLE_Y+" and "+Constants.MAX_POSSIBLE_Y,
+				"Must be 1 less than a multiple of 16."
+		);
+
+		writer.putSetting(WorldStandardValues.WORLD_HEIGHT_SCALE_BITS, this.worldHeightScaleBits,
+			"The height scale of the world. Increasing this by one doubles the terrain height of the world, substracting one halves the terrain height. Values must be between 5 and 8, inclusive."
 		);
 
 		writer.putSetting(WorldStandardValues.FRACTURE_HORIZONTAL, this.fractureHorizontal,
@@ -1070,7 +1093,7 @@ public class WorldConfig extends WorldConfigBase
 			"Whether the dimension has raids, true by default."
 		);
 		writer.putSetting(WorldStandardValues.LOGICAL_HEIGHT, this.logicalHeight, 
-			"World height, 256 by default. Affects portals and chorus fruits."
+			"Maximum expected height in this . Affects portals and chorus fruits."
 		);
 		writer.putSetting(WorldStandardValues.INFINIBURN, this.infiniburn, 
 			"Infiniburn block tag registry key, minecraft:infiniburn_overworld by default.",

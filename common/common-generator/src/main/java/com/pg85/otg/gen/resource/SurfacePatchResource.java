@@ -64,8 +64,8 @@ public class SurfacePatchResource  extends BiomeResourceBase implements IBasicRe
 			this.decorationAboveReplacements = null;
 		}
 		
-		this.minAltitude = readInt(args.get(2), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
-		this.maxAltitude = readInt(args.get(3), this.minAltitude, Constants.WORLD_HEIGHT - 1);
+		this.minAltitude = readInt(args.get(2), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
+		this.maxAltitude = readInt(args.get(3), this.minAltitude, Constants.MAX_POSSIBLE_Y);
 		this.sourceBlocks = readMaterials(args, 4, materialReader);
 		this.random = new Random(2345L);
 		this.noiseGen = new NoiseGeneratorSurfacePatchOctaves(this.random, 1);
@@ -92,7 +92,7 @@ public class SurfacePatchResource  extends BiomeResourceBase implements IBasicRe
 	public void spawn(IWorldGenRegion worldGenRegion, Random rand, boolean villageInChunk, int x, int z)
 	{
 		int y = worldGenRegion.getHighestBlockAboveYAt(x, z) - 1;
-		if (y < this.minAltitude || y > this.maxAltitude)
+		if (y < Math.max(this.minAltitude, worldGenRegion.getWorldMinY()) || y > Math.min(this.maxAltitude, worldGenRegion.getWorldMaxY()))
 		{
 			return;
 		}

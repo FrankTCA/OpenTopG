@@ -17,6 +17,7 @@ import com.pg85.otg.forge.util.ForgeNBTHelper;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.gen.LocalWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterials;
+import com.pg85.otg.util.world.WorldHeight;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
@@ -138,7 +139,7 @@ public class ObjectUtils
 	 * @param pos The position of the player
 	 * @param object The object to be spawned
 	 */
-	protected static RegionCommand.Region getRegionFromObject(BlockPos pos, StructuredCustomObject object)
+	protected static RegionCommand.Region getRegionFromObject(BlockPos pos, StructuredCustomObject object, int worldMinY, int worldMaxY)
 	{
 		RegionCommand.Region region = new RegionCommand.Region();
 		BoundingBox box = object.getBoundingBox(Rotation.NORTH);
@@ -151,13 +152,13 @@ public class ObjectUtils
 
 		int yshift = 0;
 
-		if (lowestElevation <= Constants.WORLD_DEPTH+1)
+		if (lowestElevation <= worldMinY+1)
 		{
 			yshift = (-lowestElevation) + 2;
 		}
-		else if (highestElevation >= Constants.WORLD_HEIGHT)
+		else if (highestElevation > worldMaxY)
 		{
-			yshift = highestElevation - Constants.WORLD_HEIGHT;
+			yshift = highestElevation - worldMaxY;
 		}
 
 		Corner center = new Corner(pos.getX() + 2 + (box.getWidth() / 2), pos.getY() + yshift, pos.getZ() + 2 + (box.getDepth() / 2));
