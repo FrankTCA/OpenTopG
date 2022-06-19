@@ -141,7 +141,7 @@ public class ObjectUtils
 	 * @param loc The position of the player
 	 * @param object The object to be spawned
 	 */
-	protected static RegionCommand.Region getRegionFromObject(Location loc, StructuredCustomObject object)
+	protected static RegionCommand.Region getRegionFromObject(Location loc, StructuredCustomObject object, int worldMinY, int worldMaxY)
 	{
 		BlockPos pos = new BlockPos(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		RegionCommand.Region region = new RegionCommand.Region();
@@ -155,13 +155,13 @@ public class ObjectUtils
 
 		int yshift = 0;
 
-		if (lowestElevation <= Constants.WORLD_DEPTH+1)
+		if (lowestElevation <= worldMinY +1)
 		{
 			yshift = (-lowestElevation) + 2;
 		}
-		else if (highestElevation >= Constants.WORLD_HEIGHT)
+		else if (highestElevation >= worldMaxY)
 		{
-			yshift = highestElevation - Constants.WORLD_HEIGHT;
+			yshift = highestElevation - worldMaxY;
 		}
 
 		Corner center = new Corner(pos.getX() + 2 + (box.getWidth() / 2), pos.getY() + yshift, pos.getZ() + 2 + (box.getDepth() / 2));

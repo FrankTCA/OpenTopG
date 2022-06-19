@@ -2,11 +2,14 @@ package com.pg85.otg.config.biome;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
+import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.util.helpers.RandomHelper;
 
 /** Represents a BiomeConfig ResourceQueue resource. */
 public abstract class BiomeResourceBase extends ConfigFunction<IBiomeConfig>
@@ -30,4 +33,13 @@ public abstract class BiomeResourceBase extends ConfigFunction<IBiomeConfig>
 	// We're using reflection to match constructors for resources, so resource classes must implement this 
 	// constructor or createResource / com.pg85.otg.config.biome.BiomeResourcesManager.getConfigFunction() will fail. 
 	public BiomeResourceBase(IBiomeConfig biomeConfig, List<String> args, ILogger logger, IMaterialReader materialReader) { }
+
+	public static int getValidYInRange(Random rand, int minAltitude, int maxAltitude, IWorldGenRegion world)
+	{
+		try {
+			return RandomHelper.numberInRange(rand, Math.max(minAltitude, world.getWorldMinY()), Math.min(maxAltitude, world.getWorldMaxY()));
+		} catch (IllegalArgumentException e) {
+			return 0;
+		}
+	}
 }

@@ -292,14 +292,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	@Override
 	public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager accessor, ChunkAccess chunk)
 	{
-		buildNoise(accessor, chunk, executor, blender);
 
-		return CompletableFuture.completedFuture(chunk);
-	}
-
-	// Generates the base terrain for a chunk.
-	public void buildNoise (StructureFeatureManager manager, ChunkAccess chunk, Executor executor, Blender blender)
-	{
 		// If we've already generated and cached this
 		// chunk while it was unloaded, use cached data.
 		ChunkCoordinate chunkCoord = ChunkCoordinate.fromChunkCoords(chunk.getPos().x, chunk.getPos().z);
@@ -309,15 +302,16 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 		// When generating the spawn area, Spigot will get the structure and biome info for the first chunk before we can inject
 		// Therefore, we need to re-do these calls now, for that one chunk
-		if (fixBiomesForChunk != null && fixBiomesForChunk.equals(chunkCoord))
-		{
+//		if (fixBiomesForChunk != null && fixBiomesForChunk.equals(chunkCoord))
+//		{
 
 			// Should only run when first creating the world, on a single chunk
 			// TODO: we need a ServerLevel or similar for this
 			//this.createStructures(world.getMinecraftWorld().registryAccess(), world.getMinecraftWorld().structureFeatureManager(), chunk, world.getMinecraftWorld().getStructureManager(), worldSeed);
-			this.createBiomes(chunk.biomeRegistry, executor, blender, manager, chunk);
-			fixBiomesForChunk = null;
-		}
+//			this.createBiomes(chunk.biomeRegistry, executor, blender, accessor, chunk);
+
+		//	fixBiomesForChunk = null;
+		//}
 		ChunkBuffer buffer = new PaperChunkBuffer(chunk);
 		ChunkAccess cachedChunk = this.shadowChunkGenerator.getChunkFromCache(chunkCoord);
 		if (cachedChunk != null)
@@ -330,12 +324,16 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 			ChunkPos pos = new ChunkPos(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
 
-			findNoiseStructures(pos, chunk, manager, structures, junctions);
+			findNoiseStructures(pos, chunk, accessor, structures, junctions);
 
 			this.internalGenerator.populateNoise(this.preset.getWorldConfig().getWorldHeightCap(), random, buffer, buffer.getChunkCoordinate(), structures, junctions);
 			this.shadowChunkGenerator.setChunkGenerated(chunkCoord);
 		}
+
+		return CompletableFuture.completedFuture(chunk);
 	}
+
+	// Generates the base terrain for a chunk.
 
 
 	// Replaces surface and ground blocks in base terrain and places bedrock.
@@ -354,23 +352,15 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		{
 			ProtoChunk protoChunk = (ProtoChunk) chunk;
 			ChunkBuffer chunkBuffer = new PaperChunkBuffer(protoChunk);
-			/*
-			 * The following code exists as Minecraft 1.18 has a new "carvingMask"
-			 * class that they use instead of BitSet
-			 * However, that class is really just a wrapper that makes it harder
-			 * to access the BitSet inside.
-			 * We simply use reflections to access the BitSet
-			 * Which enables us to send it up into common code.
-			 *
-			 * - Frank
-			 */
 			CarvingMask carvingMaskRaw = protoChunk.getOrCreateCarvingMask(stage);
 			try {
 				Field theRealMask = ObfuscationHelper.getField(CarvingMask.class, "mask", "b");
 				theRealMask.setAccessible(true);
 				BitSet carvingMask = (BitSet)theRealMask.get(carvingMaskRaw);
 
-				this.internalGenerator.carve(chunkBuffer, seed, protoChunk.getPos().x, protoChunk.getPos().z, carvingMask, true, true); //TODO: Don't use hardcoded true
+				// TODO: Carvers need updating to use sub-0 height, and also to potentially use the new Carving Mask -auth
+				// Leaving this commented out until at least the sub-0 is implemented.
+				// this.internalGenerator.carve(chunkBuffer, seed, protoChunk.getPos().x, protoChunk.getPos().z, carvingMask, true, true); //TODO: Don't use hardcoded true
 			} catch (NoSuchFieldException e) {
 				if (OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.MAIN)) {
 					OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, "!!! Error obtaining the carving mask! Caves will not generate! Stacktrace:\n" + e.getStackTrace());
@@ -586,33 +576,52 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	@Override
 	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world)
 	{
-		return this.sampleHeightmap(x, z, null, heightmap.isOpaque());
+		NoiseSettings noiseSettings = this.generatorSettings.value().noiseSettings();
+		int minGenY = Math.max(noiseSettings.minY(), world.getMinBuildHeight());
+		int maxGenY = Math.min(noiseSettings.minY() + noiseSettings.height(), world.getMaxBuildHeight());
+		int cellNoiseMinY = Math.floorDiv(minGenY, noiseSettings.getCellHeight());
+		int noiseCellCount = Math.floorDiv(maxGenY - minGenY, noiseSettings.getCellHeight());
+		return noiseCellCount <= 0 ?
+				world.getMinBuildHeight() :
+				this.sampleHeightmap(x, z, null, heightmap.isOpaque(), cellNoiseMinY, noiseCellCount);
 	}
 
 	// Provides a sample of the full column for structure generation.
 	@Override
 	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world)
 	{
-		BlockState[] ablockstate = new BlockState[256];
-		this.sampleHeightmap(x, z, ablockstate, null);
-		return new NoiseColumn(0, ablockstate);
+		NoiseSettings noiseSettings = this.generatorSettings.value().noiseSettings();
+		int minGenY = Math.max(noiseSettings.minY(), world.getMinBuildHeight());
+		int maxGenY = Math.min(noiseSettings.minY() + noiseSettings.height(), world.getMaxBuildHeight());
+		int cellNoiseMinY = Math.floorDiv(minGenY, noiseSettings.getCellHeight());
+		int noiseCellCount = Math.floorDiv(maxGenY - minGenY, noiseSettings.getCellHeight());
+		if (noiseCellCount <= 0)
+		{
+			return new NoiseColumn(minGenY, new BlockState[0]);
+		} else {
+			BlockState[] blockStates = new BlockState[noiseCellCount * noiseSettings.getCellHeight()];
+			this.sampleHeightmap(x, z, blockStates, null, cellNoiseMinY, noiseCellCount);
+			return new NoiseColumn(0, blockStates);
+		}
 	}
 
 	@Override
 	public void addDebugScreenInfo(List<String> text, BlockPos pos) {
-		// TODO: what does this do?
+		// TODO: what does this do? -auth
 	}
 
 	// Samples the noise at a column and provides a view of the blockstates, or fills a heightmap.
-	private int sampleHeightmap (int x, int z, @Nullable BlockState[] blockStates, @Nullable Predicate<BlockState> predicate)
+	private int sampleHeightmap (int x, int z, @Nullable BlockState[] blockStates, @Nullable Predicate<BlockState> predicate, int cellNoiseMinY, int noiseCellCount)
 	{
+		NoiseSettings noisesettings = this.generatorSettings.value().noiseSettings();
+		int cellWidth = noisesettings.getCellWidth();
 		// Get all of the coordinate starts and positions
-		int xStart = Math.floorDiv(x, 4);
-		int zStart = Math.floorDiv(z, 4);
-		int xProgress = Math.floorMod(x, 4);
-		int zProgress = Math.floorMod(z, 4);
-		double xLerp = (double) xProgress / 4.0;
-		double zLerp = (double) zProgress / 4.0;
+		int xStart = Math.floorDiv(x, cellWidth);
+		int zStart = Math.floorDiv(z, cellWidth);
+		int xProgress = Math.floorMod(x, cellWidth);
+		int zProgress = Math.floorMod(z, cellWidth);
+		double xLerp = (double) xProgress / cellWidth;
+		double zLerp = (double) zProgress / cellWidth;
 		// Create the noise data in a 2 * 2 * 32 grid for interpolation.
 		double[][] noiseData = new double[4][this.internalGenerator.getNoiseSizeY() + 1];
 

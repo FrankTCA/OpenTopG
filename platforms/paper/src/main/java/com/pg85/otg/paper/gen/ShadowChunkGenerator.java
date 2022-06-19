@@ -396,8 +396,8 @@ public class ShadowChunkGenerator
 		ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
 
 		// Get internal coordinates for block in chunk
-		byte blockX = (byte) (x &= 0xF);
-		byte blockZ = (byte) (z &= 0xF);
+		byte blockX = (byte) (x & 0xF);
+		byte blockZ = (byte) (z & 0xF);
 
 		LocalMaterialData[] cachedColumn = this.unloadedBlockColumnsCache.get(blockPos);
 
@@ -413,12 +413,12 @@ public class ShadowChunkGenerator
 			chunk = getUnloadedChunk(otgChunkGenerator, worldHeightCap, worldRandom, chunkCoord, level).getChunk();
 			this.unloadedChunksCache.put(chunkCoord, chunk);
 		}
+		int totalHeight = otgChunkGenerator.getMaxY() - otgChunkGenerator.getMinY();
+		cachedColumn = new LocalMaterialData[totalHeight];
 
-		cachedColumn = new LocalMaterialData[256];
-
-		LocalMaterialData[] blocksInColumn = new LocalMaterialData[256];
+		LocalMaterialData[] blocksInColumn = new LocalMaterialData[totalHeight];
 		BlockState blockInChunk;
-		for (short y = 0; y < 256; y++)
+		for (int y = otgChunkGenerator.getMinY(); y <= otgChunkGenerator.getMaxY(); y++)
 		{
 			blockInChunk = chunk.getBlockState(new BlockPos(blockX, y, blockZ));
 			if (blockInChunk != null)

@@ -309,14 +309,14 @@ public class BO3 implements StructuredCustomObject
 		}
 		// Offset by static and random settings values
 		// TODO: This is pointless used with randomY?
-		offsetY = baseY + this.getOffsetAndVariance(random, this.settings.getSpawnHeightOffset(), this.settings.spawnHeightVariance);
+		offsetY = baseY + this.getOffsetAndVariance(worldGenRegion, random, this.settings.getSpawnHeightOffset(), this.settings.spawnHeightVariance);
 		return trySpawnAt(null, structureCache, worldGenRegion, random, rotation, x, offsetY, z, minY, maxY, baseY);
 	}
 	
 	// Used for trees, customobjects and customstructures during decoration.
 	public boolean trySpawnAt(CustomStructure structure, CustomStructureCache structureCache, IWorldGenRegion worldGenRegion, Random random, Rotation rotation, int x, int y, int z, int minY, int maxY, int baseY)
 	{
-		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT) // Isn't this already done before this method is called?
+		if (y < worldGenRegion.getWorldMinY() || y > worldGenRegion.getWorldMaxY()) // Isn't this already done before this method is called?
 		{
 			return false;
 		}
@@ -348,7 +348,7 @@ public class BO3 implements StructuredCustomObject
 		ChunkCoordinate chunkCoord;
 		for (BO3BlockFunction block : blocks)
 		{
-			if (y + block.y < Constants.WORLD_DEPTH || y + block.y >= Constants.WORLD_HEIGHT)
+			if (y + block.y < worldGenRegion.getWorldMinY() || y + block.y > worldGenRegion.getWorldMaxY())
 			{
 				return false;
 			}
@@ -501,13 +501,13 @@ public class BO3 implements StructuredCustomObject
 	/**
 	 * Computes the offset and variance for spawning a bo3
 	 *
-	 * @param random	Random number generator.
-	 * @param offset	Base spawn offset.
-	 * @param variance Max variance from this offset.
-	 *
+	 * @param worldGenRegion
+	 * @param random         Random number generator.
+	 * @param offset         Base spawn offset.
+	 * @param variance       Max variance from this offset.
 	 * @return The sum of the offset and variance.
 	 */
-	private int getOffsetAndVariance(Random random, int offset, int variance)
+	private int getOffsetAndVariance(IWorldGenRegion worldGenRegion, Random random, int offset, int variance)
 	{
 		if (variance == 0)
 		{
@@ -518,7 +518,7 @@ public class BO3 implements StructuredCustomObject
 		} else {
 			variance = random.nextInt(variance + 1);
 		}
-		return MathHelper.clamp(offset + variance, Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		return MathHelper.clamp(offset + variance, worldGenRegion.getWorldMinY(), worldGenRegion.getWorldMaxY());
 	}
 	
 	public CustomStructureCoordinate makeCustomStructureCoordinate(String presetFolderName, boolean useOldBO3StructureRarity, Random random, int chunkX, int chunkZ)
