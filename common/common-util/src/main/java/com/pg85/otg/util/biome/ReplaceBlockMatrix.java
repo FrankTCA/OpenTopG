@@ -131,7 +131,7 @@ public class ReplaceBlockMatrix
 	public ReplaceBlockMatrix(String setting, int maxHeight, IMaterialReader reader) throws InvalidConfigException
 	{
 		this.maxHeight = maxHeight;
-		this.targetsAtHeights = (ReplaceBlockEntry[])new ReplaceBlockEntry[256];
+		this.targetsAtHeights = (ReplaceBlockEntry[])new ReplaceBlockEntry[320];
 		
 		// Parse
 		if (setting.isEmpty() || setting.equalsIgnoreCase(NO_REPLACE))

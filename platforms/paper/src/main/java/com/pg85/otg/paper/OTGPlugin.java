@@ -104,7 +104,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 
 		OTG.startEngine(new PaperEngine(this));
 
-		// TODO: Fix
+		// TODO: Fix when readding commands
 		/*OTGCommandExecutor.registerArguments();
 		OTGCommandExecutor.register(((CraftServer)Bukkit.getServer()).getServer().vanillaCommandDispatcher.getDispatcher());*/
 		// Does this go here?
@@ -156,8 +156,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		}
 	}
 
-	public void injectInternalGenerator(World world)
-	{
+	public void injectInternalGenerator(World world) {
 		initLock.lock();
 		if (processedWorlds.contains(world.getName()))
 		{
@@ -187,13 +186,25 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		if (OTGGen.generator == null)
 		{
 			RegistryAccess registryAccess = ((CraftServer) Bukkit.getServer()).getServer().registryAccess();
+			Field frozen;
+			Registry noiseGeneratorSettingsReg = registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY);
+			try {
+				frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
+				frozen.setAccessible(true);
+				frozen.set(noiseGeneratorSettingsReg, false);
+			} catch (NoSuchFieldException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+
 			OTGDelegate = new OTGNoiseChunkGenerator(
-				OTGGen.getPreset().getFolderName(),
-				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
-				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
-				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
-				world.getSeed(),
-				NoiseGeneratorSettings.bootstrap(registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY))
+					OTGGen.getPreset().getFolderName(),
+					new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
+					registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
+					registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
+					world.getSeed(),
+					NoiseGeneratorSettings.bootstrap(noiseGeneratorSettingsReg)
 			);
 			// add the weird Spigot config; it was complaining about this
 			OTGDelegate.conf = serverWorld.spigotConfig;
