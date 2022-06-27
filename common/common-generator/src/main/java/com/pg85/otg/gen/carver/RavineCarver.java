@@ -106,6 +106,10 @@ public class RavineCarver extends Carver
 	@Override
 	protected boolean isPositionExcluded(float[] cache, double scaledRelativeX, double scaledRelativeY, double scaledRelativeZ, int y)
 	{
+		// TODO: Have better fix for this when we make caves
+		if (y < 1) {
+			return true;
+		}
 		return (scaledRelativeX * scaledRelativeX + scaledRelativeZ * scaledRelativeZ) * (double) cache[y - 1] + scaledRelativeY * scaledRelativeY / 6.0D >= 1.0D;
 	}
 }

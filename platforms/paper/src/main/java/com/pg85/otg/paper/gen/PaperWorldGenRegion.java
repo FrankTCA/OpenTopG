@@ -790,7 +790,8 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		// isAtLeast() -> b()
 		if ((chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)))
 		{
-			return this.chunkGenerator.getMaterialInUnloadedChunk((Random) this.getWorldRandom(), x, y, z, this.worldGenRegion.getLevel());
+			// Edited because RandomSource issue
+			return this.chunkGenerator.getMaterialInUnloadedChunk(new RandomSourceWrapper.RandomWrapper(this.getWorldRandom()), x, y, z, this.worldGenRegion.getLevel());
 		}
 
 		// Get internal coordinates for block in chunk
