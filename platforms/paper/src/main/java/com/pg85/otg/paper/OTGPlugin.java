@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
@@ -42,6 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -202,7 +204,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
 				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
 				world.getSeed(),
-				Holder.direct(new NoiseGeneratorSettings(noiseSettings, Blocks.STONE.defaultBlockState(), Blocks.WATER.defaultBlockState(), getNoiseRouter(noiseSettings), SurfaceRuleData.overworld(), 63, false, true, true, false))
+				Holder.direct(new NoiseGeneratorSettings(noiseSettings, Blocks.STONE.defaultBlockState(), Blocks.WATER.defaultBlockState(), getNoiseRouter(noiseSettings), SurfaceRuleData.overworld(), this.spawnTarget(), 63, false, true, true, false))
 			);
 			// add the weird Spigot config; it was complaining about this
 			OTGDelegate.conf = serverWorld.spigotConfig;
@@ -243,10 +245,10 @@ public class OTGPlugin extends JavaPlugin implements Listener
 	}
 
 	// Taken from vanilla NoiseRouterData::overworldWithoutCaves
-	private NoiseRouterWithOnlyNoises getNoiseRouter(NoiseSettings noiseSettings) {
+	private NoiseRouter getNoiseRouter(NoiseSettings noiseSettings) {
 		DensityFunction shiftX = getFunction("shift_x");
 		DensityFunction shiftZ = getFunction("shift_z");
-		return new NoiseRouterWithOnlyNoises(
+		return new NoiseRouter(
 				DensityFunctions.zero(),
 				DensityFunctions.zero(),
 				DensityFunctions.zero(),
@@ -258,7 +260,7 @@ public class OTGPlugin extends JavaPlugin implements Listener
 				getFunction("overworld/depth"),
 				getFunction("overworld/ridges"),
 				DensityFunctions.mul(DensityFunctions.constant(4.0D), DensityFunctions.mul(getFunction("overworld/depth"), DensityFunctions.cache2d(getFunction("overworld/factor"))).quarterNegative()),
-				DensityFunctions.mul(DensityFunctions.interpolated(DensityFunctions.blendDensity(DensityFunctions.slide(noiseSettings, getFunction("overworld/sloped_cheese")))), DensityFunctions.constant(0.64D)).squeeze(),
+				DensityFunctions.mul(DensityFunctions.interpolated(DensityFunctions.blendDensity(DensityFunctions.blendDensity(getFunction("overworld/sloped_cheese")))), DensityFunctions.constant(0.64D)).squeeze(),
 				DensityFunctions.zero(),
 				DensityFunctions.zero(),
 				DensityFunctions.zero()
@@ -273,11 +275,16 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		return NoiseSettings.create(
 				worldConfig.getWorldMinY(),
 				worldConfig.getWorldHeight(),
-				new NoiseSamplingSettings(1.0D, 1.0D, 80.0D, 160.0D),
-				new NoiseSlider(-0.078125D, 2, 8),
-				new NoiseSlider(0.1171875D, 3, 0),
 				1,
-				2,
-				TerrainProvider.overworld(false));
+				2);
+	}
+
+	// I think this might be a bit jank.
+	private final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
+	private final Climate.Parameter inlandContinentalness = Climate.Parameter.span(-0.11F, 0.55F);
+	private List<Climate.ParameterPoint> spawnTarget() {
+		Climate.Parameter parameter = Climate.Parameter.point(0.0F);
+		float f = 0.16F;
+		return List.of(new Climate.ParameterPoint(this.FULL_RANGE, this.FULL_RANGE, Climate.Parameter.span(this.inlandContinentalness, this.FULL_RANGE), this.FULL_RANGE, parameter, Climate.Parameter.span(-1.0F, -0.16F), 0L), new Climate.ParameterPoint(this.FULL_RANGE, this.FULL_RANGE, Climate.Parameter.span(this.inlandContinentalness, this.FULL_RANGE), this.FULL_RANGE, parameter, Climate.Parameter.span(0.16F, 1.0F), 0L));
 	}
 }
