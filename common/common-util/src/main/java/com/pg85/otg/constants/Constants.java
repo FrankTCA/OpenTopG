@@ -33,18 +33,19 @@ public class Constants
 	public static final String MOD_ID_LOWER_CASE = "openterraingenerator";
 	public static final String MOD_ID_SHORT = "otg";
 	
-	/**
-	 * The world depth that the engine supports. Not the actual depth the
-	 * world is capped at. 0 in Minecraft.
-	 */
-	public static final int WORLD_DEPTH = -64;
-	
-	/**
-	 * The world height that the engine supports. Not the actual height the
-	 * world is capped at. 256 in Minecraft.
-	 */
-	public static final int WORLD_HEIGHT = 319;
-	
+	// Default min build height
+	public static final int WORLD_DEFAULT_MIN_Y = -64;
+
+	// Default max build height
+	public static final int WORLD_DEFAULT_MAX_Y = 319;
+
+	// Default total world height
+	public static final int WORLD_DEFAULT_TOTAL_HEIGHT = 384;
+
+	// Possible world height values
+	public static final int MIN_POSSIBLE_Y = -2032;
+	public static final int MAX_POSSIBLE_Y = 2031;
+
 	// Region size for BO3/BO4 structure data files
 	public static final int REGION_SIZE = 100;
 	

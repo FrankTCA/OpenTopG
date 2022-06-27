@@ -16,8 +16,10 @@ public abstract class LocalWorldGenRegion implements IWorldGenRegion
 	protected final ILogger logger;
 	protected final DecorationBiomeCache decorationBiomeCache;
 	protected final DecorationArea decorationArea;
+    protected int minY;
+	protected int maxY;
 
-	/** Creates a LocalWorldGenRegion to be used during chunk decoration */
+    /** Creates a LocalWorldGenRegion to be used during chunk decoration */
 	protected LocalWorldGenRegion(String presetFolderName, IPluginConfig pluginConfig, IWorldConfig worldConfig, ILogger logger, int worldRegionCenterX, int worldRegionCenterZ, ICachedBiomeProvider cachedBiomeProvider)
 	{
 		this.presetFolderName = presetFolderName;
@@ -64,5 +66,15 @@ public abstract class LocalWorldGenRegion implements IWorldGenRegion
 	public DecorationArea getDecorationArea()
 	{
 		return this.decorationArea;
+	}
+
+	@Override
+	public int getWorldMaxY() {
+		return this.maxY;
+	}
+
+	@Override
+	public int getWorldMinY() {
+		return this.minY;
 	}
 }

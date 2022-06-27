@@ -258,6 +258,9 @@ public class BO4 implements StructuredCustomObject
 		IBiomeConfig biomeConfig3 = null;
 		IBiomeConfig biomeConfig4 = null;
 
+		int worldMinY = worldGenRegion.getWorldMinY();
+		int worldMaxY = worldGenRegion.getWorldMaxY();
+
 		biomeConfig = worldGenRegion.getBiomeConfigForDecoration(x, z);
 		if(replaceWithBiomeBlocks)
 		{
@@ -443,9 +446,9 @@ public class BO4 implements StructuredCustomObject
 	
 							// TODO: Make override leaves and air configurable
 							// TODO: Make replaceBelow height configurable
-							while(blockY > Constants.WORLD_DEPTH)
+							while(blockY > worldMinY)
 							{
-								if(blockY < Constants.WORLD_HEIGHT)
+								if(blockY < worldMaxY)
 								{
 									sourceBlockMaterial = worldGenRegion.getMaterial(x + newBlock.x, blockY, z + newBlock.z);
 									
@@ -489,7 +492,7 @@ public class BO4 implements StructuredCustomObject
 						}
 					}				
 					
-					if(y + newBlock.y > 0 && y + newBlock.y < 256 && !doReplaceAboveBelowOnly)
+					if(y + newBlock.y >= worldMinY && y + newBlock.y <= worldMaxY && !doReplaceAboveBelowOnly)
 					{
 						blockToQueueForSpawn = new BO4BlockFunction();
 						blockToQueueForSpawn.x = x + newBlock.x;
@@ -635,9 +638,9 @@ public class BO4 implements StructuredCustomObject
 	
 							// TODO: Make override leaves and air configurable
 							// TODO: Make replaceBelow height configurable
-							while(blockY > Constants.WORLD_DEPTH)
+							while(blockY > worldMinY)
 							{
-								if(blockY < Constants.WORLD_HEIGHT)
+								if(blockY < worldMaxY)
 								{
 									sourceBlockMaterial = worldGenRegion.getMaterial(x + block.x, blockY, z + block.z);
 									
@@ -681,7 +684,7 @@ public class BO4 implements StructuredCustomObject
 						}					
 					}
 					
-					if(y + block.y > 0 && y + block.y < 256 && !doReplaceAboveBelowOnly)
+					if(y + block.y >= worldMinY && y + block.y <= worldMaxY && !doReplaceAboveBelowOnly)
 					{
 						blockToQueueForSpawn = new BO4BlockFunction();
 						blockToQueueForSpawn.x = x + block.x;

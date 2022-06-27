@@ -37,8 +37,8 @@ public class BasaltColumnResource extends FrequencyResourceBase
 		this.sizeVariance = readInt(args.get(4), 0, 5);
 		this.baseHeight = readInt(args.get(5), 1, 5);
 		this.heightVariance = readInt(args.get(6), 0, 5);
-		this.minAltitude = readInt(args.get(7), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
-		this.maxAltitude = readInt(args.get(8), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.minAltitude = readInt(args.get(7), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
+		this.maxAltitude = readInt(args.get(8), this.minAltitude, Constants.MAX_POSSIBLE_Y);
 		this.sourceBlocks = readMaterials(args, 9, materialReader);
 
 	}
@@ -113,7 +113,7 @@ public class BasaltColumnResource extends FrequencyResourceBase
 
 	private int[] findAir(IWorldGenRegion world, int[] pos, int p_236249_2_)
 	{
-		while (pos[1] < Constants.WORLD_HEIGHT && p_236249_2_ > 0)
+		while (pos[1] < world.getWorldMaxY() && p_236249_2_ > 0)
 		{
 			p_236249_2_--;
 			if (this.sourceBlocks.contains(world.getMaterialDirect(pos[0], pos[1], pos[2])))

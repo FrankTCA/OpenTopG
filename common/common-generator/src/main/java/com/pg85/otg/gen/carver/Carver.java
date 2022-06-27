@@ -17,12 +17,14 @@ import com.pg85.otg.util.materials.LocalMaterials;
 
 public abstract class Carver
 {
-	protected final int heightLimit;
+	protected final int minHeight;
+	protected final int maxHeight;
 	protected final IWorldConfig worldConfig;
 
-	public Carver(int heightLimit, IWorldConfig worldConfig)
+	public Carver(int minHeight, int maxHeight, IWorldConfig worldConfig)
 	{
-		this.heightLimit = heightLimit;
+		this.minHeight = minHeight;
+		this.maxHeight = maxHeight;
 		this.worldConfig = worldConfig;
 	}
 
@@ -48,7 +50,7 @@ public abstract class Carver
 			int i = Math.max(MathHelper.floor(x - yaw) - chunkX * Constants.CHUNK_SIZE - 1, 0);
 			int j = Math.min(MathHelper.floor(x + yaw) - chunkX * Constants.CHUNK_SIZE + 1, Constants.CHUNK_SIZE);
 			int k = Math.max(MathHelper.floor(y - pitch) - 1, -63);
-			int l = Math.min(MathHelper.floor(y + pitch) + 1, this.heightLimit - 8);
+			int l = Math.min(MathHelper.floor(y + pitch) + 1, this.maxHeight - 8);
 			int m = Math.max(MathHelper.floor(z - yaw) - chunkZ * Constants.CHUNK_SIZE - 1, 0);
 			int n = Math.min(MathHelper.floor(z + yaw) - chunkZ * Constants.CHUNK_SIZE + 1, Constants.CHUNK_SIZE);
 			int worldX;

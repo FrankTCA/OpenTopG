@@ -14,6 +14,8 @@ public interface IWorldGenRegion extends ISurfaceGeneratorNoiseProvider
 	ILogger getLogger();
 	IPluginConfig getPluginConfig();
 	IWorldConfig getWorldConfig();
+	int getWorldMaxY();
+	int getWorldMinY();
 	String getPresetFolderName();
 	long getSeed();
 	// Now requires RandomSource :/
@@ -31,10 +33,51 @@ public interface IWorldGenRegion extends ISurfaceGeneratorNoiseProvider
 	boolean placeTree(TreeType type, Random rand, int x, int y, int z);
 	LocalMaterialData getMaterial(int x, int y, int z);
 	LocalMaterialData getMaterialDirect(int x, int y, int z);
-	int getBlockAboveLiquidHeight(int x, int z);
-	int getBlockAboveSolidHeight(int x, int z);
-	int getHighestBlockAboveYAt(int x, int z);
-	int getHighestBlockAboveYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves);
+
+	default int getBlockAboveLiquidHeight(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, false, true, false, false, false);
+		if(highestY >= getWorldMinY())
+		{
+			return highestY + 1;
+		} else {
+			return getWorldMinY()-1;
+		}
+	}
+
+	default int getBlockAboveSolidHeight(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, true, false, true, true, false);
+		if(highestY >= getWorldMinY())
+		{
+			return highestY + 1;
+		} else {
+			return getWorldMinY()-1;
+		}
+	}
+
+	default int getHighestBlockAboveYAt(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, true, true, false, false, false);
+		if (highestY >= getWorldMinY())
+		{
+			return highestY + 1;
+		} else {
+			return getWorldMinY()-1;
+		}
+	}
+
+	default int getHighestBlockAboveYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
+	{
+		int highestY = getHighestBlockYAt(x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, ignoreLeaves);
+		if(highestY >= getWorldMinY())
+		{
+			return highestY + 1;
+		} else {
+			return getWorldMinY()-1;
+		}
+	}
+
 	int getHighestBlockYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves);
 	int getHeightMapHeight(int x, int z);
 	int getLightLevel(int x, int y, int z);

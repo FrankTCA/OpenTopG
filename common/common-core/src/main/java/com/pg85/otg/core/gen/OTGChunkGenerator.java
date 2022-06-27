@@ -33,7 +33,6 @@ import com.pg85.otg.util.helpers.MathHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
-import com.pg85.otg.util.materials.LocalMaterials;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
@@ -96,6 +95,8 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider
 	// Carvers
 	private final Carver caves;
 	private final Carver ravines;
+	private final int minY;
+	private final int maxY;
 	// Biome blocks noise
 	// TODO: Use new noise?
 	private ThreadLocal<double[]> biomeBlocksNoise = ThreadLocal.withInitial(() -> new double[Constants.CHUNK_SIZE * Constants.CHUNK_SIZE]);
@@ -107,6 +108,8 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider
 	public OTGChunkGenerator(Preset preset, long seed, ILayerSource biomeProvider, IBiome[] biomesById, ILogger logger)
 	{
 		this.preset = preset;
+		this.minY = preset.getWorldConfig().getWorldMinY();
+		this.maxY = preset.getWorldConfig().getWorldMaxY();
 		this.seed = seed;
 		this.cachedBiomeProvider = new CachedBiomeProvider(this.seed, biomeProvider, biomesById, logger);
 
@@ -124,8 +127,8 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider
 
 		this.biomeBlocksNoiseGen = new NoiseGeneratorPerlinMesaBlocks(random, 4);
 
-		this.caves = new CaveCarver(Constants.WORLD_HEIGHT, preset.getWorldConfig());
-		this.ravines = new RavineCarver(Constants.WORLD_HEIGHT, preset.getWorldConfig());
+		this.caves = new CaveCarver(minY, maxY, preset.getWorldConfig());
+		this.ravines = new RavineCarver(minY, maxY, preset.getWorldConfig());
 
 		this.oreVeinGenerator = preset.getWorldConfig().getLargeOreVeins() ? new OreVeinGenerator(seed) : null;
 	}
@@ -651,6 +654,13 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider
 		{
 			logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Terrain generation for chunk at " + (chunkCoord.getBlockX() + DecorationArea.DECORATION_OFFSET) + " ~ " + (chunkCoord.getBlockZ() + DecorationArea.DECORATION_OFFSET) + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
 		}
+	}
+	public int getMinY() {
+		return minY;
+	}
+
+	public int getMaxY() {
+		return maxY;
 	}
 
 	public void carve(ChunkBuffer chunk, long seed, int chunkX, int chunkZ, BitSet carvingMask, boolean cavesEnabled, boolean ravinesEnabled)

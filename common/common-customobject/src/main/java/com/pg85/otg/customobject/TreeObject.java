@@ -24,8 +24,6 @@ import java.util.Random;
 class TreeObject implements CustomObject
 {
 	private TreeType type;
-	private int minHeight = Constants.WORLD_DEPTH;
-	private int maxHeight = Constants.WORLD_HEIGHT - 1;
 
 	TreeObject(TreeType type)
 	{
@@ -59,7 +57,7 @@ class TreeObject implements CustomObject
 		int x = worldGenRegion.getDecorationArea().getChunkBeingDecoratedCenterX() + random.nextInt(Constants.CHUNK_SIZE);
 		int z = worldGenRegion.getDecorationArea().getChunkBeingDecoratedCenterZ() + random.nextInt(Constants.CHUNK_SIZE);
 		int y = worldGenRegion.getHighestBlockAboveYAt(x, z);
-		if (y < minHeight || y > maxHeight)
+		if (y < worldGenRegion.getWorldMinY() || y > worldGenRegion.getWorldMaxY())
 		{
 			return false;
 		}	
@@ -92,7 +90,7 @@ class TreeObject implements CustomObject
 			}
 		}
 		
-		if (y < minHeight || y > maxHeight)
+		if (y < worldGenRegion.getWorldMinY() || y > worldGenRegion.getWorldMaxY())
 		{
 			return false;
 		}

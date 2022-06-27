@@ -13,9 +13,9 @@ import com.pg85.otg.util.helpers.RandomHelper;
 
 public class RavineCarver extends Carver
 {
-	public RavineCarver(int heightLimit, IWorldConfig worldConfig)
+	public RavineCarver(int minHeight,int maxHeight, IWorldConfig worldConfig)
 	{
-		super(heightLimit, worldConfig);
+		super(minHeight, maxHeight, worldConfig);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class RavineCarver extends Carver
 		float stretchFactor = 1.0F;
 
 		float[] heightToHorizontalStretchFactor = new float[1024];
-		for (int y1 = 0; y1 < Constants.WORLD_HEIGHT; ++y1)
+		for (int y1 = minHeight; y1 <= maxHeight; ++y1)
 		{
 			if (y1 == 0 || random.nextInt(3) == 0)
 			{

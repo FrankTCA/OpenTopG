@@ -93,7 +93,9 @@ abstract class WorldConfigBase extends ConfigFile implements IWorldConfig
 	
 	protected double fractureHorizontal;
 	protected double fractureVertical;
-	protected int worldHeightCap;
+	protected int worldMinY;
+	protected int worldMaxY;
+
 	protected int worldHeightScale;
 	protected int maxSmoothRadius = 2;
 	protected boolean betterSnowFall;	
@@ -322,11 +324,28 @@ abstract class WorldConfigBase extends ConfigFile implements IWorldConfig
 	{
 		return this.disableBedrock;
 	}	
-	
+	@Override
+	public int getWorldMinY()
+	{
+		return this.worldMinY;
+	}
+
+	@Override
+	public int getWorldMaxY()
+	{
+		return this.worldMaxY;
+	}
+
+	@Override
+	public int getWorldHeight()
+	{
+		return (this.worldMaxY - this.worldMinY) + 1;
+	}
+
 	@Override
 	public int getWorldHeightCap()
 	{
-		return this.worldHeightCap;
+		return this.getWorldHeight();
 	}
 	
 	@Override
@@ -474,9 +493,9 @@ abstract class WorldConfigBase extends ConfigFile implements IWorldConfig
 	}
 	
 	@Override
-	public boolean setBiomeConfigsHaveReplacement(boolean biomeConfigsHaveReplacement)
+	public void setBiomeConfigsHaveReplacement(boolean biomeConfigsHaveReplacement)
 	{
-		return this.biomeConfigsHaveReplacement = biomeConfigsHaveReplacement;
+		this.biomeConfigsHaveReplacement = biomeConfigsHaveReplacement;
 	}
 	
 	@Override
