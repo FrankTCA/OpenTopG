@@ -411,7 +411,7 @@ public class ShadowChunkGenerator
 			chunk = getUnloadedChunk(otgChunkGenerator, worldHeightCap, worldRandom, chunkCoord, level).getChunk();
 			this.unloadedChunksCache.put(chunkCoord, chunk);
 		}
-		int totalHeight = otgChunkGenerator.getMaxY() - otgChunkGenerator.getMinY();
+		int totalHeight = otgChunkGenerator.getMaxY() - otgChunkGenerator.getMinY()+1;
 		cachedColumn = new LocalMaterialData[totalHeight];
 
 		LocalMaterialData[] blocksInColumn = new LocalMaterialData[totalHeight];
