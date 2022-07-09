@@ -13,6 +13,7 @@ import com.pg85.otg.util.materials.LocalMaterialTag;
 import com.pg85.otg.util.minecraft.BlockNames;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -138,7 +139,8 @@ public class ForgeMaterialReader implements IMaterialReader
 		BlockState state = null;
 		try {
 			String newInput = blockNameCorrected.contains(":") ? blockNameCorrected : "minecraft:" + blockNameCorrected;
-			state = new BlockStateParser(new StringReader(newInput), true).parse(true).getState();
+			// TODO: Does this work?
+			state = BlockStateParser.parseForBlock(Registry.BLOCK, newInput, true).blockState();
 		} catch (CommandSyntaxException ignored) { }
 		if(state != null)
 		{

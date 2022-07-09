@@ -3,6 +3,7 @@ package com.pg85.otg.forge.materials;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.util.materials.LocalMaterials;
 
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.state.properties.BambooLeaves;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.tags.BlockTags;
@@ -34,8 +35,9 @@ public class ForgeMaterials extends LocalMaterials
 	{
 		// Tags used for OTG configs
 		// TODO: We should be including these via datapack and make sure we don't use tags before datapacks are loaded.
-		
-		BlockTags.createOptional(new ResourceLocation(Constants.MOD_ID_SHORT, "stone"), new HashSet<Supplier<Block>>()
+		// TODO: Needs to be fixed
+		/*TagKey stone = BlockTags.create(new ResourceLocation(Constants.MOD_ID_SHORT, "stone");
+		new HashSet<Supplier<Block>>()
 		{{
 			add(() -> { return Blocks.STONE; });
 			add(() -> { return Blocks.GRANITE; });
@@ -177,7 +179,7 @@ public class ForgeMaterials extends LocalMaterials
 			add(() -> { return Blocks.GREEN_CONCRETE; });
 			add(() -> { return Blocks.RED_CONCRETE; });
 			add(() -> { return Blocks.BLACK_CONCRETE; });
-		}});
+		}});*/
 
 		// Coral
 		CORAL_BLOCKS = Arrays.stream(CORAL_BLOCKS_TAG).map(block -> ForgeMaterialData.ofBlockState(block.defaultBlockState())).collect(Collectors.toList());

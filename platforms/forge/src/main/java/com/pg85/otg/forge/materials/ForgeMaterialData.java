@@ -113,7 +113,7 @@ public class ForgeMaterialData extends LocalMaterialData
 					.replace("Block{", "")
 					.replace("}", "");
 			} else {
-				this.name = this.blockData.getBlock().getRegistryName().toString();
+				this.name = this.blockData.getBlock().getName().toString();
 			}
 		}
 		return this.name;
@@ -122,7 +122,7 @@ public class ForgeMaterialData extends LocalMaterialData
 	@Override
 	public String getRegistryName()
 	{
-		return this.blockData == null ? null : this.blockData.getBlock().getRegistryName().toString();
+		return this.blockData == null ? null : this.blockData.getBlock().getName().toString();
 	}
 
 	@Override
