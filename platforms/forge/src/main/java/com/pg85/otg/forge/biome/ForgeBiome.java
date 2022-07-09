@@ -18,6 +18,7 @@ import com.pg85.otg.util.logging.LogLevel;
 
 import com.pg85.otg.util.minecraft.EntityCategory;
 import com.pg85.otg.util.minecraft.LegacyRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.Music;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
@@ -30,10 +31,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.biome.Biome.TemperatureModifier;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import net.minecraft.world.level.biome.AmbientAdditionsSettings;
@@ -100,9 +101,10 @@ public class ForgeBiome implements IBiome
 				Decoration stage = GenerationStep.Decoration.valueOf(registryResource.getDecorationStage());
 				// This changed from CONFIGURED_FEATURES to PLACED_FEATURE, also registry names changed, so presets will need to be updated.
 				PlacedFeature registry = BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(registryResource.getFeatureKey()));
+				Holder<PlacedFeature> holder = Holder.direct(registry);
 				if(registry != null)
 				{
-					biomeGenerationSettingsBuilder.addFeature(stage, registry);
+					biomeGenerationSettingsBuilder.addFeature(stage, holder);
 				} else {
 					String newResourceLocation = LegacyRegistry.convertLegacyResourceLocation(registryResource.getFeatureKey());
 					if (newResourceLocation != null) {
@@ -110,7 +112,7 @@ public class ForgeBiome implements IBiome
 						if (registry == null) {
 							OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Somehow you broke the universe! Feature: " + newResourceLocation + " is not in the registry");
 						} else {
-							biomeGenerationSettingsBuilder.addFeature(stage, registry);
+							biomeGenerationSettingsBuilder.addFeature(stage, holder);
 						}
 					} else {
 						if(OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.DECORATION))
@@ -197,7 +199,7 @@ public class ForgeBiome implements IBiome
 		}
 		
 		ResourceLocation registryName = new ResourceLocation(biomeConfig.getRegistryKey().toResourceLocationString());
-		Biome.BiomeCategory category = Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory());
+		/*Biome.BiomeCategory category = Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory());
 		if (category == null)
 		{
 			if(OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.CONFIGS))
@@ -205,7 +207,7 @@ public class ForgeBiome implements IBiome
 				OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Could not parse biome category " + biomeConfig.getBiomeCategory());
 			}
 			category = isOceanBiome ? Biome.BiomeCategory.OCEAN : Biome.BiomeCategory.NONE;
-		}
+		}*/
 		Biome.Precipitation rainType = 
 			biomeConfig.getBiomeWetness() <= 0.0001 ? Biome.Precipitation.NONE : 
 			biomeConfig.getBiomeTemperature() > Constants.SNOW_AND_ICE_TEMP ? Biome.Precipitation.RAIN : 
@@ -213,13 +215,14 @@ public class ForgeBiome implements IBiome
 		;
 
 		// Fire Forge BiomeLoadingEvent to allow other mods to enrich otg biomes with decoration features, structure features and mob spawns.
-		BiomeGenerationSettingsBuilder genBuilder = new BiomeGenerationSettingsBuilder(biomeGenerationSettingsBuilder.build());
+		// TODO: Add back
+		/*BiomeGenerationSettingsBuilder genBuilder = new BiomeGenerationSettingsBuilder(biomeGenerationSettingsBuilder.build());
 		MobSpawnSettingsBuilder spawnBuilder = new MobSpawnSettingsBuilder(mobSpawnInfoBuilder.build());
 		BiomeLoadingEvent event1 = new BiomeLoadingEvent(registryName, new Biome.ClimateSettings(rainType, safeTemperature, TemperatureModifier.NONE, biomeConfig.getBiomeWetness()), category, biomeAmbienceBuilder.build(), genBuilder, spawnBuilder);
 		MinecraftForge.EVENT_BUS.post(event1);
 		BiomeSpecialEffects biomeAmbienceBuilder2 = event1.getEffects();
 		BiomeGenerationSettingsBuilder biomeGenerationSettingsBuilder2 = event1.getGeneration();
-		MobSpawnSettingsBuilder mobSpawnInfoBuilder2 = event1.getSpawns();
+		MobSpawnSettingsBuilder mobSpawnInfoBuilder2 = event1.getSpawns();*/
 		//
 
 		Biome.BiomeBuilder biomeBuilder = 
@@ -227,9 +230,9 @@ public class ForgeBiome implements IBiome
 			.precipitation(rainType)
 			.temperature(safeTemperature)
 			.downfall(biomeConfig.getBiomeWetness())
-			.specialEffects(biomeAmbienceBuilder2)
-			.mobSpawnSettings(mobSpawnInfoBuilder2.build())
-			.generationSettings(biomeGenerationSettingsBuilder2.build())
+			.specialEffects(biomeAmbienceBuilder.build())
+			.mobSpawnSettings(mobSpawnInfoBuilder.build())
+			.generationSettings(biomeGenerationSettingsBuilder.build())
 		;
 		
 		if(biomeConfig.useFrozenOceanTemperature())
@@ -237,9 +240,9 @@ public class ForgeBiome implements IBiome
 			biomeBuilder.temperatureAdjustment(Biome.TemperatureModifier.FROZEN);
 		}
 
-		biomeBuilder.biomeCategory(category != null ? category : isOceanBiome ? Biome.BiomeCategory.OCEAN : Biome.BiomeCategory.PLAINS);
+		//biomeBuilder.(category != null ? category : isOceanBiome ? Biome.BiomeCategory.OCEAN : Biome.BiomeCategory.PLAINS);
 		
-		return biomeBuilder.build().setRegistryName(registryName);
+		return biomeBuilder.build();
 	}
 
 	private static MobSpawnSettings.Builder createMobSpawnInfo(IBiomeConfig biomeConfig)
