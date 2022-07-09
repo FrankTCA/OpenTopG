@@ -2,6 +2,7 @@ package com.pg85.otg.forge.event;
 
 import java.util.Arrays;
 
+import net.minecraft.world.level.material.FogType;
 import org.lwjgl.opengl.GL11;
 
 import com.pg85.otg.constants.Constants;
@@ -44,7 +45,7 @@ public class ClientFogHandler
 	{
 		if(1 == 1) { return; } // TODO: This causes a crash on world join for 1.17, reimplement
 		
-		Entity entity = event.getCamera().getEntity();
+		/*Entity entity = event.getCamera().getEntity();
 		Options settings = Minecraft.getInstance().options;
 
 		if (!(entity instanceof LocalPlayer))
@@ -148,10 +149,10 @@ public class ClientFogHandler
 		otgDidLastFogRender = true;
 
 		GL11.glFogf(GL11.GL_FOG_START, fogStart);
-		GL11.glFogf(GL11.GL_FOG_END, finalFogDistance);
+		GL11.glFogf(GL11.GL_FOG_END, finalFogDistance);*/
 	}
 
-	private static void resetFogDistance(Minecraft minecraft, FogMode type)
+	/*private static void resetFogDistance(Minecraft minecraft, FogType type)
 	{
 		if (otgDidLastFogRender)
 		{
@@ -161,7 +162,7 @@ public class ClientFogHandler
 			otgDidLastFogRender = false;
 			float farPlaneDistance = (float) (minecraft.options.renderDistance * 16);
 
-			if (type == FogMode.FOG_SKY)
+			if (type == FogType.NONE)
 			{
 				GL11.glFogf(GL11.GL_FOG_START, 0.0f);
 			} else
@@ -175,7 +176,7 @@ public class ClientFogHandler
 				Arrays.fill(row, -1f);
 			}
 		}
-	}
+	}*/
 
 	// Get the difference between the raw coordinate and block coordinate
 	private static double getDifference(double rawCoord, int blockCoord, int pos, int distance)
@@ -190,8 +191,8 @@ public class ClientFogHandler
 		return -1.0f;
 	}
 
-	@SuppressWarnings("resource")
-	private static float getFogDensity(int x, int z, BlockPos.MutableBlockPos blockpos, boolean hasMoved)
+	//@SuppressWarnings("resource")
+	/*private static float getFogDensity(int x, int z, BlockPos.MutableBlockPos blockpos, boolean hasMoved)
 	{
 		float density = fogDensityCache[x][z];
 
@@ -210,5 +211,5 @@ public class ClientFogHandler
 
 		fogDensityCache[x][z] = wrapper.getFogDensity();
 		return wrapper.getFogDensity();
-	}
+	}*/
 }
