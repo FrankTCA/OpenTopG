@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.pg85.otg.constants.Constants;
-import com.pg85.otg.forge.dimensions.portals.OTGPortalBlock;
-import com.pg85.otg.forge.dimensions.portals.OTGPortalColors;
 import com.pg85.otg.forge.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.util.materials.LocalMaterialData;
 
@@ -49,7 +47,7 @@ public class BlockHandler
 			Collection<ServerLevel> worlds = (Collection<ServerLevel>) event.getWorld().getServer().getAllLevels();
 			worlds = worlds.stream().sorted((a,b) -> a.dimension().location().toString().compareTo(b.dimension().location().toString())).collect(Collectors.toList());
 			ArrayList<String> usedColors = new ArrayList<>();
-			for(ServerLevel world : worlds)
+			/*for(ServerLevel world : worlds)
 			{
 				if(
 					world.dimension() != Level.END && 
@@ -88,7 +86,7 @@ public class BlockHandler
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 }

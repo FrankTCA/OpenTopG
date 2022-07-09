@@ -7,7 +7,6 @@ import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.presets.Preset;
 import com.pg85.otg.forge.biome.OTGBiomeProvider;
 import com.pg85.otg.forge.client.MultipleColorHandler;
-import com.pg85.otg.forge.commands.OTGCommand;
 import com.pg85.otg.forge.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.forge.network.OTGClientSyncManager;
 
@@ -100,11 +99,11 @@ public class OTGPlugin
 		MultipleColorHandler.setup();
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onCommandRegister(RegisterCommandsEvent event)
 	{
 		OTGCommand.register(event.getDispatcher());
-	}
+	}*/
 
 	@SubscribeEvent
 	public void onSave(Save event)
