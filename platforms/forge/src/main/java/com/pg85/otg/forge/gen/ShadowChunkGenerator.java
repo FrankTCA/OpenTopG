@@ -108,7 +108,7 @@ public class ShadowChunkGenerator
 	// These chunks are highly likely to be requested next, so we can filter out any that need noisegen/base terrain gen and
 	// pre-emptively generate and cache them asynchronously. When MC requests those chunks a moment later as part of worldgen,
 	// we return the async generated chunk data.
-	public void queueChunksForWorkerThreads(WorldGenRegion worldGenRegion, StructureManager manager, ChunkAccess chunk, ChunkGenerator chunkGenerator, OTGBiomeProvider biomeProvider, OTGChunkGenerator otgChunkGenerator, HolderSet<StructureSet> dimensionStructuresSettings, int worldHeightCap)
+	public void queueChunksForWorkerThreads(WorldGenRegion worldGenRegion, StructureManager manager, ChunkAccess chunk, ChunkGenerator chunkGenerator, OTGBiomeProvider biomeProvider, OTGChunkGenerator otgChunkGenerator, int worldHeightCap)
 	{
 		if(this.maxConcurrent > 0)
 		{

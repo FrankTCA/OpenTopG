@@ -56,8 +56,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.*;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.*;
-import net.minecraft.data.worldgen.StructureFeatures;
-import net.minecraft.resources.RegistryLookupCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -82,21 +80,8 @@ import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.MineshaftFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.MineshaftConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.OceanRuinConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.StrongholdConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.structures.JigsawJunction;
-import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool.Projection;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.*;
-import net.minecraft.world.level.levelgen.structure.OceanRuinFeature;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -176,14 +161,14 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	private String portalMob;
 	private String portalIgnitionSource;
 
-	public OTGNoiseChunkGenerator(Registry<NormalNoise.NoiseParameters> noises, BiomeSource biomeProvider, long seed, Supplier<NoiseGeneratorSettings> dimensionSettingsSupplier)
+	public OTGNoiseChunkGenerator (BiomeSource biomeSource, long seed, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
-		this(OTG.getEngine().getPresetLoader().getDefaultPresetFolderName(), null, noises, biomeProvider, biomeProvider, seed, dimensionSettingsSupplier);
+		this("default", biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);
 	}
 
-	public OTGNoiseChunkGenerator(String presetName, BiomeSource biomeSource, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
+	public OTGNoiseChunkGenerator (String presetName, BiomeSource biomeSource, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
-		this(presetFolderName, dimConfigName, noises, biomeProvider, biomeProvider, seed, dimensionSettingsSupplier);
+		this(presetName, biomeSource, biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);
 	}
 
 	// TODO: Why are there 2 biome providers, and why does getBiomeProvider() return the second, while we're using the first?
@@ -627,11 +612,12 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	{
 		return new OTGNoiseChunkGenerator(this.preset.getFolderName(), this.dimConfigName, this.noises, this.biomeSource.withSeed(seed), seed, this.dimensionSettingsSupplier);
 	}*/
-	
-	public boolean stable(long p_64376_, ResourceKey<NoiseGeneratorSettings> p_64377_)
+
+	// Is this used?
+	/*public boolean stable(long p_64376_, ResourceKey<NoiseGeneratorSettings> p_64377_)
 	{
 		return this.seed == p_64376_ && this.dimensionSettingsSupplier.get().stable(p_64377_);
-	}
+	}*/
 	
 	// Base terrain gen
 	@Override
@@ -651,7 +637,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		Random random = new Random();
 		// Fetch any chunks that are cached in the WorldGenRegion, so we can
 		// pre-emptively generate and cache base terrain for them asynchronously.
-		this.shadowChunkGenerator.queueChunksForWorkerThreads((WorldGenRegion)chunk.getWorldForge(), manager, chunk, this, (OTGBiomeProvider)this.biomeSource, this.internalGenerator, , this.preset.getWorldConfig().getWorldHeightCap());
+		this.shadowChunkGenerator.queueChunksForWorkerThreads((WorldGenRegion)chunk.getWorldForge(), manager, chunk, this, (OTGBiomeProvider)this.biomeSource, this.internalGenerator, this.preset.getWorldConfig().getWorldHeightCap());
 		
 		// If we've already (shadow-)generated and cached this	
 		// chunk while it was unloaded, use cached data.
@@ -719,7 +705,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	
 	// Replaces surface and ground blocks in base terrain and places bedrock.
 	@Override
-	public void buildSurface(WorldGenRegion worldGenRegion, StructureFeatureManager structureFeatureManager, ChunkAccess chunk)
+	public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structures, RandomState noiseConfig, ChunkAccess chunk)
 	{
 		// OTG handles surface/ground blocks during base terrain gen. For non-OTG biomes used
 		// with TemplateForBiome, we want to use registered surfacebuilders though.
@@ -762,7 +748,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Carvers: Caves and ravines
 	
 	@Override
-	public void applyCarvers(WorldGenRegion p_187691_, long seed, BiomeManager biomeManager, StructureFeatureManager structureFeatureManager, ChunkAccess chunk, Carving stage)
+	public void applyCarvers(WorldGenRegion p_187691_, long seed, RandomState noiseConfig, BiomeManager biomeManager, StructureManager structureFeatureManager, ChunkAccess chunk, Carving stage)
 	{
 		// OTG has its own caves and canyons carvers. We register default carvers to OTG biomes,
 		// then check if they have been overridden by mods before using our own carvers.
@@ -771,7 +757,11 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		{
 			ForgeBiome biome = (ForgeBiome)this.getCachedBiomeProvider().getNoiseBiome(chunk.getPos().x << 2, chunk.getPos().z << 2);
 			BiomeGenerationSettings biomegenerationsettings = biome.getBiomeBase().getGenerationSettings();
-			List<Supplier<ConfiguredWorldCarver<?>>> list = biomegenerationsettings.getCarvers(stage);
+			Iterable<Holder<ConfiguredWorldCarver<?>>> iterable = biomegenerationsettings.getCarvers(stage);
+			List<Holder<ConfiguredWorldCarver<?>>> list = new ArrayList<Holder<ConfiguredWorldCarver<?>>>();
+			while (iterable.iterator().hasNext()) {
+				list.add(iterable.iterator().next());
+			}
 
 			// Only use OTG carvers when default mc carvers are found
 			List<String> defaultCaves = Arrays.asList("minecraft:cave", "minecraft:underwater_cave", "minecraft:nether_cave");			
