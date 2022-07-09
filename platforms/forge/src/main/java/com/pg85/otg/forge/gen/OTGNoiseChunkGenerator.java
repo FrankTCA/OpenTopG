@@ -55,17 +55,12 @@ import net.minecraft.ReportedException;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.*;
 import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.worldgen.BastionPieces;
-import net.minecraft.data.worldgen.DesertVillagePools;
-import net.minecraft.data.worldgen.PillagerOutpostPools;
-import net.minecraft.data.worldgen.PlainVillagePools;
-import net.minecraft.data.worldgen.SavannaVillagePools;
-import net.minecraft.data.worldgen.SnowyVillagePools;
+import net.minecraft.data.worldgen.*;
 import net.minecraft.data.worldgen.StructureFeatures;
-import net.minecraft.data.worldgen.TaigaVillagePools;
 import net.minecraft.resources.RegistryLookupCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
@@ -197,7 +192,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	private OTGNoiseChunkGenerator(String presetFolderName, BiomeSource populationSource, BiomeSource runtimeSource, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, long seed, Holder<NoiseGeneratorSettings> generatorSettings)
 	{
 		//super(biomeProvider1, biomeProvider2, overrideStructureSettings(dimensionSettingsSupplier.get().structureSettings(), presetFolderName, (OTGBiomeProvider)biomeProvider1), seed);
-		super(structureSetRegistry, Optional.of(getEnabledStructures(structureSetRegistry, presetFolderName)), populationSource);
+		super(structureSetRegistry, Optional.of(getEnabledStructures(structureSetRegistry, presetFolderName, (OTGBiomeProvider) populationSource)), populationSource);
 
 		if (!(populationSource instanceof ILayerSource))
 		{
@@ -232,7 +227,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Structure settings
 
 	// Method to remove structures which have been disabled in the world config
-	private static HolderSet<StructureSet> getEnabledStructures(Registry<StructureSet> registry, String presetFolderName)
+	private static HolderSet<StructureSet> getEnabledStructures(Registry<StructureSet> registry, String presetFolderName, OTGBiomeProvider otgBiomeProvider)
 	{
 		Preset preset = OTG.getEngine().getPresetLoader().getPresetByFolderName(presetFolderName);
 		IWorldConfig worldConfig = preset.getWorldConfig();
@@ -287,12 +282,12 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 
 		if(worldConfig.getNetherFossilsEnabled())
 			holderList.add(registry.getHolderOrThrow(BuiltinStructureSets.NETHER_FOSSILS));
-
 		HolderSet<StructureSet> holderSet = HolderSet.direct(holderList);
+		addBiomeConfigStructures(preset, worldConfig, otgBiomeProvider, holderSet);
 		return holderSet;
 	}
-	
-	private static void addBiomeConfigStructures(Preset preset, IWorldConfig worldConfig, OTGBiomeProvider otgBiomeProvider, StructureSettings oldSettings, StructureSettings newSettings)
+
+	private static void addBiomeConfigStructures(Preset preset, IWorldConfig worldConfig, OTGBiomeProvider otgBiomeProvider, HolderSet<StructureSet> newSettings)
 	{
 		// TODO: Currently we can only enable/disable structures per biome and use any configuration options exposed by the vanilla structure 
 		// classes (size for villages fe). If we want to be able to customise more, we'll need to implement our own structure classes.
@@ -301,25 +296,26 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 
 		// Build vanilla structure settings for OTG biomes
 		List<ResourceKey<Biome>> biomeKeys = ((ForgePresetLoader)OTG.getEngine().getPresetLoader()).getBiomeRegistryKeys(preset.getFolderName());
-		HashMap<StructureFeature<?>, com.google.common.collect.ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> hashmap = new HashMap<>();
+		HashMap<StructureType, com.google.common.collect.ImmutableMultimap.Builder<Structure, ResourceKey<Biome>>> hashmap = new HashMap<>();
 		preset.getAllBiomeConfigs().stream().forEach(biomeConfig -> {
 			if(!biomeConfig.getIsTemplateForBiome())
 			{
-				Optional<ResourceKey<Biome>> biomeKey = biomeKeys.stream().filter(b -> b.getRegistryName().toString().equals(biomeConfig.getRegistryKey().toResourceLocationString())).findFirst();
+				Optional<ResourceKey<Biome>> biomeKey = biomeKeys.stream().filter(b -> b.location().toString().equals(biomeConfig.getRegistryKey().toResourceLocationString())).findFirst();
 				if(biomeKey.isPresent())
 				{
-					Optional<Biome> biome = otgBiomeProvider.possibleBiomes().stream().filter(b -> b.getRegistryName().toString().equals(biomeConfig.getRegistryKey().toResourceLocationString())).findFirst();
+					Optional<Holder<Biome>> biome = otgBiomeProvider.possibleBiomes().stream().filter(b -> b.is(new ResourceLocation(biomeConfig.getRegistryKey().toResourceLocationString()))).findFirst();
 					if(biome.isPresent())
 					{
 						// Villages
 						// TODO: Allow spawning multiple types in a single biome?
-						if(worldConfig.getVillagesEnabled() && biomeConfig.getVillageType() != VillageType.disabled)
-						{
-							int villageSize = biomeConfig.getVillageSize();
-							VillageType villageType = biomeConfig.getVillageType();
-							ConfiguredStructureFeature<JigsawConfiguration, ? extends StructureFeature<JigsawConfiguration>> customVillage = register(
-								((OTGBiomeResourceLocation)biomeConfig.getRegistryKey()).withBiomeResource("village").toResourceLocationString(),
-								StructureFeature.VILLAGE.configured(
+						//if(worldConfig.getVillagesEnabled() && biomeConfig.getVillageType() != VillageType.disabled)
+						//{
+						// TODO: Fix
+							//int villageSize = biomeConfig.getVillageSize();
+							//VillageType villageType = biomeConfig.getVillageType();
+							//Structure customVillage = register(
+								//((OTGBiomeResourceLocation)biomeConfig.getRegistryKey()).withBiomeResource("village").toResourceLocationString(),
+								/*Structures.(
 									new JigsawConfiguration(
 										() -> {
 											switch(villageType)
@@ -342,20 +338,20 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 										villageSize
 									)
 								)
-							);
-							addStructureToBiome(hashmap, customVillage, biomeKey.get());
-						}
+							);*/
+							//addStructureToBiome(hashmap, customVillage, biomeKey.get());
+						//}
 						
 						// Strongholds
 						if(worldConfig.getStrongholdsEnabled() && biomeConfig.getStrongholdsEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.STRONGHOLD, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.STRONGHOLD, biomeKey.get());
 						}		
 
 						// Ocean Monuments
 						if(worldConfig.getOceanMonumentsEnabled() && biomeConfig.getOceanMonumentsEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.OCEAN_MONUMENT, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.OCEAN_MONUMENT, biomeKey.get());
 						}
 						
 						// Rare buildings
@@ -365,16 +361,16 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 							switch(biomeConfig.getRareBuildingType())
 							{
 								case desertPyramid:
-									addStructureToBiome(hashmap, StructureFeatures.DESERT_PYRAMID, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.DESERT_PYRAMID, biomeKey.get());
 									break;
 								case igloo:
-									addStructureToBiome(hashmap, StructureFeatures.IGLOO, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.IGLOO, biomeKey.get());
 									break;
 								case jungleTemple:
-									addStructureToBiome(hashmap, StructureFeatures.JUNGLE_TEMPLE, biomeKey.get());			
+									addStructureToBiome(hashmap, Structures.JUNGLE_TEMPLE, biomeKey.get());
 									break;
 								case swampHut:
-									addStructureToBiome(hashmap, StructureFeatures.SWAMP_HUT, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.SWAMP_HUT, biomeKey.get());
 									break;
 								case disabled:
 									break;					
@@ -384,19 +380,20 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 						// Woodland Mansions
 						if(worldConfig.getWoodlandMansionsEnabled() && biomeConfig.getWoodlandMansionsEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.WOODLAND_MANSION, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.WOODLAND_MANSION, biomeKey.get());
 						}
 						
 						// Nether Fortresses
 						if(worldConfig.getNetherFortressesEnabled() && biomeConfig.getNetherFortressesEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.NETHER_BRIDGE, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.FORTRESS, biomeKey.get());
 						}
 
 						// Mineshafts
 						if(worldConfig.getMineshaftsEnabled() && biomeConfig.getMineShaftType() != MineshaftType.disabled)
 						{
-							float mineShaftProbability = biomeConfig.getMineShaftProbability();
+							// Mineshaft customization no longer supported
+							/*float mineShaftProbability = biomeConfig.getMineShaftProbability();
 							MineshaftType mineShaftType = biomeConfig.getMineShaftType();
 							ConfiguredStructureFeature<MineshaftConfiguration, ? extends StructureFeature<MineshaftConfiguration>> customMineShaft = register(
 								((OTGBiomeResourceLocation)biomeConfig.getRegistryKey()).withBiomeResource("mineshaft").toResourceLocationString(),
@@ -406,23 +403,25 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 										mineShaftType == MineshaftType.mesa ? MineshaftFeature.Type.MESA : MineshaftFeature.Type.NORMAL
 									)
 								)
-							);
-							addStructureToBiome(hashmap, customMineShaft, biomeKey.get());
+							);*/
+							addStructureToBiome(hashmap, Structures.MINESHAFT, biomeKey.get());
 						}
 						
 						// Buried Treasure
 						if(worldConfig.getBuriedTreasureEnabled() && biomeConfig.getBuriedTreasureEnabled())
 						{
-							float buriedTreasureProbability = biomeConfig.getBuriedTreasureProbability();
-							ConfiguredStructureFeature<ProbabilityFeatureConfiguration, ? extends StructureFeature<ProbabilityFeatureConfiguration>> customBuriedTreasure = register(
+							// Buried treasure rarity no longer supported by 1.19
+							/*float buriedTreasureProbability = biomeConfig.getBuriedTreasureProbability();
+							Structure customBuriedTreasure = register(
 								((OTGBiomeResourceLocation)biomeConfig.getRegistryKey()).withBiomeResource("buried_treasure").toResourceLocationString(),
-								StructureFeature.BURIED_TREASURE.configured(new ProbabilityFeatureConfiguration(buriedTreasureProbability))
-							);
-							addStructureToBiome(hashmap, customBuriedTreasure, biomeKey.get());
+								Structures.BURIED_TREASURE.(new ProbabilityFeatureConfiguration(buriedTreasureProbability))
+							);*/
+							addStructureToBiome(hashmap, Structures.BURIED_TREASURE, biomeKey.get());
 						}
 						
 						// Ocean Ruins
-						if(worldConfig.getOceanRuinsEnabled() && biomeConfig.getOceanRuinsType() != OceanRuinsType.disabled)
+						// No longer supported
+						/*if(worldConfig.getOceanRuinsEnabled() && biomeConfig.getOceanRuinsType() != OceanRuinsType.disabled)
 						{
 							float oceanRuinsLargeProbability = biomeConfig.getOceanRuinsLargeProbability();
 							float oceanRuinsClusterProbability = biomeConfig.getOceanRuinsClusterProbability();
@@ -438,7 +437,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 								)
 							);
 							addStructureToBiome(hashmap, customOceanRuins, biomeKey.get());
-						}
+						}*/
 
 						// Shipwrecks
 						// TODO: Allowing both types in the same biome, make sure this won't cause problems.
@@ -446,21 +445,22 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 						{
 							if(biomeConfig.getShipWreckEnabled())
 							{
-								addStructureToBiome(hashmap, StructureFeatures.SHIPWRECK, biomeKey.get());
+								addStructureToBiome(hashmap, Structures.SHIPWRECK, biomeKey.get());
 							}
-							if(biomeConfig.getShipWreckBeachedEnabled())
+							// Beached shipwrecks no longer supported
+							/*if(biomeConfig.getShipWreckBeachedEnabled())
 							{
-								addStructureToBiome(hashmap, StructureFeatures.SHIPWRECK_BEACHED, biomeKey.get());
-							}			
+								addStructureToBiome(hashmap, Structures.SHIPWRECK_BEACHED, biomeKey.get());
+							}*/
 						}
 						
 						// Pillager Outpost
-						if(worldConfig.getPillagerOutpostsEnabled() && biomeConfig.getPillagerOutpostEnabled())
+						/*if(worldConfig.getPillagerOutpostsEnabled() && biomeConfig.getPillagerOutpostEnabled())
 						{
 							int outpostSize = biomeConfig.getPillagerOutPostSize();
-							ConfiguredStructureFeature<JigsawConfiguration, ? extends StructureFeature<JigsawConfiguration>> customOutpost = register(
+							Structure customOutpost = register(
 								((OTGBiomeResourceLocation)biomeConfig.getRegistryKey()).withBiomeResource("pillager_outpost").toResourceLocationString(), 
-								StructureFeature.PILLAGER_OUTPOST.configured(
+								Structures.configured(
 									new JigsawConfiguration(
 										() -> {
 											return PillagerOutpostPools.START;
@@ -470,10 +470,11 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 								)
 							);
 							addStructureToBiome(hashmap, customOutpost, biomeKey.get());							
-						}
+						}*/
 						
 						// Bastion Remnants
-						if(worldConfig.getBastionRemnantsEnabled() && biomeConfig.getBastionRemnantEnabled())
+						// No longer supported
+						/*if(worldConfig.getBastionRemnantsEnabled() && biomeConfig.getBastionRemnantEnabled())
 						{
 							int bastionRemnantSize = biomeConfig.getBastionRemnantSize();
 							ConfiguredStructureFeature<JigsawConfiguration, ? extends StructureFeature<JigsawConfiguration>> customBastionRemnant = register(
@@ -488,45 +489,46 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 								)
 							);
 							addStructureToBiome(hashmap, customBastionRemnant, biomeKey.get());
-						}
+						}*/
 						
 						// Nether Fossils
 						if(worldConfig.getNetherFossilsEnabled() && biomeConfig.getNetherFossilEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.NETHER_FOSSIL, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.NETHER_FOSSIL, biomeKey.get());
 						}
 						
 						// End Cities
 						if(worldConfig.getEndCitiesEnabled() && biomeConfig.getEndCityEnabled())
 						{
-							addStructureToBiome(hashmap, StructureFeatures.END_CITY, biomeKey.get());
+							addStructureToBiome(hashmap, Structures.END_CITY, biomeKey.get());
 						}
 						
 						// Ruined Portals
 						if(worldConfig.getRuinedPortalsEnabled() && biomeConfig.getRuinedPortalType() != RuinedPortalType.disabled)
 						{
+							//addStructureToBiome(hashmap, Structures., biomeKey.get());
 							switch(biomeConfig.getRuinedPortalType())
 							{
 								case normal:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_STANDARD, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_STANDARD, biomeKey.get());
 									break;
 								case desert:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_DESERT, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_DESERT, biomeKey.get());
 									break;
 								case jungle:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_JUNGLE, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_JUNGLE, biomeKey.get());
 									break;
 								case swamp:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_SWAMP, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_SWAMP, biomeKey.get());
 									break;
 								case mountain:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_MOUNTAIN, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_MOUNTAIN, biomeKey.get());
 									break;
 								case ocean:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_OCEAN, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_OCEAN, biomeKey.get());
 									break;
 								case nether:
-									addStructureToBiome(hashmap, StructureFeatures.RUINED_PORTAL_NETHER, biomeKey.get());
+									addStructureToBiome(hashmap, Structures.RUINED_PORTAL_NETHER, biomeKey.get());
 									break;
 								case disabled:
 									break;
@@ -537,10 +539,10 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			}
 		});
 		
-		ImmutableMap<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> configuredStructures = 
+		ImmutableMap<StructureType, ImmutableMultimap<Structure, ResourceKey<Biome>>> configuredStructures =
 			hashmap.entrySet().stream().collect(
 				ImmutableMap.toImmutableMap(
-					Entry<StructureFeature<?>, com.google.common.collect.ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>>::getKey, 
+					Entry<StructureType, com.google.common.collect.ImmutableMultimap.Builder<Structure, ResourceKey<Biome>>>::getKey,
 					(p_189370_) -> { 
 						return p_189370_.getValue().build(); 
 					}
@@ -549,8 +551,8 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		;
 		
 		// Add any existing (non-vanilla) structure settings
-		HashMap<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> configuredStructures2 = new HashMap<>(configuredStructures);
-		oldSettings.configuredStructures.entrySet().stream().forEach(a -> {
+		HashMap<StructureType, ImmutableMultimap<Structure, ResourceKey<Biome>>> configuredStructures2 = new HashMap<>(configuredStructures);
+		/*oldSettings.configuredStructures.entrySet().stream().forEach(a -> {
 			if(
 				a.getKey() != StructureFeature.VILLAGE &&
 				a.getKey() != StructureFeature.DESERT_PYRAMID &&
@@ -574,28 +576,28 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			{
 				configuredStructures2.putIfAbsent(a.getKey(), a.getValue());
 			}
-		});
-		
-		newSettings.configuredStructures = new ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>>().putAll(configuredStructures2).build();
+		});*/
+
+		//newSettings.configuredStructures = new ImmutableMap.Builder<StructureType, ImmutableMultimap<Structure, ResourceKey<Biome>>>().putAll(configuredStructures2).build();
 	}
 	
 	// StructureFeatures.register()
-	private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> ConfiguredStructureFeature<FC, F> register(String name, ConfiguredStructureFeature<FC, F> structure)
+	private static Structure register(String name, Structure structure)
 	{
-		return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, name, structure);
+		return Registry.register(BuiltinRegistries.STRUCTURES, name, structure);
 	}	
 	
-	private static void addStructureToBiome(HashMap<StructureFeature<?>, com.google.common.collect.ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> hashmap, ConfiguredStructureFeature<?, ?> configuredStructureFeature, ResourceKey<Biome> biomeKey)
+	private static void addStructureToBiome(HashMap<StructureType, com.google.common.collect.ImmutableMultimap.Builder<Structure, ResourceKey<Biome>>> hashmap, Holder<Structure> configuredStructureFeature, ResourceKey<Biome> biomeKey)
 	{
-		BiConsumer<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> consumer = (p_189367_, p_189368_) -> {
+		BiConsumer<Structure, ResourceKey<Biome>> consumer = (p_189367_, p_189368_) -> {
 			hashmap.computeIfAbsent(
-				p_189367_.feature,
+				p_189367_.type(),
 				(p_189374_) -> { 
-					return new ImmutableMultimap.Builder<ConfiguredStructureFeature<?,?>,ResourceKey<Biome>>(); 
+					return new ImmutableMultimap.Builder<Structure,ResourceKey<Biome>>();
 				}
 			).put(p_189367_, p_189368_);
 		};
-		consumer.accept(configuredStructureFeature, biomeKey);
+		consumer.accept(configuredStructureFeature.get(), biomeKey);
 	}	
 	
 	//
