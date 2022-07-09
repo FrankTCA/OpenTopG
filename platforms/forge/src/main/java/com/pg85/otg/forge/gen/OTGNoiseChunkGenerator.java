@@ -620,12 +620,13 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		return this.preset;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	// No longer used?
+	/*@OnlyIn(Dist.CLIENT)
 	@Override
 	public ChunkGenerator withSeed(long seed)
 	{
 		return new OTGNoiseChunkGenerator(this.preset.getFolderName(), this.dimConfigName, this.noises, this.biomeSource.withSeed(seed), seed, this.dimensionSettingsSupplier);
-	}
+	}*/
 	
 	public boolean stable(long p_64376_, ResourceKey<NoiseGeneratorSettings> p_64377_)
 	{
@@ -634,15 +635,15 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	
 	// Base terrain gen
 	@Override
-	public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager accessor, ChunkAccess chunk)
+	public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState noiseConfig, StructureManager accessor, ChunkAccess chunk)
 	{
-		buildNoise(accessor, chunk);
+		buildNoise(accessor, chunk, executor, blender, noiseConfig);
 
 		return CompletableFuture.completedFuture(chunk);
 	}
 	
 	// Generates the base terrain for a chunk.
-	public void buildNoise(StructureFeatureManager manager, ChunkAccess chunk)
+	public void buildNoise(StructureManager manager, ChunkAccess chunk, Executor executor, Blender blender, RandomState noiseConfig)
 	{
 		ChunkCoordinate chunkCoord = ChunkCoordinate.fromChunkCoords(chunk.getPos().x, chunk.getPos().z);
 
@@ -650,7 +651,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		Random random = new Random();
 		// Fetch any chunks that are cached in the WorldGenRegion, so we can
 		// pre-emptively generate and cache base terrain for them asynchronously.
-		this.shadowChunkGenerator.queueChunksForWorkerThreads((WorldGenRegion)chunk.getWorldForge(), manager, chunk, this, (OTGBiomeProvider)this.biomeSource, this.internalGenerator, this.getSettings(), this.preset.getWorldConfig().getWorldHeightCap());
+		this.shadowChunkGenerator.queueChunksForWorkerThreads((WorldGenRegion)chunk.getWorldForge(), manager, chunk, this, (OTGBiomeProvider)this.biomeSource, this.internalGenerator, , this.preset.getWorldConfig().getWorldHeightCap());
 		
 		// If we've already (shadow-)generated and cached this	
 		// chunk while it was unloaded, use cached data.
@@ -670,7 +671,8 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			int startZ = chunkZ << 4;
 
 			// Iterate through all of the jigsaw structures (villages, pillager outposts, nether fossils)
-			for(StructureFeature<?> structure : StructureFeature.NOISE_AFFECTING_FEATURES)
+			// TODO: StructureType doesn't support jigsaw features listing anymore
+			/*for(StructureType structure : StructureFeature.NOISE_AFFECTING_FEATURES)
 			{
 				// Get all structure starts in this chunk
 				manager.startsForFeature(SectionPos.of(pos, 0), structure).forEach((start) ->
@@ -709,7 +711,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 						}
 					}
 				});
-			}		
+			}*/
 			this.internalGenerator.populateNoise(this.preset.getWorldConfig().getWorldHeightCap(), random, buffer, buffer.getChunkCoordinate(), structures, junctions);
 			this.shadowChunkGenerator.setChunkGenerated(chunkCoord);
 		}
@@ -1410,7 +1412,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	public Boolean checkHasVanillaStructureWithoutLoading(ServerLevel world, ChunkCoordinate chunkCoord)
 	{
-		return this.shadowChunkGenerator.checkHasVanillaStructureWithoutLoading(world, this, (OTGBiomeProvider)this.biomeSource, this.getSettings(), chunkCoord, this.internalGenerator.getCachedBiomeProvider(), false);
+		return this.shadowChunkGenerator.checkHasVanillaStructureWithoutLoading(world, this, (OTGBiomeProvider)this.biomeSource, chunkCoord, this.internalGenerator.getCachedBiomeProvider(), false);
 	}
 
 	public int getHighestBlockYInUnloadedChunk(Random worldRandom, int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, ServerLevel level)
