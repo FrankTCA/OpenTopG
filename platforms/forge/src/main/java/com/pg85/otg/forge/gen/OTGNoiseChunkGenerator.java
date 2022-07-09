@@ -983,7 +983,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	*/
 
 	@Override
-	public void applyBiomeDecoration(WorldGenLevel worldGenLevel, ChunkAccess p_187713_, StructureFeatureManager p_187714_)
+	public void applyBiomeDecoration(WorldGenLevel worldGenLevel, ChunkAccess p_187713_, StructureManager p_187714_)
 	{
 		if(!OTG.getEngine().getPluginConfig().getDecorationEnabled())
 		{
@@ -996,11 +996,15 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			WorldGenRegion worldGenRegion = ((WorldGenRegion)worldGenLevel);
 			SectionPos sectionpos = SectionPos.of(chunkpos, worldGenRegion.getMinSection());
 			BlockPos blockpos = sectionpos.origin();
-			Map<Integer, List<StructureFeature<?>>> map = Registry.STRUCTURE_FEATURE.stream().collect(Collectors.groupingBy((p_187720_) -> {
+			/*Map<Integer, List<StructureType>> map = Registry.STRUCTURE_TYPES.stream().collect(Collectors.groupingBy((p_187720_) -> {
 				return p_187720_.step().ordinal();
-			}));
-			List<BiomeSource.StepFeatureData> list = this.biomeSource.featuresPerStep();
-			WorldgenRandom worldgenrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.seedUniquifier()));
+			}));*/
+			/*List<StructureType> map = new ArrayList<>();
+			for (StructureType t : Registry.STRUCTURE_TYPES) {
+				map.add(t);
+			}*/
+			//List<BiomeSource.StepFeatureData> list = this.biomeSource.featuresPerStep();
+			WorldgenRandom worldgenrandom = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.generateUniqueSeed()));
 			long i = worldgenrandom.setDecorationSeed(worldGenRegion.getSeed(), blockpos.getX(), blockpos.getZ());
 			
 			int worldX = worldGenRegion.getCenter().x * Constants.CHUNK_SIZE;
@@ -1098,10 +1102,10 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			// This line has been moved up - Frank
 			//this.chunkDecorator.decorate(this.preset.getFolderName(), chunkBeingDecorated, forgeWorldGenRegion, biome.getBiomeConfig(), getStructureCache(worldSaveFolder));
 
-			Set<Biome> set = new ObjectArraySet<>();
+			//Set<Biome> set = new ObjectArraySet<>();
 			//if (this instanceof FlatLevelSource)
 			//{
-				set.addAll(this.biomeSource.possibleBiomes());
+				//set.addAll(this.biomeSource.possibleBiomes());
 			//} else {
 				/* Behold, the future
 				ChunkPos.rangeClosed(sectionpos.chunk(), 1).forEach((p_196730_) -> {
@@ -1115,8 +1119,9 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 				set.retainAll(this.biomeSource.possibleBiomes());
 				*/
 			//}
-		
-			int j = list.size();
+
+			// Irrelavent in 1.19
+			/*int j = list.size();
 		
 			try {
 				Registry<PlacedFeature> registry = worldGenRegion.registryAccess().registryOrThrow(Registry.PLACED_FEATURE_REGISTRY);
@@ -1198,7 +1203,7 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 				CrashReport crashreport = CrashReport.forThrowable(exception2, "Biome decoration");
 				crashreport.addCategory("Generation").setDetail("CenterX", chunkpos.x).setDetail("CenterZ", chunkpos.z).setDetail("Seed", i);
 				throw new ReportedException(crashreport);
-			}
+			}*/
 		}
 	}
 	
@@ -1215,9 +1220,9 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 	
 	// Mob spawning on chunk tick
 	@Override
-	public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome biome, StructureFeatureManager structureManager, MobCategory entityClassification, BlockPos blockPos)
+	public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager structureManager, MobCategory entityClassification, BlockPos blockPos)
 	{
-		if (!structureManager.hasAnyStructureAt(blockPos))
+		/*if (!structureManager.hasAnyStructureAt(blockPos))
 		{
 			return super.getMobsAt(biome, structureManager, entityClassification, blockPos);
 		} else {
@@ -1227,7 +1232,8 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 					&& structureManager.getStructureAt(blockPos, StructureFeature.OCEAN_MONUMENT).isValid()
 					? MobSpawnSettings.EMPTY_MOB_LIST
 					: super.getMobsAt(biome, structureManager, entityClassification, blockPos);
-		}
+		}*/
+		return super.getMobsAt(biome, structureManager, entityClassification, blockPos);
 	}
 	
 	// Mob spawning on initial chunk spawn (animals).
@@ -1240,27 +1246,32 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 			int chunkX = worldGenRegion.getCenter().x;
 			int chunkZ = worldGenRegion.getCenter().z;
 			IBiome biome = this.internalGenerator.getCachedBiomeProvider().getBiome(chunkX * Constants.CHUNK_SIZE, chunkZ * Constants.CHUNK_SIZE);
-			WorldgenRandom sharedseedrandom = new WorldgenRandom(new LegacyRandomSource(RandomSupport.seedUniquifier()));
+			WorldgenRandom sharedseedrandom = new WorldgenRandom(new LegacyRandomSource(RandomSupport.generateUniqueSeed()));
 			sharedseedrandom.setDecorationSeed(worldGenRegion.getSeed(), chunkX << 4, chunkZ << 4);
-			NaturalSpawner.spawnMobsForChunkGeneration(worldGenRegion, ((ForgeBiome)biome).getBiomeBase(), worldGenRegion.getCenter(), sharedseedrandom);
+			NaturalSpawner.spawnMobsForChunkGeneration(worldGenRegion, Holder.direct(((ForgeBiome)biome).getBiomeBase()), worldGenRegion.getCenter(), sharedseedrandom);
 		}
 	}	
 
 	// Noise
 
 	@Override
-	public int getBaseHeight(int x, int z, Types heightmapType, LevelHeightAccessor world)
+	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world, RandomState noiseConfig)
 	{
-		return this.sampleHeightmap(x, z, null, heightmapType.isOpaque());
+		return this.sampleHeightmap(x, z, null, heightmap.isOpaque());
 	}
 
 	// Provides a sample of the full column for structure generation.
 	@Override
-	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world)
+	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState noiseConfig)
 	{
 		BlockState[] ablockstate = new BlockState[this.internalGenerator.getNoiseSizeY() * 8];
 		this.sampleHeightmap(x, x, ablockstate, null);
 		return new NoiseColumn(0, ablockstate);
+	}
+
+	@Override
+	public void addDebugScreenInfo(List<String> list, RandomState arg, BlockPos arg2) {
+		// Do we need to do anything here?
 	}
 
 	// Samples the noise at a column and provides a view of the blockstates, or fills a heightmap.
@@ -1502,22 +1513,22 @@ public final class OTGNoiseChunkGenerator extends ChunkGenerator
 		}
 	}
 
-	protected final OTGNoiseSampler sampler = new OTGNoiseSampler();
+	//protected final OTGNoiseSampler sampler = new OTGNoiseSampler();
 	
-	@Override
-	public Sampler climateSampler()
+	// Comment out if not needed?
+	/*public Sampler climateSampler()
 	{
 		return sampler;
 	}
 	
-	public class OTGNoiseSampler implements Climate.Sampler
+	public class OTGNoiseSampler implements
 	{
 		@Override
 		public TargetPoint sample(int p_186975_, int p_186976_, int p_186977_)
 		{
 			return null;
 		}
-	}
+	}*/
 	
 	/** @deprecated */
 	@Deprecated
