@@ -26,9 +26,7 @@ import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.world.ForgeWorldPreset;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,6 +36,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(Constants.MOD_ID_SHORT) // Should match META-INF/mods.toml
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_SHORT, bus = Mod.EventBusSubscriber.Bus.MOD) 
@@ -81,15 +80,22 @@ public class OTGPlugin
 
 	// OTG World Type MP: Register the OTG world type.
 	// For MP we use server.properties level-type:otg + generatorSettings:presetFolderName
-	@SubscribeEvent
+	/*
+	* Forge did us a favor in removing this functionality altogether
+	* So we need not need to worry about this, and can comment it out
+	* I don't like removing code altogether, in case we need it for the future :p
+	* - Frank
+	 */
+	/*@SubscribeEvent
 	@OnlyIn(Dist.DEDICATED_SERVER)
-	public static void registerWorldType(RegistryEvent.Register<ForgeWorldPreset> event)
+	public static void registerWorldType(RegisterEvent.Register<> event)
 	{
 		ForgeRegistries.WORLD_TYPES.register(new OTGWorldType());
-	}
-	
+	}*/
+
+	// NOTE: I'm not sure if changing RegistryEvent.Register<Biome> to just RegisterEvent could cause issues or not
 	@SubscribeEvent
-	public static void registerBiomes(RegistryEvent.Register<Biome> event)
+	public static void registerBiomes(RegisterEvent event)
 	{
 		// Start OpenTerrainGenerator engine, loads all presets.
 		// Done here so that file indexing happens after presetpacker has unpacked its preset
