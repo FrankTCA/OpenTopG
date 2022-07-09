@@ -1,6 +1,6 @@
 plugins {
     id("platform-conventions")
-    id("dev.architectury.loom") version "0.10.0-SNAPSHOT"
+    id("dev.architectury.loom") version "0.11.0-SNAPSHOT"
 }
 
 val mcVersion = "1.19"
@@ -44,10 +44,10 @@ dependencies {
     otg(project(":common:common-core"))
 
     val worldeditVersion = "7.2.8-SNAPSHOT"
-    compileOnly("com.sk89q.worldedit:worldedit-core:$worldeditVersion") {
+    /*compileOnly("com.sk89q.worldedit:worldedit-core:$worldeditVersion") {
         exclude("org.yaml")
-    }
-    modCompileOnly("com.sk89q.worldedit:worldedit-forge-mc$mcVersion:$worldeditVersion")
+    }*/
+    //modCompileOnly("com.sk89q.worldedit:worldedit-forge-mc$mcVersion:$worldeditVersion")
 }
 
 tasks {
