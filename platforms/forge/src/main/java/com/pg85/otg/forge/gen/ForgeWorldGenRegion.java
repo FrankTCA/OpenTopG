@@ -27,12 +27,15 @@ import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 import com.pg85.otg.util.minecraft.TreeType;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -54,7 +57,6 @@ import net.minecraft.data.worldgen.placement.EndPlacements;
 import net.minecraft.data.worldgen.placement.NetherPlacements;
 import net.minecraft.data.worldgen.placement.TreePlacements;
 import net.minecraft.nbt.*;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.WorldGenRegion;
 
 // TODO: Split up worldgenregion into separate classes, one for decoration/worldgen, one for non-worldgen.
@@ -103,8 +105,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 		return this.worldGenRegion.getSeed();
 	}	
 
-	@Override
-	public Random getWorldRandom()
+	public RandomSource getWorldRandom()
 	{
 		return this.worldGenRegion.getRandom();
 	}
@@ -449,8 +450,10 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	// TODO: Make sure tree spawning looks more or less the same as 1.12.2.
 	@Override
 	@SuppressWarnings("unchecked")	
-	public boolean placeTree(TreeType type, Random rand, int x, int y, int z)
+	public boolean placeTree(TreeType type, Random random, int x, int y, int z)
 	{
+		// TODO: Not good, should use single random. (Fixed maybe)
+		RandomSource rand = getWorldRandom();
 		if(y < minY || y > maxY)
 		{
 			return false;
@@ -475,91 +478,91 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 			switch (type)
 			{
 				case Tree:
-					PlacedFeature oak = TreePlacements.OAK_CHECKED;					
+					PlacedFeature oak = TreePlacements.OAK_CHECKED.get();
 					oak.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case BigTree:
-					PlacedFeature fancy_oak = TreePlacements.FANCY_OAK_CHECKED;
+					PlacedFeature fancy_oak = TreePlacements.FANCY_OAK_CHECKED.get();
 					fancy_oak.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case Forest:
 				case Birch:
-					PlacedFeature birch = TreePlacements.BIRCH_CHECKED;
+					PlacedFeature birch = TreePlacements.BIRCH_CHECKED.get();
 					birch.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case TallBirch:
-					PlacedFeature tall_birch = TreePlacements.SUPER_BIRCH_BEES_0002;
+					PlacedFeature tall_birch = TreePlacements.SUPER_BIRCH_BEES_0002.get();
 					tall_birch.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case HugeMushroom:
 					if (rand.nextBoolean())
 					{
-						ConfiguredFeature<?, ?> huge_brown_mushroom = TreeFeatures.HUGE_BROWN_MUSHROOM;
+						ConfiguredFeature<?, ?> huge_brown_mushroom = TreeFeatures.HUGE_BROWN_MUSHROOM.get();
 						huge_brown_mushroom.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					} else {
-						ConfiguredFeature<?, ?> huge_red_mushroom = TreeFeatures.HUGE_RED_MUSHROOM;
+						ConfiguredFeature<?, ?> huge_red_mushroom = TreeFeatures.HUGE_RED_MUSHROOM.get();
 						huge_red_mushroom.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					}
 					return true;
 				case HugeRedMushroom:
-					ConfiguredFeature<?, ?> huge_red_mushroom = TreeFeatures.HUGE_RED_MUSHROOM;
+					ConfiguredFeature<?, ?> huge_red_mushroom = TreeFeatures.HUGE_RED_MUSHROOM.get();
 					huge_red_mushroom.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case HugeBrownMushroom:
-					ConfiguredFeature<?, ?> huge_brown_mushroom = TreeFeatures.HUGE_BROWN_MUSHROOM;
+					ConfiguredFeature<?, ?> huge_brown_mushroom = TreeFeatures.HUGE_BROWN_MUSHROOM.get();
 					huge_brown_mushroom.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case SwampTree:
-					ConfiguredFeature<TreeConfiguration, ?> swamp_tree = TreeFeatures.SWAMP_OAK;
+					ConfiguredFeature<TreeConfiguration, ?> swamp_tree = TreeFeatures.SWAMP_OAK.get();
 					swamp_tree.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case Taiga1:
-					PlacedFeature pine = TreePlacements.PINE_CHECKED;
+					PlacedFeature pine = TreePlacements.PINE_CHECKED.get();
 					pine.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case Taiga2:
-					PlacedFeature spruce = TreePlacements.SPRUCE_CHECKED;
+					PlacedFeature spruce = TreePlacements.SPRUCE_CHECKED.get();
 					spruce.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case JungleTree:
 					// TODO: Apparently there's another jungle tree (non-mega)
-					PlacedFeature mega_jungle_tree = TreePlacements.MEGA_JUNGLE_TREE_CHECKED;
+					PlacedFeature mega_jungle_tree = TreePlacements.MEGA_JUNGLE_TREE_CHECKED.get();
 					mega_jungle_tree.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case CocoaTree:
-					PlacedFeature jungle_tree = TreePlacements.JUNGLE_TREE_CHECKED;
+					PlacedFeature jungle_tree = TreePlacements.JUNGLE_TREE_CHECKED.get();
 					jungle_tree.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case GroundBush:
-					PlacedFeature jungle_bush = TreePlacements.JUNGLE_BUSH;
+					PlacedFeature jungle_bush = TreePlacements.JUNGLE_BUSH.get();
 					jungle_bush.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case Acacia:
-					PlacedFeature acacia = TreePlacements.ACACIA_CHECKED;
+					PlacedFeature acacia = TreePlacements.ACACIA_CHECKED.get();
 					acacia.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case DarkOak:
-					PlacedFeature dark_oak = TreePlacements.DARK_OAK_CHECKED;
+					PlacedFeature dark_oak = TreePlacements.DARK_OAK_CHECKED.get();
 					dark_oak.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case HugeTaiga1:
-					PlacedFeature mega_pine = TreePlacements.MEGA_PINE_CHECKED;
+					PlacedFeature mega_pine = TreePlacements.MEGA_PINE_CHECKED.get();
 					mega_pine.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case HugeTaiga2:
-					PlacedFeature mega_spruce = TreePlacements.MEGA_SPRUCE_CHECKED;
+					PlacedFeature mega_spruce = TreePlacements.MEGA_SPRUCE_CHECKED.get();
 					mega_spruce.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case CrimsonFungi:
-					PlacedFeature crimson_fungi = NetherPlacements.CRIMSON_FOREST_VEGETATION;
+					PlacedFeature crimson_fungi = NetherPlacements.CRIMSON_FOREST_VEGETATION.get();
 					crimson_fungi.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case WarpedFungi:
-					PlacedFeature warped_fungi = NetherPlacements.WARPED_FOREST_VEGETATION;
+					PlacedFeature warped_fungi = NetherPlacements.WARPED_FOREST_VEGETATION.get();
 					warped_fungi.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;
 				case ChorusPlant:
-					PlacedFeature chorus_plant = EndPlacements.CHORUS_PLANT;
+					PlacedFeature chorus_plant = EndPlacements.CHORUS_PLANT.get();
 					chorus_plant.place(this.worldGenRegion, this.chunkGenerator, rand, blockPos);
 					return true;					
 				default:
@@ -744,11 +747,13 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 				}
 				
 				// Attach nametag if one was provided via Entity()
-				String nameTag = entityData.getNameTagOrNBTFileName();
+				// TODO: Idk if anyone actually uses this, so disabling for now
+				/*String nameTag = entityData.getNameTagOrNBTFileName();
 				if (nameTag != null && !nameTag.toLowerCase().trim().endsWith(".txt") && !nameTag.toLowerCase().trim().endsWith(".nbt"))
 				{
+					Component customName =
 					entity.setCustomName(new TextComponent(nameTag));
-				}
+				}*/
 				// Make sure Entity() mobs don't de-spawn, regardless of nbt data
 				mobentity.setPersistenceRequired();
 				
@@ -760,19 +765,21 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	}
 
 	@Override
-	public void placeDungeon(Random random, int x, int y, int z)
+	public void placeDungeon(Random rand, int x, int y, int z)
 	{
-		Feature.MONSTER_ROOM.configured(FeatureConfiguration.NONE).place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+		RandomSource random = getWorldRandom();
+		Feature.MONSTER_ROOM.place(FeatureConfiguration.NONE, this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 	}
 
 	@Override
-	public void placeFossil(Random random, int x, int y, int z)
+	public void placeFossil(Random rand, int x, int y, int z)
 	{
+		RandomSource random = getWorldRandom();
 		if(y >= 0)
 		{
-			CavePlacements.FOSSIL_UPPER.place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+			CavePlacements.FOSSIL_UPPER.get().place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 		} else {
-			CavePlacements.FOSSIL_LOWER.place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
+			CavePlacements.FOSSIL_LOWER.get().place(this.worldGenRegion, this.chunkGenerator, random, new BlockPos(x, y, z));
 		}
 	}
 	
@@ -823,7 +830,8 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 		// decoration sequence, return the material without loading the chunk.
 		if((chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)))
 		{
-			return this.chunkGenerator.getMaterialInUnloadedChunk(this.getWorldRandom(), x , y, z, this.worldGenRegion.getLevel());
+			Random random = new Random(getSeed());
+			return this.chunkGenerator.getMaterialInUnloadedChunk(random, x , y, z, this.worldGenRegion.getLevel());
 		}
 
 		// Get internal coordinates for block in chunk
@@ -851,7 +859,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 		// decoration sequence, return the material without loading the chunk.
 		if((chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)))
 		{
-			return this.chunkGenerator.getHighestBlockYInUnloadedChunk(this.getWorldRandom(), x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, this.worldGenRegion.getLevel());
+			return this.chunkGenerator.getHighestBlockYInUnloadedChunk(new Random(getSeed()), x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, this.worldGenRegion.getLevel());
 		}
 
 		// Get internal coordinates for block in chunk
