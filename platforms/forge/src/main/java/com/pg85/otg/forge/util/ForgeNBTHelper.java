@@ -26,7 +26,7 @@ public class ForgeNBTHelper extends LocalNBTHelper
 			return null;
 		}
 		CompoundTag nbt = new CompoundTag();
-		tileEntity.save(nbt);
+		tileEntity.getTileData().merge(nbt);
 		// Double up, just to be safe. It should be x, y, z.
 		//nmsTag.remove("pos");
 		nbt.remove("x");

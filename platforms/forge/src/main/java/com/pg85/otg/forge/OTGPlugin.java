@@ -8,23 +8,14 @@ import com.pg85.otg.core.presets.Preset;
 import com.pg85.otg.forge.biome.OTGBiomeProvider;
 import com.pg85.otg.forge.client.MultipleColorHandler;
 import com.pg85.otg.forge.commands.OTGCommand;
-import com.pg85.otg.forge.dimensions.OTGDimensionTypeHelper;
-import com.pg85.otg.forge.dimensions.OTGWorldType;
-import com.pg85.otg.forge.dimensions.portals.OTGPortalBlocks;
-import com.pg85.otg.forge.dimensions.portals.OTGCapabilities;
-import com.pg85.otg.forge.dimensions.portals.OTGPortalPois;
 import com.pg85.otg.forge.gen.OTGNoiseChunkGenerator;
-import com.pg85.otg.forge.gui.OTGGui;
 import com.pg85.otg.forge.network.OTGClientSyncManager;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -35,7 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(Constants.MOD_ID_SHORT) // Should match META-INF/mods.toml
@@ -48,7 +38,6 @@ public class OTGPlugin
 
 		// Register the clientSetup method for client-side initialisation logic (GUI etc).
 		modEventBus.addListener(this::clientSetup);
-		modEventBus.addListener(this::commonSetup);
 
 		// Register self for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
@@ -60,22 +49,22 @@ public class OTGPlugin
 		ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constants.MOD_ID_SHORT, "default"));
 
 		// Deferred registers
-		OTGPortalPois.poi.register(modEventBus);
-		OTGPortalBlocks.blocks.register(modEventBus);
+		//OTGPortalPois.poi.register(modEventBus);
+		//OTGPortalBlocks.blocks.register(modEventBus);
 	}
 
 	// Register player capabilities for dimension portal timer.
-	public void commonSetup(FMLCommonSetupEvent event)
+	/*public void commonSetup(FMLCommonSetupEvent event)
 	{
 		OTGCapabilities.register();
-	}
+	}*/
 
 	// OTG World Type SP: We use our own world type registration logic so we can add a "customise"
 	// button to the world creation gui that shows OTG preset selection and customisation screens.
 	private void clientSetup(final FMLClientSetupEvent event)
 	{
 		// Register the OTG world type and any OTG GUI's for the world creation screen.
-		OTGGui.init();
+		//OTGGui.init();
 	}
 
 	// OTG World Type MP: Register the OTG world type.
@@ -129,7 +118,7 @@ public class OTGPlugin
 				Path datapackDir = ((ServerLevel)event.getWorld()).getLevel().getServer().getWorldPath(LevelResource.DATAPACK_DIR);
 				Preset preset = ((OTGNoiseChunkGenerator)((ServerLevel)event.getWorld()).getLevel().getChunkSource().getGenerator()).getPreset();
 				String dimName = ((ServerLevel)event.getWorld()).dimension().location().getPath();
-				OTGDimensionTypeHelper.saveDataPackFile(datapackDir, dimName, preset.getWorldConfig(), preset.getFolderName());
+				//OTGDimensionTypeHelper.saveDataPackFile(datapackDir, dimName, preset.getWorldConfig(), preset.getFolderName());
 			}
 		}
 		((ForgeEngine)OTG.getEngine()).onSave(event.getWorld());
