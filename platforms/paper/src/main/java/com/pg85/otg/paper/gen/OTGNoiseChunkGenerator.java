@@ -1,6 +1,5 @@
 package com.pg85.otg.paper.gen;
 
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -11,16 +10,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import com.pg85.otg.paper.util.OTGBeardifier;
-import com.pg85.otg.paper.util.OTGCarvingContext;
-import com.pg85.otg.paper.util.ObfuscationHelper;
+import com.pg85.otg.paper.carver.OTGBeardifier;
+import com.pg85.otg.paper.carver.OTGCarvingContext;
 import com.pg85.otg.util.gen.DecorationArea;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.SharedConstants;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
 import net.minecraft.core.*;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.*;
@@ -69,6 +65,7 @@ import net.minecraft.world.level.levelgen.structure.pools.JigsawJunction;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.storage.LevelResource;
+import net.royawesome.jlibnoise.Noise;
 
 public class OTGNoiseChunkGenerator extends ChunkGenerator
 {	
@@ -101,6 +98,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 	private final Aquifer.FluidPicker globalFluidPicker;
 	private final Preset preset;
+
+	private NoiseBasedChunkGenerator vanillaGenerator;
 	private final NoiseRouter router;
 	//protected final WorldgenRandom random;
 
@@ -156,6 +155,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		this.globalFluidPicker = (k, l, i1) -> {
 			return l < Math.min(-54, getSeaLevel()) ? aquifer_b : aquifer_b1;
 		};
+
+		this.vanillaGenerator = new NoiseBasedChunkGenerator(this.structureSets, this.noises, this.biomeSource, this.worldSeed, this.generatorSettings);
 
 	}
 
@@ -372,7 +373,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 			return new OTGBeardifier(structureAccessor, chunk);
 		}, (NoiseGeneratorSettings) this.generatorSettings.value(), this.globalFluidPicker, Blender.of(chunkRegion));
 		Aquifer aquifer = noisechunk.aquifer();
-		CarvingContext carvingcontext = new OTGCarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), noisechunk, chunkRegion.getMinecraftWorld()); // Paper
+		CarvingContext carvingcontext = new CarvingContext(this.vanillaGenerator, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), noisechunk, chunkRegion.getMinecraftWorld()); // Paper
 		CarvingMask carvingmask = ((ProtoChunk) chunk).getOrCreateCarvingMask(generationStep);
 
 		for (int j = -8; j <= 8; ++j) {
@@ -408,8 +409,6 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 				Field theRealMask = ObfuscationHelper.getField(CarvingMask.class, "mask", "b");
 				theRealMask.setAccessible(true);
 				BitSet carvingMask = (BitSet)theRealMask.get(carvingMaskRaw);
-
-
 				// TODO: Carvers need updating to use sub-0 height, and also to potentially use the new Carving Mask -auth
 				// Leaving this commented out until at least the sub-0 is implemented.
 				// this.internalGenerator.carve(chunkBuffer, seed, protoChunk.getPos().x, protoChunk.getPos().z, carvingMask, true, true); //TODO: Don't use hardcoded true
