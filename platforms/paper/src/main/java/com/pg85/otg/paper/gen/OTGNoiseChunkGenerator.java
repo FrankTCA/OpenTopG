@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.pg85.otg.paper.util.OTGBeardifier;
+import com.pg85.otg.paper.util.OTGCarvingContext;
 import com.pg85.otg.paper.util.ObfuscationHelper;
 import com.pg85.otg.util.gen.DecorationArea;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
@@ -26,6 +28,8 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.*;
@@ -94,6 +98,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	public final OTGChunkGenerator internalGenerator;
 	private final OTGChunkDecorator chunkDecorator;
 	private final String presetFolderName;
+
+	private final Aquifer.FluidPicker globalFluidPicker;
 	private final Preset preset;
 	private final NoiseRouter router;
 	//protected final WorldgenRandom random;
@@ -142,6 +148,14 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 
 		this.router = settings.createNoiseRouter(this.noises, seed);
 		this.sampler = new Climate.Sampler(this.router.temperature(), this.router.humidity(), this.router.continents(), this.router.erosion(), this.router.depth(), this.router.ridges(), this.router.spawnTarget());
+
+		Aquifer.FluidStatus aquifer_b = new Aquifer.FluidStatus(-54, Blocks.LAVA.defaultBlockState());
+		Aquifer.FluidStatus aquifer_b1 = new Aquifer.FluidStatus(getSeaLevel(), settings.defaultFluid());
+		Aquifer.FluidStatus aquifer_b2 = new Aquifer.FluidStatus(noisesettings.minY() - 1, Blocks.AIR.defaultBlockState());
+
+		this.globalFluidPicker = (k, l, i1) -> {
+			return l < Math.min(-54, getSeaLevel()) ? aquifer_b : aquifer_b1;
+		};
 
 	}
 
@@ -346,8 +360,45 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 	// Carvers: Caves and ravines
 
 	@Override
-	public void applyCarvers(WorldGenRegion chunkRegion, long seed, BiomeManager biomeManager, StructureFeatureManager structureAccess, ChunkAccess chunk, GenerationStep.Carving stage)
+	public void applyCarvers(WorldGenRegion chunkRegion, long seed, BiomeManager biomeAccess, StructureFeatureManager structureAccessor, ChunkAccess chunk, GenerationStep.Carving generationStep)
 	{
+		BiomeManager biomemanager1 = biomeAccess.withDifferentSource((j, k, l) -> {
+			return this.biomeSource.getNoiseBiome(j, k, l, this.climateSampler());
+		});
+		WorldgenRandom seededrandom = new WorldgenRandom(new LegacyRandomSource(RandomSupport.seedUniquifier()));
+		boolean flag = true;
+		ChunkPos chunkcoordintpair = chunk.getPos();
+		NoiseChunk noisechunk = chunk.getOrCreateNoiseChunk(this.router, () -> {
+			return new OTGBeardifier(structureAccessor, chunk);
+		}, (NoiseGeneratorSettings) this.generatorSettings.value(), this.globalFluidPicker, Blender.of(chunkRegion));
+		Aquifer aquifer = noisechunk.aquifer();
+		CarvingContext carvingcontext = new OTGCarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), noisechunk, chunkRegion.getMinecraftWorld()); // Paper
+		CarvingMask carvingmask = ((ProtoChunk) chunk).getOrCreateCarvingMask(generationStep);
+
+		for (int j = -8; j <= 8; ++j) {
+			for (int k = -8; k <= 8; ++k) {
+				ChunkPos chunkcoordintpair1 = new ChunkPos(chunkcoordintpair.x + j, chunkcoordintpair.z + k);
+				ChunkAccess ichunkaccess1 = chunkRegion.getChunk(chunkcoordintpair1.x, chunkcoordintpair1.z);
+				BiomeGenerationSettings biomesettingsgeneration = ((Biome) ichunkaccess1.carverBiome(() -> {
+					return this.biomeSource.getNoiseBiome(QuartPos.fromBlock(chunkcoordintpair1.getMinBlockX()), 0, QuartPos.fromBlock(chunkcoordintpair1.getMinBlockZ()), this.climateSampler());
+				}).value()).getGenerationSettings();
+				Iterable<Holder<ConfiguredWorldCarver<?>>> iterable = biomesettingsgeneration.getCarvers(generationStep);
+				int l = 0;
+
+				for (Iterator iterator = iterable.iterator(); iterator.hasNext(); ++l) {
+					Holder<ConfiguredWorldCarver<?>> holder = (Holder) iterator.next();
+					ConfiguredWorldCarver<?> worldgencarverwrapper = (ConfiguredWorldCarver) holder.value();
+
+					seededrandom.setLargeFeatureSeed(seed + (long) l, chunkcoordintpair1.x, chunkcoordintpair1.z);
+					if (worldgencarverwrapper.isStartChunk(seededrandom)) {
+						Objects.requireNonNull(biomemanager1);
+						worldgencarverwrapper.carve(carvingcontext, chunk, biomemanager1::getBiome, seededrandom, aquifer, chunkcoordintpair1, carvingmask);
+					}
+				}
+			}
+		}
+		// For historical sake, the old code:
+		/*
 		if (stage == GenerationStep.Carving.AIR)
 		{
 			ProtoChunk protoChunk = (ProtoChunk) chunk;
@@ -357,6 +408,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 				Field theRealMask = ObfuscationHelper.getField(CarvingMask.class, "mask", "b");
 				theRealMask.setAccessible(true);
 				BitSet carvingMask = (BitSet)theRealMask.get(carvingMaskRaw);
+
 
 				// TODO: Carvers need updating to use sub-0 height, and also to potentially use the new Carving Mask -auth
 				// Leaving this commented out until at least the sub-0 is implemented.
@@ -370,7 +422,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 					OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, "!!! Error obtaining the carving mask! Caves will not generate! Stacktrace:\n" + e.getStackTrace());
 				}
 			}
-		}
+		}*/
 		// Commenting out as abstract implies it is no longer needed.
 		//super.applyCarvers(chunkRegion, seed, biomeManager, structureAccess, chunk, stage);
 	}
