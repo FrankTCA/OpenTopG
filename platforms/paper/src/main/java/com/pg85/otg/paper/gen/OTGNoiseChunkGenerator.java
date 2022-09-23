@@ -599,8 +599,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator
 		{
 			return new NoiseColumn(minGenY, new BlockState[0]);
 		} else {
-			// Altered because of arrayindexoutofbounds
-			BlockState[] blockStates = new BlockState[noiseCellCount * noiseSettings.getCellHeight()+1];
+			BlockState[] blockStates = new BlockState[noiseCellCount * noiseSettings.getCellHeight()];
 			this.sampleHeightmap(x, z, blockStates, null, cellNoiseMinY, noiseCellCount);
 			return new NoiseColumn(0, blockStates);
 		}
