@@ -6,7 +6,7 @@ import java.util.Random;
  * Class to get a random generator which is constant for the given input.
  *
  */
-public class RandomHelper
+public final class RandomHelper
 {
 	private RandomHelper()
 	{

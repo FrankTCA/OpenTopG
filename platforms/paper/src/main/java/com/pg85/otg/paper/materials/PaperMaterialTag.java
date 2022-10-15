@@ -9,7 +9,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public class PaperMaterialTag extends LocalMaterialTag
+public final class PaperMaterialTag extends LocalMaterialTag
 {
 	public static LocalMaterialTag ofString(String name)
 	{

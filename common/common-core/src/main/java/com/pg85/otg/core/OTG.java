@@ -5,7 +5,7 @@ package com.pg85.otg.core;
  * OTGEngine is implemented and provided by the platform-specific 
  * layer and holds any objects and methods used during a session. 
  */
-public class OTG
+public final class OTG
 {
 	private static OTGEngine engine;
 

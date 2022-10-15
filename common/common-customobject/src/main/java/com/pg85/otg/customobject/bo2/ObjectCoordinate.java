@@ -4,7 +4,7 @@ import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.materials.LocalMaterialData;
 
-class ObjectCoordinate
+final class ObjectCoordinate
 {
 	int x;
 	int y;

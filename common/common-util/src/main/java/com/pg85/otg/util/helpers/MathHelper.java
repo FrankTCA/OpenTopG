@@ -1,6 +1,6 @@
 package com.pg85.otg.util.helpers;
 
-public class MathHelper
+public final class MathHelper
 {
 	private static float[] A = new float[65536];
 

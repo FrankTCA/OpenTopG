@@ -9,7 +9,7 @@ import com.pg85.otg.util.helpers.StringHelper;
  * Setting that handles the {@link SurfaceGenerator}.
  *
  */
-public class SurfaceGeneratorSetting extends Setting<SurfaceGenerator>
+public final class SurfaceGeneratorSetting extends Setting<SurfaceGenerator>
 {
 	public static final Setting<SurfaceGenerator> SURFACE_AND_GROUND_CONTROL = surfaceGeneratorSetting("SurfaceAndGroundControl");	
 

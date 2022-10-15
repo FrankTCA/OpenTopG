@@ -14,7 +14,7 @@ import com.pg85.otg.util.helpers.MathHelper;
  * <p>This class contains some helper methods to switch from/to block
  * coordinates.
  */
-public class ChunkCoordinate
+public final class ChunkCoordinate
 {
 	private final int chunkX;
 	private final int chunkZ;

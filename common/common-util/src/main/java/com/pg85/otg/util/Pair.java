@@ -1,6 +1,6 @@
 package com.pg85.otg.util;
 
-public class Pair<F, S>
+public final class Pair<F, S>
 {
 	private final F first;
 	private final S second;

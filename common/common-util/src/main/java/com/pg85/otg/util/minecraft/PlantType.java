@@ -14,7 +14,7 @@ import com.pg85.otg.util.materials.LocalMaterials;
  * Holds all small plants (1 or 2 blocks) of Minecraft so that users don't
  * have to use the confusing ids and data values Mojang and Bukkit gave them.
  */
-public class PlantType
+public final class PlantType
 {
 	// Builds lookup map
 	private static final Map<String, PlantType> LOOKUP_MAP = new TreeMap<String, PlantType>(String.CASE_INSENSITIVE_ORDER);

@@ -6,7 +6,7 @@ import com.pg85.otg.util.helpers.StringHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplaceBlocks
+public final class ReplaceBlocks
 {
 	private final String sourceBlock;
 	private final String targetBlock;
