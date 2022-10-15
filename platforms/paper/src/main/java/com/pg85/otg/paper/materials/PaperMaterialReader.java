@@ -159,7 +159,7 @@ public class PaperMaterialReader implements IMaterialReader
 		if (blockNameCorrected.contains(":"))
 		{
 			// Try parsing data argument as int.
-			String blockNameOrId = blockNameCorrected.substring(0, blockNameCorrected.indexOf(":"));
+			String blockNameOrId = blockNameCorrected.substring(0, blockNameCorrected.indexOf(':'));
 			try
 			{
 				int blockId = Integer.parseInt(blockNameOrId);
@@ -168,14 +168,14 @@ public class PaperMaterialReader implements IMaterialReader
 
 			try
 			{
-				int data = Integer.parseInt(blockNameCorrected.substring(blockNameCorrected.indexOf(":") + 1));
+				int data = Integer.parseInt(blockNameCorrected.substring(blockNameCorrected.indexOf(':') + 1));
 				blockState = PaperLegacyMaterials.fromLegacyBlockNameOrIdWithData(blockNameOrId, data);
 				if (blockState != null)
 				{
 					return PaperMaterialData.ofBlockData(blockState, input);
 				}
 				// Failed to parse data, remove. fe STONE:0 or STONE:1 -> STONE
-				blockNameCorrected = blockNameCorrected.substring(0, blockNameCorrected.indexOf(":"));
+				blockNameCorrected = blockNameCorrected.substring(0, blockNameCorrected.indexOf(':'));
 			} catch (NumberFormatException ignored) { }
 		}
 
