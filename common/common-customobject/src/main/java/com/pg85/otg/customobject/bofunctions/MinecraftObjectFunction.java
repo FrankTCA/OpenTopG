@@ -42,20 +42,16 @@ public abstract class MinecraftObjectFunction<T extends CustomObjectConfigFile> 
 		return "MinecraftObject(" + x + ',' + y + ',' + z + ',' + structurePart + ')';
 	}
 
+	// TODO: May cause cascading chunkgen.
+	// TODO: Implement this?
+	//SpawnableObject object = worldGenRegion.getMojangStructurePart(structurePart.getPath());
+	//object.spawnForced(null, worldGenRegion, random, rotation, x, y, z);
 	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z)
-	{
-		// TODO: May cause cascading chunkgen.
-		// TODO: Implement this?
-		//SpawnableObject object = worldGenRegion.getMojangStructurePart(structurePart.getPath());
-		//object.spawnForced(null, worldGenRegion, random, rotation, x, y, z);
-	}
-	
+	public abstract void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z);
+
+	// TODO: Implement this?
 	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks)
-	{
-		// TODO: Implement this?	
-	}
+	public abstract void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks);
 
 	@Override
 	public boolean isAnalogousTo(CustomObjectConfigFunction<T> other)
