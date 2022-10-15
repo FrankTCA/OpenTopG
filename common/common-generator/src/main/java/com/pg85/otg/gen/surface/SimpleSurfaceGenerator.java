@@ -29,6 +29,18 @@ public class SimpleSurfaceGenerator implements SurfaceGenerator
 		spawnColumn(worldSeed, null, generatingChunk, chunkBuffer, biome, xInWorld, zInWorld);
 	}
 
+	public StringBuilder appendGroundLayerString(StringBuilder stringBuilder, MultipleLayersSurfaceGeneratorLayer groundLayer) {
+		stringBuilder.append(groundLayer.surfaceBlock);
+		stringBuilder.append(','+' ');
+		stringBuilder.append(groundLayer.underWaterSurfaceBlock);
+		stringBuilder.append(','+' ');
+		stringBuilder.append(groundLayer.groundBlock);
+		stringBuilder.append(','+' ');
+		stringBuilder.append(groundLayer.maxNoise);
+		stringBuilder.append(','+' ');
+		return stringBuilder;
+	}
+
 	// net.minecraft.world.biome.Biome.generateBiomeTerrain
 	protected void spawnColumn(long worldSeed, MultipleLayersSurfaceGeneratorLayer layer, GeneratingChunk generatingChunk, ChunkBuffer chunkBuffer, IBiome biome, int xInWorld, int zInWorld)
 	{

@@ -353,7 +353,7 @@ public class ReplaceBlockMatrix
 				builder.append(',').append(instruction.getMinHeight());
 				builder.append(',').append(instruction.getMaxHeight());
 			}
-			builder.append(')').append(',');
+			builder.append(')'+',');
 		}
 
 		// Remove last ',' and return the result

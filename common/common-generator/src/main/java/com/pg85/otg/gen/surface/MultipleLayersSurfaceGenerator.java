@@ -108,20 +108,15 @@ class MultipleLayersSurfaceGenerator extends SimpleSurfaceGenerator
 		spawnColumn(worldSeed, null, generatingChunkInfo, chunkBuffer, biome, xInWorld, zInWorld);
 	}
 
+
+
 	@Override
 	public String toString()
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		for (MultipleLayersSurfaceGeneratorLayer groundLayer : this.layers)
 		{
-			stringBuilder.append(groundLayer.surfaceBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.underWaterSurfaceBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.groundBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.maxNoise);
-			stringBuilder.append(',').append(' ');
+			stringBuilder = appendGroundLayerString(stringBuilder, groundLayer);
 		}
 		// Delete last ", "
 		if(stringBuilder.length() > 0)
