@@ -99,7 +99,7 @@ public abstract class Carver
 	protected boolean carveAtPoint(ISurfaceGeneratorNoiseProvider noiseProvider, ChunkBuffer chunkBuffer, BitSet carvingMask, Random random, int seaLevel, int mainChunkX, int mainChunkZ, int worldX, int worldZ, int relativeX, int y, int relativeZ, MutableBoolean foundSurface, IBiomeConfig biomeConfig)
 	{
 		// Getting the absolute value here seems icky, but we're reworking everything so whatever... - Frank
-		int i = relativeX | relativeZ << 4 | Math.abs(y << 8);
+		int i = relativeX | relativeZ << 4 | ((y + 64) << 8);
 		if (carvingMask.get(i))
 		{
 			return false;
