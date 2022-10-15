@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.zip.DataFormatException;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -122,19 +123,19 @@ public class CustomStructureFileManager
 						{
 							dos.close();
 						}
-					} catch (Exception e) { }
+					} catch (IOException e) { }
 					try {
 						if(dos2 != null)
 						{
 							dos2.close();
 						}
-					} catch (Exception e) { }
+					} catch (IOException e) { }
 					try {
 						if(fos != null)
 						{
 							fos.close();
 						}
-					} catch (Exception e) { }
+					} catch (IOException e) { }
 				}
 			}
 		}
@@ -281,8 +282,9 @@ public class CustomStructureFileManager
 					buffer = ByteBuffer.wrap(decompressedBytes);
 					result = parsePlottedChunksFileFromStream(buffer, logger);
 				}
-				catch (Exception ex)
-				{
+				catch (DataFormatException ex) {
+					ex.printStackTrace();
+				} catch (IOException ex) {
 					ex.printStackTrace();
 				} finally {
 					if(fis != null)
@@ -609,19 +611,19 @@ public class CustomStructureFileManager
 				{
 					dos.close();
 				}
-			} catch (Exception e) { }
+			} catch (IOException e) { }
 			try {
 				if(dos2 != null)
 				{
 					dos2.close();
 				}
-			} catch (Exception e) { }
+			} catch (IOException e) { }
 			try {
 				if(fos != null)
 				{
 					fos.close();
 				}
-			} catch (Exception e) { }
+			} catch (IOException e) { }
 		}
 	}
 	
@@ -717,8 +719,10 @@ public class CustomStructureFileManager
 										
 					result = parseStructuresFileFromStream(buffer, regionCoord, presetFolderName, worldSeed, isBO4Enabled, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
 				}
-				catch (Exception ex)
-				{
+				catch (IOException ex) {
+					ex.printStackTrace();
+					logger.log(LogLevel.WARN, LogCategory.MAIN, "Failed to load " + structureDataFile.getAbsolutePath() + ", trying to load backup.");
+				} catch (DataFormatException ex) {
 					ex.printStackTrace();
 					logger.log(LogLevel.WARN, LogCategory.MAIN, "Failed to load " + structureDataFile.getAbsolutePath() + ", trying to load backup.");
 				} finally {
@@ -762,8 +766,9 @@ public class CustomStructureFileManager
 										
 					result = parseStructuresFileFromStream(buffer, regionCoord, presetFolderName, worldSeed, isBO4Enabled, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
 				}
-				catch (Exception ex)
-				{
+				catch (IOException ex) {
+					ex.printStackTrace();
+				} catch (DataFormatException ex) {
 					ex.printStackTrace();
 				} finally {
 					if(fis != null)
@@ -1030,19 +1035,19 @@ public class CustomStructureFileManager
 					{
 						dos.close();
 					}
-				} catch (Exception e) { }				
+				} catch (IOException e) { }
 				try {
 					if(dos2 != null)
 					{
 						dos2.close();
 					}
-				} catch (Exception e) { }
+				} catch (IOException e) { }
 				try {
 					if(fos != null)
 					{
 						fos.close();
 					}
-				} catch (Exception e) { }
+				} catch (IOException e) { }
 			}
 		}
 	}
@@ -1071,8 +1076,10 @@ public class CustomStructureFileManager
 				parseChunksMapFileFromStream(buffer, spawnedStructuresByName, spawnedStructuresByGroup);
 				return;
 			}
-			catch (Exception ex)
-			{
+			catch (IOException ex) {
+				ex.printStackTrace();
+				logger.log(LogLevel.WARN, LogCategory.MAIN, "Failed to load " + occupiedChunksFile.getAbsolutePath() + ", trying to load backup.");
+			} catch (DataFormatException ex) {
 				ex.printStackTrace();
 				logger.log(LogLevel.WARN, LogCategory.MAIN, "Failed to load " + occupiedChunksFile.getAbsolutePath() + ", trying to load backup.");
 			} finally {
@@ -1106,8 +1113,9 @@ public class CustomStructureFileManager
 				parseChunksMapFileFromStream(buffer, spawnedStructuresByName, spawnedStructuresByGroup);
 				return;
 			}
-			catch (Exception ex)
-			{
+			catch (IOException ex) {
+				ex.printStackTrace();
+			} catch (DataFormatException ex) {
 				ex.printStackTrace();
 			} finally {
 				if(fis != null)

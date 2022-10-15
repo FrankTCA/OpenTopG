@@ -24,12 +24,7 @@ public final class PaperMaterialTag extends LocalMaterialTag
 			}
 		}
 		final ResourceLocation resourceLocation;
-		try
-		{
-			resourceLocation = new ResourceLocation(name.trim().toLowerCase());
-		} catch(Exception ex) {
-			return null;
-		}
+		resourceLocation = new ResourceLocation(name.trim().toLowerCase());
 		TagKey<Block> blockTag = getBlockTagFromResourceLocation(resourceLocation);
 		return blockTag == null ? null : new PaperMaterialTag(blockTag, resourceLocation.toString());
 	}

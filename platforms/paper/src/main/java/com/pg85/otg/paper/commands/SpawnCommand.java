@@ -103,8 +103,12 @@ public class SpawnCommand extends BaseCommand
 			source.sendSuccess(new TextComponent("\u00a7cPermission denied!"), false);
 			return 0;
 		}
-		try
-		{
+		/*
+		* Do or do not
+		* There is no try
+		 */
+		//try
+		//{
 			presetName = presetName != null && presetName.equalsIgnoreCase("global") ? null : presetName;
 			CustomObject objectToSpawn = ObjectUtils.getObject(objectName, presetName);
 
@@ -269,14 +273,13 @@ public class SpawnCommand extends BaseCommand
 					source.sendSuccess(new TextComponent("Failed to spawn object " + objectName), false);
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		//}
+		/*{
 			source.sendSuccess(new TextComponent("Something went wrong, please check logs"), false);
 			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, "Error during spawn command: ");
 			OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MAIN, String.format("Error during spawn command: ", (Object[])e.getStackTrace()));
 			e.printStackTrace();
-		}
+		}*/
 		return 0;
 	}
 
