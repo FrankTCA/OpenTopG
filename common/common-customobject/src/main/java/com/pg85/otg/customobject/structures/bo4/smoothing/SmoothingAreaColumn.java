@@ -3,7 +3,7 @@ package com.pg85.otg.customobject.structures.bo4.smoothing;
 import java.util.ArrayList;
 
 import com.pg85.otg.customobject.bo4.BO4Config;
-import com.pg85.otg.customobject.structures.bo4.smoothing.SmoothingAreaBlock.enumSmoothingBlockType;
+import com.pg85.otg.customobject.structures.bo4.smoothing.SmoothingAreaBlock.EnumSmoothingBlockType;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
@@ -41,11 +41,11 @@ class SmoothingAreaColumn
 			// and one filling line (the highest filling block in the column).	
 			for(SmoothingAreaBlock block : this.blocks)
 			{
-				if(block.smoothingBlockType == enumSmoothingBlockType.FILLING && (this.highestFillingBlock == null || this.highestFillingBlock.y < block.y))
+				if(block.smoothingBlockType == EnumSmoothingBlockType.FILLING && (this.highestFillingBlock == null || this.highestFillingBlock.y < block.y))
 				{
 					this.highestFillingBlock = block;
 				}
-				if(block.smoothingBlockType == enumSmoothingBlockType.CUTTING && (this.lowestCuttingBlock == null || this.lowestCuttingBlock.y > block.y))
+				if(block.smoothingBlockType == EnumSmoothingBlockType.CUTTING && (this.lowestCuttingBlock == null || this.lowestCuttingBlock.y > block.y))
 				{
 					this.lowestCuttingBlock = block;
 				}
