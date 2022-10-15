@@ -7,7 +7,7 @@ package com.pg85.otg.core;
  */
 public class OTG
 {
-	private static OTGEngine Engine;
+	private static OTGEngine engine;
 
 	private OTG() { }
 
@@ -15,23 +15,23 @@ public class OTG
 
 	public static OTGEngine getEngine()
 	{
-		return Engine;
+		return engine;
 	}
 
 	public static void startEngine(OTGEngine engine)
 	{
-		if (Engine != null)
+		if (OTG.engine != null)
 		{
 			throw new IllegalStateException("Engine is already set.");
 		}
 
-		Engine = engine;
+		OTG.engine = engine;
 		engine.onStart();
 	}
 
 	public static void stopEngine()
 	{
-		Engine.onShutdown();
-		Engine = null;
+		engine.onShutdown();
+		engine = null;
 	}
 }
