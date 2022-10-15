@@ -454,9 +454,10 @@ public class BO3 implements StructuredCustomObject
 		}
 
 		BO3EntityFunction[] entityDataInObject = this.settings.entityFunctions[rotation.getRotationId()];
+		BO3EntityFunction newEntityData;
 		for (BO3EntityFunction entity : entityDataInObject)
 		{
-			BO3EntityFunction newEntityData = new BO3EntityFunction();
+			newEntityData = new BO3EntityFunction();
 
 			newEntityData.y = y + entity.y;
 			newEntityData.x = x + entity.x;

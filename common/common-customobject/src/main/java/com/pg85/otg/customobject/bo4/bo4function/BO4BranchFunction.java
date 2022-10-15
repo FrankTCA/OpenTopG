@@ -64,6 +64,7 @@ public class BO4BranchFunction extends BranchFunction<BO4Config>
 		int newX = rotatedBranch.x;
 		int newZ = rotatedBranch.z;
 
+		ArrayList<BO4BranchNode> rotatedBranchBranches;
 		for(int i = 0; i < rotation.getRotationId(); i++)
 		{
 			newX = rotatedBranch.z;
@@ -73,7 +74,7 @@ public class BO4BranchFunction extends BranchFunction<BO4Config>
 			rotatedBranch.y = rotatedBranch.y;
 			rotatedBranch.z = newZ;
 
-			ArrayList<BO4BranchNode> rotatedBranchBranches = new ArrayList<BO4BranchNode>();
+			rotatedBranchBranches = new ArrayList<BO4BranchNode>();
 			for (BO4BranchNode holder : rotatedBranch.branchesBO4)
 			{
 				rotatedBranchBranches.add(new BO4BranchNode(holder.branchDepth, holder.isRequiredBranch, holder.isWeightedBranch, holder.getRotation().next(), holder.getChance(), holder.getCustomObject(false, presetFolderName, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker), holder.customObjectName, holder.branchGroup));

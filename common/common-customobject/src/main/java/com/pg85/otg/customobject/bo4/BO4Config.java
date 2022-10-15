@@ -2070,13 +2070,14 @@ public class BO4Config extends CustomObjectConfigFile
 				}
 			}
 		}
+		int blockIndex;
 		for(int i = 0; i < newBlocks.size(); i++)
 		{
 			block = (BO4BlockFunction) newBlocks.get(i);
 
 			this.blocks[block.x][block.z][columnBlockIndex[block.x][block.z]] = (short) block.y;
 
-			int blockIndex = columnBlockIndex[block.x][block.z] + getColumnBlockIndex(columnSizes, block.x, block.z);
+			blockIndex = columnBlockIndex[block.x][block.z] + getColumnBlockIndex(columnSizes, block.x, block.z);
 
 			this.blocksMaterial[blockIndex] = block.material;
 			this.blocksMetaDataName[blockIndex] = block.nbtName;

@@ -67,6 +67,7 @@ public final class BiomeConfigFinder
 	 */
 	private void loadBiomesFromDirectory(List<String> worldBiomes, int worldHeightScale, Map<String, BiomeConfigStub> biomeConfigsStore, File directory, ILogger logger, IMaterialReader materialReader)
 	{
+		SettingsMap settings;
 		for (File file : directory.listFiles())
 		{
 			// Search recursively
@@ -86,7 +87,7 @@ public final class BiomeConfigFinder
 			
 			// Load biomeconfig
 			File renamedFile = renameBiomeFile(file, biomeName, logger);
-			SettingsMap settings = FileSettingsReader.read(biomeName, renamedFile, logger);
+			settings = FileSettingsReader.read(biomeName, renamedFile, logger);
 			BiomeConfigStub biomeConfigStub = new BiomeConfigStub(settings, file.toPath(), biomeName, logger, materialReader);
 			biomeConfigsStore.put(biomeName, biomeConfigStub);
 		}

@@ -203,13 +203,14 @@ public abstract class LocalPresetLoader
 	{
 		ArrayList<BiomeConfig> biomeConfigs = new ArrayList<BiomeConfig>();
 
+		BiomeConfig biomeConfig;
 		for (BiomeConfigStub biomeConfigStub : biomeConfigStubs.values())
 		{
 			// Inheritance
 			processMobInheritance(biomeConfigStubs, biomeConfigStub, 0, logger);
 
 			// Settings reading
-			BiomeConfig biomeConfig = new BiomeConfig(biomeConfigStub.getBiomeName(), biomeConfigStub, presetDir, biomeConfigStub.getSettings(), worldConfig, presetShortName, presetMajorVersion, biomeResourcesManager, logger, materialReader, worldConfig);
+			biomeConfig = new BiomeConfig(biomeConfigStub.getBiomeName(), biomeConfigStub, presetDir, biomeConfigStub.getSettings(), worldConfig, presetShortName, presetMajorVersion, biomeResourcesManager, logger, materialReader, worldConfig);
 			biomeConfigs.add(biomeConfig);
 
 			// Settings writing

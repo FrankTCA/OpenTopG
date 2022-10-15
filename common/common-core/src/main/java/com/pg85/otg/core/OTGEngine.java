@@ -161,10 +161,11 @@ public abstract class OTGEngine
 						int oldMinorVer = parseMinorVersion(reader);
 						int newMajorVer = 0;
 						int newMinorVer = 0;
+						JarEntry jarEntry;
 	
 						while (entries.hasMoreElements())
 						{
-							JarEntry jarEntry = entries.nextElement();
+							jarEntry = entries.nextElement();
 							if (jarEntry.getName().contains("Default/" + Constants.WORLD_CONFIG_FILE))
 							{
 								reader = new BufferedReader(new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry))));
@@ -186,10 +187,11 @@ public abstract class OTGEngine
 				String defaultPresetPath = "resources/Presets/Default/";
 				String dimensionConfigsPath = "resources/DimensionConfigs/";
 				entries = jarFile.entries();
-	
+
+				JarEntry entry;
 				while (entries.hasMoreElements())
 				{
-					JarEntry entry = entries.nextElement();
+					entry = entries.nextElement();
 					if (
 							entry.getName().startsWith(dimensionConfigsPath) ||
 									entry.getName().startsWith(defaultPresetPath)

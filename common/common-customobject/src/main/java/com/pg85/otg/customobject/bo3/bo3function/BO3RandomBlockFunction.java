@@ -116,13 +116,14 @@ public class BO3RandomBlockFunction extends BO3BlockFunction
 				if (metaData != null)
 				{
 					if (metaData.getTag("Items") != null) {
+						String strVal;
 						for (NamedBinaryTag item : (NamedBinaryTag[]) metaData.getTag("Items").getValue()) {
 							if (item.getTag("id").getType() == NamedBinaryTag.Type.TAG_Short) {
 								short val = (short)item.getTag("id").getValue();
 								item.removeSubTag(item.getTag("id"));
 								NamedBinaryTag[] newItemValue = new NamedBinaryTag[((NamedBinaryTag[])item.getValue()).length + 1];
 								System.arraycopy(item.getValue(), 0, newItemValue, 0, newItemValue.length - 1);
-								String strVal = "minecraft:" + BlockNames.blockNameFromLegacyBlockId(val);
+								strVal = "minecraft:" + BlockNames.blockNameFromLegacyBlockId(val);
 								newItemValue[newItemValue.length-2] = new NamedBinaryTag(NamedBinaryTag.Type.TAG_String, "id", strVal);
 								newItemValue[newItemValue.length-1] = new NamedBinaryTag(NamedBinaryTag.Type.TAG_End, "", null);
 								item.setValue(newItemValue);

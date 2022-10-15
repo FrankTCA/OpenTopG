@@ -436,9 +436,10 @@ abstract class BiomeConfigBase extends ConfigFile implements IBiomeConfig
 	public List<List<String>> getCustomStructureNames()
 	{
 		List<List<String>> customStructureNamesByGen = new ArrayList<>();
+		List<String> customStructureNames;
 		for(CustomStructureResource structureGens : this.settings.customStructures)
 		{
-			List<String> customStructureNames = new ArrayList<>(structureGens.objectNames);
+			customStructureNames = new ArrayList<>(structureGens.objectNames);
 			customStructureNamesByGen.add(customStructureNames);
 		}
 		return customStructureNamesByGen; 

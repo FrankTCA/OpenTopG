@@ -171,9 +171,10 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject
 		ObjectCoordinate[] data = this.data[0];
 		BlockFunction<?>[] blockFunctions = new BO3BlockFunction[data.length];
 		int i = 0;
+		BO3BlockFunction block;
 		for (ObjectCoordinate point : data)
 		{
-			BO3BlockFunction block = new BO3BlockFunction();
+			block = new BO3BlockFunction();
 			block.material = point.material;
 			block.nbt = null;
 			block.nbtName = "";
