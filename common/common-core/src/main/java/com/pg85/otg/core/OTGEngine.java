@@ -20,6 +20,7 @@ import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
@@ -155,7 +156,7 @@ public abstract class OTGEngine
 					File wc = new File(presetsDir.getPath() + File.separator+ "Default" + File.separator + Constants.WORLD_CONFIG_FILE);
 					if (wc.exists())
 					{
-						BufferedReader reader = new BufferedReader(new FileReader(wc));
+						BufferedReader reader = Files.newBufferedReader(wc.toPath());
 						int oldMajorVer = parseMajorVersion(reader);
 						int oldMinorVer = parseMinorVersion(reader);
 						int newMajorVer = 0;

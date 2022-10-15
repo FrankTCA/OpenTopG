@@ -12,6 +12,7 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.EntityNames;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
 
 /**
@@ -157,7 +158,7 @@ public abstract class EntityFunction<T extends CustomObjectConfigFile> extends C
 			if(metaDataFile.exists())
 			{
 				try {
-					BufferedReader reader = new BufferedReader(new FileReader(metaDataFile));
+					BufferedReader reader = Files.newBufferedReader(metaDataFile.toPath());
 					try {
 						String line = reader.readLine();
 

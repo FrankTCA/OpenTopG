@@ -74,7 +74,7 @@ public class CommandUtil
 					}
 				}
 
-				argsMap.put((index++) + "", str);
+				argsMap.put(Integer.toString((index++)), str);
 			}
 		}
 		catch (CommandSyntaxException e)

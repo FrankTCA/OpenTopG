@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 
 /**
@@ -74,7 +75,7 @@ public final class FileSettingsWriter
 				throw new IOException("Could not create directory '" + file.getParentFile() + "'");
 			}
 
-			writer = new BufferedWriter(new FileWriter(file));
+			writer = Files.newBufferedWriter(file.toPath());
 			for (RawSettingValue entry : settingsMap.getRawSettings())
 			{
 				writeEntry(writer, entry);

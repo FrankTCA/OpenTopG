@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * A settings reader that reads from a file.
@@ -96,7 +97,7 @@ public class FileSettingsReader
 
 		try
 		{
-			settingsReader = new BufferedReader(new FileReader(file));
+			settingsReader = Files.newBufferedReader(file.toPath());
 			readIntoMap(settings, settingsReader);
 		} catch (IOException e) {
 			logger.log(LogLevel.ERROR, LogCategory.CONFIGS, String.format("Could not read file, exception: ", (Object[])e.getStackTrace()));

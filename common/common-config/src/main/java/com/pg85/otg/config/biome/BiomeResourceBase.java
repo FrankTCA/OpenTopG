@@ -20,7 +20,7 @@ public abstract class BiomeResourceBase extends ConfigFunction<IBiomeConfig>
 		List<String> stringArgs = new ArrayList<String>(args.length);
 		for (Object arg : args)
 		{
-			stringArgs.add("" + arg);
+			stringArgs.add(arg.toString());
 		}
 
 		try

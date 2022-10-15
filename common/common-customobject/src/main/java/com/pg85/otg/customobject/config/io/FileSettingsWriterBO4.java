@@ -17,6 +17,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,7 +201,7 @@ public final class FileSettingsWriterBO4 implements SettingsWriterBO4
 	public void open() throws IOException
 	{
 		file.getParentFile().mkdirs();
-		writer = new BufferedWriter(new FileWriter(file));
+		writer = Files.newBufferedWriter(file.toPath());
 	}
 
 	@Override
