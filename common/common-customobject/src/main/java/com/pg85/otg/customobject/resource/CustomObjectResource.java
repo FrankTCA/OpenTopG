@@ -11,6 +11,7 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.helpers.StringHelper;
 
 import java.nio.file.Path;
@@ -26,7 +27,7 @@ public class CustomObjectResource extends BiomeResourceBase implements ICustomOb
 	public CustomObjectResource(IBiomeConfig biomeConfig, List<String> args, ILogger logger, IMaterialReader materialReader) throws InvalidConfigException
 	{
 		super(biomeConfig, args, logger, materialReader);
-		if (args.isEmpty() || (args.size() == 1 && args.get(0).trim().isEmpty()))
+		if (args.isEmpty() || (args.size() == 1 && PerfHelper.stringIsEmpty(args.get(0))))
 		{
 			// Backwards compatibility
 			args = new ArrayList<String>();

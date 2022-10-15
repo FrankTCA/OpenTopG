@@ -26,6 +26,7 @@ import com.pg85.otg.interfaces.ICustomObjectManager;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.nbt.NamedBinaryTag;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.helpers.StreamHelper;
@@ -1216,7 +1217,7 @@ public class BO4Config extends CustomObjectConfigFile
 
 		this.inheritedBO3s = new ArrayList<String>();
 		this.inheritedBO3s.add(this.getName()); // TODO: Make this cleaner?
-		if(this.inheritBO3 != null && this.inheritBO3.trim().length() > 0)
+		if(!PerfHelper.stringIsEmpty(this.inheritBO3))
 		{
 			this.inheritedBO3s.add(this.inheritBO3);
 		}

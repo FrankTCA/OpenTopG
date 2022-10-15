@@ -168,7 +168,7 @@ public abstract class StringHelper
 	 */
 	public static String[] readCommaSeperatedString(String line)
 	{
-		if (line.trim().isEmpty())
+		if (PerfHelper.stringIsEmpty(line))
 		{
 			// Empty lines have no elements, not one empty element
 			return new String[0];
