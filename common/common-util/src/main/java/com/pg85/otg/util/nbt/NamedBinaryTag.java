@@ -590,7 +590,15 @@ public class NamedBinaryTag
 		return null;
 	}
 
-	private void indent(int indent)
+	/*
+	* This code is disabled and commented out
+	* It is used nowhere else in the project
+	* It was likely used at some point a LONG time ago
+	* to debug nbt
+	* I am keeping it in case it is needed again in the future
+	* But for now it will remain commented
+	 */
+	/*private void indent(int indent)
 	{
 		for (int i = 0; i < indent; i++)
 		{
@@ -650,5 +658,5 @@ public class NamedBinaryTag
 		} else {
 			System.out.println(": " + t.getValue());
 		}
-	}
+	}*/
 }
