@@ -5,6 +5,7 @@ import com.pg85.otg.exceptions.InvalidConfigException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Structure parts: parts of a vanilla structure that Mojang has saved to a NBT
@@ -58,7 +59,7 @@ public enum DefaultStructurePart
 	IGLOO_MIDDLE("minecraft:igloo/igloo_middle"),
 	IGLOO_BOTTOM("minecraft:igloo/igloo_bottom");
 
-	private static final Map<String, DefaultStructurePart> ByPath = new HashMap<String, DefaultStructurePart>();
+	private static final ConcurrentHashMap<String, DefaultStructurePart> ByPath = new ConcurrentHashMap<String, DefaultStructurePart>();
 
 	static
 	{

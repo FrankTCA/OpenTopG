@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.pg85.otg.config.ConfigFile;
 import com.pg85.otg.config.ConfigFunction;
@@ -194,7 +195,7 @@ abstract class BiomeConfigBase extends ConfigFile implements IBiomeConfig
 		
 		// Mob spawning
 
-		protected Map<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new HashMap<>();
+		protected ConcurrentHashMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new ConcurrentHashMap<>();
 		
 		protected String inheritMobsBiomeName;
 		
@@ -205,8 +206,8 @@ abstract class BiomeConfigBase extends ConfigFile implements IBiomeConfig
 		// Saplings
 		
 		protected Map<SaplingType, SaplingResource> saplingGrowers = new EnumMap<SaplingType, SaplingResource>(SaplingType.class);
-		protected Map<LocalMaterialData, SaplingResource> customSaplingGrowers = new HashMap<>();
-		protected Map<LocalMaterialData, SaplingResource> customBigSaplingGrowers = new HashMap<>();
+		protected ConcurrentHashMap<LocalMaterialData, SaplingResource> customSaplingGrowers = new ConcurrentHashMap<>();
+		protected ConcurrentHashMap<LocalMaterialData, SaplingResource> customBigSaplingGrowers = new ConcurrentHashMap<>();
 	}
 	
 	protected BiomeConfigBase(String configName)

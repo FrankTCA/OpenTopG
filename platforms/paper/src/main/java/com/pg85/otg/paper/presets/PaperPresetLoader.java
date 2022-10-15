@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.pg85.otg.paper.util.ObfuscationHelper;
 import net.minecraft.core.MappedRegistry;
@@ -56,10 +57,10 @@ import net.minecraft.world.level.biome.Biome;
 public class PaperPresetLoader extends LocalPresetLoader
 {
 	private final Map<String, List<ResourceKey<Biome>>> biomesByPresetFolderName = new LinkedHashMap<>();
-	private final HashMap<String, IBiome[]> globalIdMapping = new HashMap<>();	
-	private final Map<String, BiomeLayerData> presetGenerationData = new HashMap<>();	
+	private final ConcurrentHashMap<String, IBiome[]> globalIdMapping = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, BiomeLayerData> presetGenerationData = new ConcurrentHashMap<>();
 	// We have to store biomes, since Spigot doesn't expose registry key on BiomeBase.
-	private final Map<Biome, IBiomeConfig> biomeConfigsByBiome = new HashMap<>();	
+	private final ConcurrentHashMap<Biome, IBiomeConfig> biomeConfigsByBiome = new ConcurrentHashMap<>();
 
 	private final ResourceKey<Registry<Biome>> BIOME_KEY = Registry.BIOME_REGISTRY;
 
@@ -134,11 +135,11 @@ public class PaperPresetLoader extends LocalPresetLoader
 		
 		List<IBiomeConfig> biomeConfigs = preset.getAllBiomeConfigs();		
 
-		Map<Integer, List<BiomeData>> isleBiomesAtDepth = new HashMap<>();
-		Map<Integer, List<BiomeData>> borderBiomesAtDepth = new HashMap<>();
+		ConcurrentHashMap<Integer, List<BiomeData>> isleBiomesAtDepth = new ConcurrentHashMap<>();
+		ConcurrentHashMap<Integer, List<BiomeData>> borderBiomesAtDepth = new ConcurrentHashMap<>();
 		
-		Map<String, List<Integer>> worldBiomes = new HashMap<>();
-		Map<String, IBiomeConfig> biomeConfigsByName = new HashMap<>();
+		ConcurrentHashMap<String, List<Integer>> worldBiomes = new ConcurrentHashMap<>();
+		ConcurrentHashMap<String, IBiomeConfig> biomeConfigsByName = new ConcurrentHashMap<>();
 		
 		// Create registry keys for each biomeconfig, create template 
 		// biome configs for any modded biomes using TemplateForBiome.
@@ -404,7 +405,7 @@ public class PaperPresetLoader extends LocalPresetLoader
 
 	public Map<String, BiomeLayerData> getPresetGenerationData ()
 	{
-		Map<String, BiomeLayerData> clonedData = new HashMap<>();
+		ConcurrentHashMap<String, BiomeLayerData> clonedData = new ConcurrentHashMap<>();
 		for (Map.Entry<String, BiomeLayerData> entry : this.presetGenerationData.entrySet())
 		{
 			clonedData.put(entry.getKey(), new BiomeLayerData(entry.getValue()));

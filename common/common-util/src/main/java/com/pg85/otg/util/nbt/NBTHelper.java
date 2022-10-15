@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.util.logging.LogCategory;
@@ -16,7 +17,7 @@ import com.pg85.otg.util.logging.LogLevel;
 public class NBTHelper
 {
 	// A list of already loaded meta Tags. The path is the key, a NBT Tag is the value.
-	private static Map<String, NamedBinaryTag> LoadedTags = new HashMap<String, NamedBinaryTag>();
+	private static ConcurrentHashMap<String, NamedBinaryTag> LoadedTags = new ConcurrentHashMap<String, NamedBinaryTag>();
 
 	private static NamedBinaryTag loadTileEntityFromNBT(String path, ILogger logger)
 	{

@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.DataFormatException;
 
 import com.pg85.otg.constants.Constants;
@@ -495,7 +496,7 @@ public class CustomStructureFileManager
 					{
 						dos.writeBoolean(true);
 												
-						Map<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsInRegion = new HashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
+						ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsInRegion = new ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
 						int size = 0;
 						for(Entry<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectToSpawn : ((BO4CustomStructure)structure).getObjectsToSpawn().entrySet())
 						{
@@ -536,7 +537,7 @@ public class CustomStructureFileManager
 						ArrayList<SmoothingAreaLine> coords2;
 						dos.writeBoolean(true);
 						
-						Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasPerRegion = new HashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+						ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasPerRegion = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
 						int size = 0;
 						for(Entry<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreaToSpawn : ((BO4CustomStructure)structure).getSmoothingAreaManager().smoothingAreasToSpawn.entrySet())
 						{
@@ -887,7 +888,7 @@ public class CustomStructureFileManager
 					chunkCoords.add(ChunkCoordinate.fromChunkCoords(chunkX, chunkZ));
 				}
 
-				Map<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn = new HashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();	
+				ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn = new ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
 				if(buffer.get() != 0)
 				{
 					int objectsToSpawnSize = buffer.getInt();
@@ -909,7 +910,7 @@ public class CustomStructureFileManager
 					}
 				}
 								
-				Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new HashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+				ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
 				if(buffer.get() != 0)
 				{
 					int smoothingAreasToSpawnSize = buffer.getInt();

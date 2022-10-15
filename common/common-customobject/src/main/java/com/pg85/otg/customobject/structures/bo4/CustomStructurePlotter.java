@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -274,7 +275,7 @@ public class CustomStructurePlotter
 			}
 			if(targetStructure != null || customStructureGens.size() > 0)
 			{
-				Map<IStructuredCustomObject, Double> structuredCustomObjects = new HashMap<>();
+				ConcurrentHashMap<IStructuredCustomObject, Double> structuredCustomObjects = new ConcurrentHashMap<>();
 				if(targetStructure != null)
 				{
 					if(targetBiomes.size() == 0 || targetBiomes.contains(biomeConfig.getName()))

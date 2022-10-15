@@ -28,6 +28,7 @@ import com.pg85.otg.util.logging.LogLevel;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BO4CustomStructure extends CustomStructure
 {	
@@ -51,11 +52,11 @@ public class BO4CustomStructure extends CustomStructure
 	private boolean startChunkBlockChecksDone = false;
 
 	// Stores all the branches of this branching structure that should spawn along with the chunkcoordinates they should spawn in
-	private Map<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn = new HashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
+	private ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn = new ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
 	// TODO: Make sure this never becomes an issue for memory usage. 
-	private Map<ChunkCoordinate, String> objectsToSpawnInfo = new HashMap<ChunkCoordinate, String>();	
+	private ConcurrentHashMap<ChunkCoordinate, String> objectsToSpawnInfo = new ConcurrentHashMap<ChunkCoordinate, String>();
 	
-	public Map<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> getObjectsToSpawn()
+	public ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> getObjectsToSpawn()
 	{
 		return objectsToSpawn;
 	}
@@ -65,7 +66,7 @@ public class BO4CustomStructure extends CustomStructure
 		return this.smoothingAreaManager;
 	}
 
-	public Map<ChunkCoordinate, String> getObjectsToSpawnInfo()	
+	public ConcurrentHashMap<ChunkCoordinate, String> getObjectsToSpawnInfo()
 	{
 		return this.objectsToSpawnInfo;
 	}
@@ -168,7 +169,7 @@ public class BO4CustomStructure extends CustomStructure
 	
 	}	
 	
-	public BO4CustomStructure(long worldSeed, BO4CustomStructureCoordinate structureStart, Map<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn, Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn, int minY, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker)
+	public BO4CustomStructure(long worldSeed, BO4CustomStructureCoordinate structureStart, ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn, Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn, int minY, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker)
 	{
 		this(worldSeed, structureStart, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
 		this.objectsToSpawn = objectsToSpawn;
