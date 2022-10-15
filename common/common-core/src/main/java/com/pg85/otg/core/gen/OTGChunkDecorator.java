@@ -205,16 +205,12 @@ public class OTGChunkDecorator implements IChunkDecorator
 			else if(res instanceof ErroredFunction)
 			{
 				if(logger.getLogCategoryEnabled(LogCategory.DECORATION))
-				{
 					if(!((ErroredFunction<IBiomeConfig>)res).isLogged)
 					{
 						((ErroredFunction<IBiomeConfig>)res).isLogged = true;
 						if(logger.getLogCategoryEnabled(LogCategory.DECORATION))
-						{
 							logger.log(LogLevel.ERROR, LogCategory.DECORATION, "Errored setting ignored for biome " + biomeConfig.getName() + " : " + toString());
-						}
-					}					
-				}
+					}
 			}
 		}
 		if(logger.getLogCategoryEnabled(LogCategory.PERFORMANCE) && (System.currentTimeMillis() - startTimeAll) > 50)
@@ -272,17 +268,11 @@ public class OTGChunkDecorator implements IChunkDecorator
 			{
 				int y = 1;
 				if(((BO3)customObject).getConfig().getSpawnHeight() == SpawnHeightEnum.highestBlock)
-				{
 					y = worldGenRegion.getHighestBlockAboveYAt(targetChunk.getBlockX() + 15, targetChunk.getBlockZ() + 15) - 1;
-				}
 				else if(((BO3)customObject).getConfig().getSpawnHeight() == SpawnHeightEnum.highestSolidBlock)
-				{
 					y = worldGenRegion.getBlockAboveSolidHeight(targetChunk.getBlockX() + 15, targetChunk.getBlockZ() + 15) - 1;
-				}
 				else if(((BO3)customObject).getConfig().getSpawnHeight() == SpawnHeightEnum.randomY)
-				{
 					y = (int) (((BO3)customObject).getConfig().minHeight + (Math.random() * (((BO3)customObject).getConfig().maxHeight - ((BO3)customObject).getConfig().minHeight)));
-				}
 
 				y += ((BO3)customObject).getConfig().getSpawnHeightOffset();
 				// This may spawn the structure across chunk borders.

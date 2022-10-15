@@ -758,17 +758,11 @@ public class BO4 implements StructuredCustomObject
 				}
 			}
 			if(outOfBounds)
-			{
 				if(logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
-				{
 					logger.log(LogLevel.ERROR, LogCategory.CUSTOM_OBJECTS, "BO4 " + this.getName() + " tried to spawn blocks outside of the chunk being decorated, the blocks have been ignored. This can happen if a BO3 is not sliced into 16x16 pieces or has branches positioned in such a way that they cross a chunk border. OTG is more strict than TC in how branching BO4's used as CustomStructures() should be designed, BO4 creators have to design their BO4's and position their branches so that they fit neatly into a 16x16 grid. Hopefully in a future release OTG can be made to automatically slice branching structures instead of forcing the BO4 creator to do it.");
-				}
-			}
 	
 			if(logger.getLogCategoryEnabled(LogCategory.PERFORMANCE) && (System.currentTimeMillis() - startTime) > 50)
-			{
 				logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Spawning BO4 " + this.getName()  + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
-			}
 		}
 
 		return true;
@@ -794,7 +788,6 @@ public class BO4 implements StructuredCustomObject
 				worldMaterial.isMaterial(LocalMaterials.QUARTZ_BLOCK) ||
 				worldMaterial.isMaterial(LocalMaterials.EMERALD_BLOCK)
 			)
-			{
 				if(
 					material.isMaterial(LocalMaterials.GOLD_BLOCK) ||
 					material.isMaterial(LocalMaterials.IRON_BLOCK) ||
@@ -809,14 +802,11 @@ public class BO4 implements StructuredCustomObject
 					worldGenRegion.setBlock(x, y, z, LocalMaterials.GLOWSTONE);
 					return;
 				}
-			}
 		}
 		if(replaceBlocks != null)
-		{
 			worldGenRegion.setBlock(x, y, z, material, metaDataTag, replaceBlocks);
-		} else {
+		else
 			worldGenRegion.setBlock(x, y, z, material, metaDataTag);
-		}
 	}
 
 	@Override

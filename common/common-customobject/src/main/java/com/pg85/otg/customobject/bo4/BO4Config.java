@@ -369,7 +369,6 @@ public class BO4Config extends CustomObjectConfigFile
 									material.isSmoothAreaAnchor(start.getConfig().overrideChildSettings && this.overrideChildSettings ? start.getConfig().smoothStartWood : this.smoothStartWood, start.getConfig().spawnUnderWater)
 								)
 							)
-							{
 								if(
 									(!(start.getConfig().overrideChildSettings && this.overrideChildSettings ? start.getConfig().smoothStartTop : this.smoothStartTop) && y == getminY()) ||
 									((start.getConfig().overrideChildSettings && this.overrideChildSettings ? start.getConfig().smoothStartTop : this.smoothStartTop) && (this.heightMap[x][z] == null || y > this.heightMap[x][z].y))
@@ -396,7 +395,6 @@ public class BO4Config extends CustomObjectConfigFile
 									
 									this.heightMap[x][z] = blockFunction;
 								}
-							}
 							
 							blockIndex++;
 						}
@@ -611,9 +609,7 @@ public class BO4Config extends CustomObjectConfigFile
 			if(!this.inheritedBO3Loaded)
 			{
 				if(logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
-				{
 					logger.log(LogLevel.ERROR, LogCategory.CUSTOM_OBJECTS, "could not load BO4 parent for InheritBO3: " + this.inheritBO3 + " in BO4 " + this.getName());
-				}
 			}
 		}
 	}
@@ -1504,15 +1500,9 @@ public class BO4Config extends CustomObjectConfigFile
 				{
 					blocksInColumn = new ArrayList<BO4BlockFunction>();
 					for(BO4BlockFunction blockFunction : blocks)
-					{
 						if(!(blockFunction instanceof BO4RandomBlockFunction))
-						{
 							if(blockFunction.x == x && blockFunction.z == z)
-							{
 								blocksInColumn.add(blockFunction);
-							}
-						}
-					}
 					stream.writeShort(blocksInColumn.size());
 					if(blocksInColumn.size() > 0)
 					{

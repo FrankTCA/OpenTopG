@@ -197,7 +197,6 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject
 		for (ObjectCoordinate point : data)
 		{
 			if(this.doReplaceBlocks)
-			{
 				if(lastX != x + point.x || lastZ != z + point.z)
 				{
 					// TODO: Calculate area required and fetch biome data for whole chunks instead of per column.
@@ -205,7 +204,6 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject
 					lastX = x + point.x;
 					lastZ = z + point.z;
 				}
-			}
 			if ((worldMaterial = worldGenRegion.getMaterial(x + point.x, y + point.y, z + point.z)) != null)
 			{
 				if(worldMaterial.isAir())
@@ -236,25 +234,17 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject
 		// Basic checks
 		
 		if (y < worldGenRegion.getWorldMinY() || y > worldGenRegion.getWorldMaxY())  // Isn't this already done before this method is called?
-		{
 			return false;
-		}
 		
 		if ((y < this.spawnElevationMin) || (y > this.spawnElevationMax))
-		{
 			return false;
-		}
 
 		if (!this.spawnOnBlockType.contains(worldGenRegion.getMaterial(x, y - 1, z)))
-		{
 			return false;
-		}
 
 		LocalMaterialData worldMaterial = worldGenRegion.getMaterial(x, y - 5, z);
 		if (this.needsFoundation && worldMaterial == null || worldMaterial.isAir())
-		{
 			return false;
-		}
 
 		LocalMaterialData checkBlock = !this.spawnWater || !this.spawnLava ? worldGenRegion.getMaterial(x, y + 2, z) : null;
 		if(checkBlock == null)
@@ -263,19 +253,11 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject
 			return false;
 		}
 		if (!this.spawnWater)
-		{
 			if (checkBlock.isMaterial(LocalMaterials.WATER))
-			{
 				return false;
-			}
-		}
 		if (!this.spawnLava)
-		{
 			if (checkBlock.isMaterial(LocalMaterials.LAVA))
-			{
 				return false;
-			}
-		}
 
 		// TODO: Allow force spawning of BO2's? (/otg spawn), avoid light checks.
 		int checkLight = !this.spawnSunlight || !this.spawnDarkness ? worldGenRegion.getLightLevel(x, y + 2, z) : 0;

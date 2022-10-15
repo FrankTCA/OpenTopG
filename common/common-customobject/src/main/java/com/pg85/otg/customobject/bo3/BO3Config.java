@@ -692,22 +692,12 @@ public class BO3Config extends CustomObjectConfigFile
 	boolean parseModChecks(IModLoadedChecker modLoadedChecker)
 	{
 		for (BO3Check check : bo3Checks[0])
-		{
 			if (check instanceof ModCheck)
-			{
 				if (!((ModCheck) check).evaluate(modLoadedChecker))
-				{
 					return false;
-				}
-			}
 			else if (check instanceof ModCheckNot)
-			{
 				if (!((ModCheckNot) check).evaluate(modLoadedChecker))
-				{
 					return false;
-				}
-			}
-		}
 		return true;
 	}
 

@@ -83,12 +83,10 @@ class TreeObject implements CustomObject
 		Rotation rotation = Rotation.getRandomRotation(random);
 
 		if(!(minY == -1 && maxY == -1))
-		{
 			if (y < minY || y > maxY)
 			{
 				return false;
 			}
-		}
 		
 		if (y < worldGenRegion.getWorldMinY() || y > worldGenRegion.getWorldMaxY())
 		{

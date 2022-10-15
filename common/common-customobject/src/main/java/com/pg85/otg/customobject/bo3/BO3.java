@@ -153,10 +153,7 @@ public class BO3 implements StructuredCustomObject
 					!localMaterial.isAir() && 
 					!localMaterial.isLogOrLeaves() && 
 					!localMaterial.isSapling()
-				)
-				{
-					return false;
-				}
+				) return false;
 			}
 
 			// Only overwrite air

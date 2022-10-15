@@ -293,7 +293,6 @@ public abstract class LocalPresetLoader
 
 				// Check for too much recursion
 				if (currentDepth > MAX_INHERITANCE_DEPTH)
-				{
 					if(logger.getLogCategoryEnabled(LogCategory.MOBS))
 					{
 						logger.log(
@@ -306,7 +305,6 @@ public abstract class LocalPresetLoader
 							)
 						);
 					}
-				}
 
 				if(inheritMobsBiomeConfig != null)
 				{

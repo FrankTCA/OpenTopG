@@ -444,9 +444,7 @@ public class WorldConfig extends WorldConfigBase
 			if (res != null)
 			{
 				if (res instanceof TemplateBiome)
-				{
 					this.templateBiomes.add((TemplateBiome)res);
-				}
 			}
 		}
 	}	
@@ -459,9 +457,7 @@ public class WorldConfig extends WorldConfigBase
 			if (res != null)
 			{
 				if (res instanceof BiomeGroup)
-				{
 					this.biomeGroupManager.registerGroup((BiomeGroup) res, logger);
-				}
 			}
 		}
 	}
