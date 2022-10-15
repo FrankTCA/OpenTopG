@@ -47,11 +47,15 @@ public abstract class MinecraftObjectFunction<T extends CustomObjectConfigFile> 
 	//SpawnableObject object = worldGenRegion.getMojangStructurePart(structurePart.getPath());
 	//object.spawnForced(null, worldGenRegion, random, rotation, x, y, z);
 	@Override
-	public abstract void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z);
+	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z) {
+
+	}
 
 	// TODO: Implement this?
 	@Override
-	public abstract void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks);
+	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks) {
+
+	}
 
 	@Override
 	public boolean isAnalogousTo(CustomObjectConfigFunction<T> other)
