@@ -178,6 +178,6 @@ public class PaperMaterialReader implements IMaterialReader {
             OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Could not parse block: " + input + " (" + blockNameCorrected + "), substituting NOTE_BLOCK.");
         }
 
-        return PaperMaterialData.ofBlockData(Blocks.NOTE_BLOCK.defaultBlockState(), input);
+        return PaperMaterialData.ofBlockData(Blocks.AIR.defaultBlockState(), input);
     }
 }
