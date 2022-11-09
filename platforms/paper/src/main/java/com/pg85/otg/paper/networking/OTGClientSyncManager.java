@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class OTGClientSyncManager
-{
-	private static final ConcurrentHashMap<String, BiomeSettingSyncWrapper> syncedData = new ConcurrentHashMap<>();
+public class OTGClientSyncManager {
+    private static final ConcurrentHashMap<String, BiomeSettingSyncWrapper> syncedData = new ConcurrentHashMap<>();
 
-	public static Map<String, BiomeSettingSyncWrapper> getSyncedData()
-	{
-		return syncedData;
-	}
+    public static Map<String, BiomeSettingSyncWrapper> getSyncedData() {
+        return syncedData;
+    }
 }

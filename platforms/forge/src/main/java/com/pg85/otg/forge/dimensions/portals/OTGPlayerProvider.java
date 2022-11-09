@@ -6,23 +6,19 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 
 // Player capabilities used for tracking players in OTG portals.
-public class OTGPlayerProvider implements ICapabilityProvider
-{
-	private final OTGPlayer otgPlayer;
-	
-	public OTGPlayerProvider(OTGPlayer otgPlayer)
-	{
-		this.otgPlayer = otgPlayer;
-	}
+public class OTGPlayerProvider implements ICapabilityProvider {
+    private final OTGPlayer otgPlayer;
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side)
-	{
-		if (cap == OTGCapabilities.OTG_PLAYER_CAPABILITY)
-		{
-			return LazyOptional.of(() -> (T) this.otgPlayer);
-		}
-		return LazyOptional.empty();
-	}
+    public OTGPlayerProvider(OTGPlayer otgPlayer) {
+        this.otgPlayer = otgPlayer;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == OTGCapabilities.OTG_PLAYER_CAPABILITY) {
+            return LazyOptional.of(() -> (T) this.otgPlayer);
+        }
+        return LazyOptional.empty();
+    }
 }

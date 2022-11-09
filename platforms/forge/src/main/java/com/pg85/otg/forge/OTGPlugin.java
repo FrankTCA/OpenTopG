@@ -40,98 +40,87 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(Constants.MOD_ID_SHORT) // Should match META-INF/mods.toml
-@Mod.EventBusSubscriber(modid = Constants.MOD_ID_SHORT, bus = Mod.EventBusSubscriber.Bus.MOD) 
-public class OTGPlugin
-{
-	public OTGPlugin()
-	{
-		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID_SHORT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class OTGPlugin {
+    public OTGPlugin() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		// Register the clientSetup method for client-side initialisation logic (GUI etc).
-		modEventBus.addListener(this::clientSetup);
-		modEventBus.addListener(this::commonSetup);
+        // Register the clientSetup method for client-side initialisation logic (GUI etc).
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::commonSetup);
 
-		// Register self for server and other game events we are interested in
-		MinecraftForge.EVENT_BUS.register(this);
+        // Register self for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
 
-		// Let MC know about our chunk generator and biome provider. 
-		// If they're not added, we get errors and MC does not save properly.
-		Registry.register(Registry.BIOME_SOURCE, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGBiomeProvider.CODEC);
-		Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGNoiseChunkGenerator.CODEC);
-		ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constants.MOD_ID_SHORT, "default"));
+        // Let MC know about our chunk generator and biome provider.
+        // If they're not added, we get errors and MC does not save properly.
+        Registry.register(Registry.BIOME_SOURCE, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGBiomeProvider.CODEC);
+        Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(Constants.MOD_ID_SHORT, "default"), OTGNoiseChunkGenerator.CODEC);
+        ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Constants.MOD_ID_SHORT, "default"));
 
-		// Deferred registers
-		OTGPortalPois.poi.register(modEventBus);
-		OTGPortalBlocks.blocks.register(modEventBus);
-	}
+        // Deferred registers
+        OTGPortalPois.poi.register(modEventBus);
+        OTGPortalBlocks.blocks.register(modEventBus);
+    }
 
-	// Register player capabilities for dimension portal timer.
-	public void commonSetup(FMLCommonSetupEvent event)
-	{
-		OTGCapabilities.register();
-	}
+    // Register player capabilities for dimension portal timer.
+    public void commonSetup(FMLCommonSetupEvent event) {
+        OTGCapabilities.register();
+    }
 
-	// OTG World Type SP: We use our own world type registration logic so we can add a "customise"
-	// button to the world creation gui that shows OTG preset selection and customisation screens.
-	private void clientSetup(final FMLClientSetupEvent event)
-	{
-		// Register the OTG world type and any OTG GUI's for the world creation screen.
-		OTGGui.init();
-	}
+    // OTG World Type SP: We use our own world type registration logic so we can add a "customise"
+    // button to the world creation gui that shows OTG preset selection and customisation screens.
+    private void clientSetup(final FMLClientSetupEvent event) {
+        // Register the OTG world type and any OTG GUI's for the world creation screen.
+        OTGGui.init();
+    }
 
-	// OTG World Type MP: Register the OTG world type.
-	// For MP we use server.properties level-type:otg + generatorSettings:presetFolderName
-	@SubscribeEvent
-	@OnlyIn(Dist.DEDICATED_SERVER)
-	public static void registerWorldType(RegistryEvent.Register<ForgeWorldPreset> event)
-	{
-		ForgeRegistries.WORLD_TYPES.register(new OTGWorldType());
-	}
-	
-	@SubscribeEvent
-	public static void registerBiomes(RegistryEvent.Register<Biome> event)
-	{
-		// Start OpenTerrainGenerator engine, loads all presets.
-		// Done here so that file indexing happens after presetpacker has unpacked its preset
-		OTG.startEngine(new ForgeEngine());
+    // OTG World Type MP: Register the OTG world type.
+    // For MP we use server.properties level-type:otg + generatorSettings:presetFolderName
+    @SubscribeEvent
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    public static void registerWorldType(RegistryEvent.Register<ForgeWorldPreset> event) {
+        ForgeRegistries.WORLD_TYPES.register(new OTGWorldType());
+    }
 
-		// Register all biomes
-		// TODO: Use proper Forge way of registering biomes, we're not using
-		// deferredregister (wasn't working before) or event.getRegistry().register atm.
-		OTG.getEngine().getPresetLoader().registerBiomes();
+    @SubscribeEvent
+    public static void registerBiomes(RegistryEvent.Register<Biome> event) {
+        // Start OpenTerrainGenerator engine, loads all presets.
+        // Done here so that file indexing happens after presetpacker has unpacked its preset
+        OTG.startEngine(new ForgeEngine());
 
-		// Fog & colors networking/handlers
-		OTGClientSyncManager.setup();
-		MultipleColorHandler.setup();
-	}
+        // Register all biomes
+        // TODO: Use proper Forge way of registering biomes, we're not using
+        // deferredregister (wasn't working before) or event.getRegistry().register atm.
+        OTG.getEngine().getPresetLoader().registerBiomes();
 
-	@SubscribeEvent
-	public void onCommandRegister(RegisterCommandsEvent event)
-	{
-		OTGCommand.register(event.getDispatcher());
-	}
+        // Fog & colors networking/handlers
+        OTGClientSyncManager.setup();
+        MultipleColorHandler.setup();
+    }
 
-	@SubscribeEvent
-	public void onSave(Save event)
-	{
-		// Save OTG DimensionTypes to world save folder as datapack json files so they're picked up on world load.
-		// Unfortunately there doesn't appear to be a way to persist them via code(?)
-		if(!event.getWorld().isClientSide())
-		{
-			if(((ServerLevel)event.getWorld()).getLevel().getChunkSource().getGenerator() instanceof OTGNoiseChunkGenerator)
-			{
-				Path datapackDir = ((ServerLevel)event.getWorld()).getLevel().getServer().getWorldPath(LevelResource.DATAPACK_DIR);
-				Preset preset = ((OTGNoiseChunkGenerator)((ServerLevel)event.getWorld()).getLevel().getChunkSource().getGenerator()).getPreset();
-				String dimName = ((ServerLevel)event.getWorld()).dimension().location().getPath();
-				OTGDimensionTypeHelper.saveDataPackFile(datapackDir, dimName, preset.getWorldConfig(), preset.getFolderName());
-			}
-		}
-		((ForgeEngine)OTG.getEngine()).onSave(event.getWorld());
-	}
+    @SubscribeEvent
+    public void onCommandRegister(RegisterCommandsEvent event) {
+        OTGCommand.register(event.getDispatcher());
+    }
 
-	@SubscribeEvent
-	public void onUnload(WorldEvent.Unload event)
-	{
-		((ForgeEngine)OTG.getEngine()).onUnload(event.getWorld());
-	}
+    @SubscribeEvent
+    public void onSave(Save event) {
+        // Save OTG DimensionTypes to world save folder as datapack json files so they're picked up on world load.
+        // Unfortunately there doesn't appear to be a way to persist them via code(?)
+        if (!event.getWorld().isClientSide()) {
+            if (((ServerLevel) event.getWorld()).getLevel().getChunkSource().getGenerator() instanceof OTGNoiseChunkGenerator) {
+                Path datapackDir = ((ServerLevel) event.getWorld()).getLevel().getServer().getWorldPath(LevelResource.DATAPACK_DIR);
+                Preset preset = ((OTGNoiseChunkGenerator) ((ServerLevel) event.getWorld()).getLevel().getChunkSource().getGenerator()).getPreset();
+                String dimName = ((ServerLevel) event.getWorld()).dimension().location().getPath();
+                OTGDimensionTypeHelper.saveDataPackFile(datapackDir, dimName, preset.getWorldConfig(), preset.getFolderName());
+            }
+        }
+        ((ForgeEngine) OTG.getEngine()).onSave(event.getWorld());
+    }
+
+    @SubscribeEvent
+    public void onUnload(WorldEvent.Unload event) {
+        ((ForgeEngine) OTG.getEngine()).onUnload(event.getWorld());
+    }
 }

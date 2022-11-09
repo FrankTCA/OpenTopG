@@ -21,284 +21,250 @@ import java.util.concurrent.ConcurrentHashMap;
  * This class searches for the appropriate file for each biome.
  * You give it a list of folders to search in, and it will find the location of
  * all BiomeConfigs. Files will be created for non-existing BiomeConfigs.
- * 
  */
-public final class BiomeConfigFinder
-{
-	/**
-	 * Constructs a new biome loader.
-	 *
-	 */
-	public BiomeConfigFinder() { }
+public final class BiomeConfigFinder {
+    /**
+     * Constructs a new biome loader.
+     */
+    public BiomeConfigFinder() {
+    }
 
-	/**
-	 * Finds the biomes in the given directories.
-	 * 
-	 * @param worldBiomes The biomes to load.
-	 * @param directories The directories to search in.
-	 *
-	 * @return A map of biome name --> location on disk.
-	 */
-	public ConcurrentHashMap<String, BiomeConfigStub> findBiomes(List<String> worldBiomes, int worldHeightScale, Collection<Path> directories, ILogger logger, IMaterialReader materialReader)
-	{
-		ConcurrentHashMap<String, BiomeConfigStub> biomeConfigsStore = new ConcurrentHashMap<String, BiomeConfigStub>();
+    /**
+     * Finds the biomes in the given directories.
+     *
+     * @param worldBiomes The biomes to load.
+     * @param directories The directories to search in.
+     * @return A map of biome name --> location on disk.
+     */
+    public ConcurrentHashMap<String, BiomeConfigStub> findBiomes(List<String> worldBiomes, int worldHeightScale, Collection<Path> directories, ILogger logger, IMaterialReader materialReader) {
+        ConcurrentHashMap<String, BiomeConfigStub> biomeConfigsStore = new ConcurrentHashMap<String, BiomeConfigStub>();
 
-		// Search all directories
-		for (Path directoryPath  : directories)
-		{
-			File directory = directoryPath.toFile();
-			// Account for the possibility that folder creation failed
-			if (directory.exists())
-			{
-				loadBiomesFromDirectory(worldBiomes, worldHeightScale, biomeConfigsStore, directory, logger, materialReader);
-			}
-		}
-		
-		return biomeConfigsStore;
-	}
+        // Search all directories
+        for (Path directoryPath : directories) {
+            File directory = directoryPath.toFile();
+            // Account for the possibility that folder creation failed
+            if (directory.exists()) {
+                loadBiomesFromDirectory(worldBiomes, worldHeightScale, biomeConfigsStore, directory, logger, materialReader);
+            }
+        }
 
-	/**
-	 * Loads the biomes from the given directory.
-	 * 
-	 * @param biomeConfigsStore Map to store all the found biome configs in.
-	 * @param directory		 The directory to load from.
-	 * @param worldBiomes	The biomes that should still be loaded. When a
-	 *						  biome is found, it is removed from this map.
-	 */
-	private void loadBiomesFromDirectory(List<String> worldBiomes, int worldHeightScale, Map<String, BiomeConfigStub> biomeConfigsStore, File directory, ILogger logger, IMaterialReader materialReader)
-	{
-		SettingsMap settings;
-		for (File file : directory.listFiles())
-		{
-			// Search recursively
-			if (file.isDirectory())
-			{
-				loadBiomesFromDirectory(worldBiomes, worldHeightScale, biomeConfigsStore, file, logger, materialReader);
-				continue;
-			}
+        return biomeConfigsStore;
+    }
 
-			// Extract name from filename
-			String biomeName = toBiomeName(file);
-			if (biomeName == null)
-			{
-				// Not a valid biome file
-				continue;
-			}
-			
-			// Load biomeconfig
-			File renamedFile = renameBiomeFile(file, biomeName, logger);
-			settings = FileSettingsReader.read(biomeName, renamedFile, logger);
-			BiomeConfigStub biomeConfigStub = new BiomeConfigStub(settings, file.toPath(), biomeName, logger, materialReader);
-			biomeConfigsStore.put(biomeName, biomeConfigStub);
-		}
-	}
+    /**
+     * Loads the biomes from the given directory.
+     *
+     * @param biomeConfigsStore Map to store all the found biome configs in.
+     * @param directory         The directory to load from.
+     * @param worldBiomes       The biomes that should still be loaded. When a
+     *                          biome is found, it is removed from this map.
+     */
+    private void loadBiomesFromDirectory(List<String> worldBiomes, int worldHeightScale, Map<String, BiomeConfigStub> biomeConfigsStore, File directory, ILogger logger, IMaterialReader materialReader) {
+        SettingsMap settings;
+        for (File file : directory.listFiles()) {
+            // Search recursively
+            if (file.isDirectory()) {
+                loadBiomesFromDirectory(worldBiomes, worldHeightScale, biomeConfigsStore, file, logger, materialReader);
+                continue;
+            }
 
-	/**
-	 * Tries to rename the config file so that it has the correct extension.
-	 * Does nothing if the config file already has the correct extension. If
-	 * the rename fails, a message is printed.
-	 * 
-	 * @param toRename The file that should be renamed.
-	 * @param biomeName The biome that the file has settings for.
-	 * @return The renamed file.
-	 */
-	private File renameBiomeFile(File toRename, String biomeName, ILogger logger)
-	{
-		String preferredFileName = toFileName(biomeName);
-		if (toRename.getName().equalsIgnoreCase(preferredFileName))
-		{
-			// No need to rename
-			return toRename;
-		}
+            // Extract name from filename
+            String biomeName = toBiomeName(file);
+            if (biomeName == null) {
+                // Not a valid biome file
+                continue;
+            }
 
-		// Wrong extension, rename
-		File newFile = new File(toRename.getParentFile(), preferredFileName);
-		if (toRename.renameTo(newFile))
-		{
-			return newFile;
-		} else {
-			if(logger.getLogCategoryEnabled(LogCategory.CONFIGS))
-			{
-				logger.log(
-					LogLevel.ERROR,
-					LogCategory.CONFIGS,
-					MessageFormat.format(
-						"Failed to rename biome file {0} to {1}",
-						toRename.getAbsolutePath(), 
-						newFile.getAbsolutePath()
-					)
-				);
-			}
-			return toRename;
-		}
-	}
+            // Load biomeconfig
+            File renamedFile = renameBiomeFile(file, biomeName, logger);
+            settings = FileSettingsReader.read(biomeName, renamedFile, logger);
+            BiomeConfigStub biomeConfigStub = new BiomeConfigStub(settings, file.toPath(), biomeName, logger, materialReader);
+            biomeConfigsStore.put(biomeName, biomeConfigStub);
+        }
+    }
 
-	/**
-	 * Extracts the biome name out of the file name.
-	 * 
-	 * @param file The file to extract the biome name out of.
-	 * @return The biome name, or null if the file is not a biome config file.
-	 */
-	private String toBiomeName(File file)
-	{
-		String fileName = file.getName();
-		for (String extension : BiomeStandardValues.biomeConfigExtensions)
-		{
-			if (fileName.endsWith(extension))
-			{
-				return fileName.substring(0, fileName.lastIndexOf(extension));
-			}
-		}
+    /**
+     * Tries to rename the config file so that it has the correct extension.
+     * Does nothing if the config file already has the correct extension. If
+     * the rename fails, a message is printed.
+     *
+     * @param toRename  The file that should be renamed.
+     * @param biomeName The biome that the file has settings for.
+     * @return The renamed file.
+     */
+    private File renameBiomeFile(File toRename, String biomeName, ILogger logger) {
+        String preferredFileName = toFileName(biomeName);
+        if (toRename.getName().equalsIgnoreCase(preferredFileName)) {
+            // No need to rename
+            return toRename;
+        }
 
-		// Invalid file name
-		return null;
-	}
+        // Wrong extension, rename
+        File newFile = new File(toRename.getParentFile(), preferredFileName);
+        if (toRename.renameTo(newFile)) {
+            return newFile;
+        } else {
+            if (logger.getLogCategoryEnabled(LogCategory.CONFIGS)) {
+                logger.log(
+                        LogLevel.ERROR,
+                        LogCategory.CONFIGS,
+                        MessageFormat.format(
+                                "Failed to rename biome file {0} to {1}",
+                                toRename.getAbsolutePath(),
+                                newFile.getAbsolutePath()
+                        )
+                );
+            }
+            return toRename;
+        }
+    }
 
-	/**
-	 * Gets the name of the file the biome should be saved in. This will use
-	 * the extension as defined in the PluginConfig.ini file.
-	 * 
-	 * @param biomeName The biome.
-	 * @return The name of the file the biome should be saved in.
-	 */
-	private String toFileName(String biomeName)
-	{
-		return biomeName + Constants.BiomeConfigFileExtension;
-	}
+    /**
+     * Extracts the biome name out of the file name.
+     *
+     * @param file The file to extract the biome name out of.
+     * @return The biome name, or null if the file is not a biome config file.
+     */
+    private String toBiomeName(File file) {
+        String fileName = file.getName();
+        for (String extension : BiomeStandardValues.biomeConfigExtensions) {
+            if (fileName.endsWith(extension)) {
+                return fileName.substring(0, fileName.lastIndexOf(extension));
+            }
+        }
 
-	/**
-	 * A stub for a BiomeConfig. At this stage, the raw settings are
-	 * already loaded. Setting reading must not start before the inheritance
-	 * settings are processed.
-	 */
-	public static final class BiomeConfigStub
-	{
-		private final SettingsMap settings;
-		private final Path file;
-		private final String biomeName;
-		
-		// Mob inheritance has to be done before the configs are actually loaded
-		// Unfortunately can't handle this like BiomeExtends so have to put these
-		// here and pass them to the BiomeConfig when it is created
-		
-		public boolean inheritMobsBiomeNameProcessed = false;		
+        // Invalid file name
+        return null;
+    }
 
-		private final ConcurrentHashMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new ConcurrentHashMap<>();
+    /**
+     * Gets the name of the file the biome should be saved in. This will use
+     * the extension as defined in the PluginConfig.ini file.
+     *
+     * @param biomeName The biome.
+     * @return The name of the file the biome should be saved in.
+     */
+    private String toFileName(String biomeName) {
+        return biomeName + Constants.BiomeConfigFileExtension;
+    }
 
-		private final ConcurrentHashMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new ConcurrentHashMap<>();
-						
-		private BiomeConfigStub(SettingsMap settings, Path file, String biomeName, ILogger logger, IMaterialReader materialReader)
-		{
-			super();
-			this.settings = settings;
-			this.file = file;
-			this.biomeName = biomeName;
-			
-			// Load mob settings here so we can process mob inheritance before loading the BiomeConfigs.
+    /**
+     * A stub for a BiomeConfig. At this stage, the raw settings are
+     * already loaded. Setting reading must not start before the inheritance
+     * settings are processed.
+     */
+    public static final class BiomeConfigStub {
+        private final SettingsMap settings;
+        private final Path file;
+        private final String biomeName;
 
-			spawnGroups.put(EntityCategory.MONSTER, settings.getSetting(BiomeStandardValues.SPAWN_MONSTERS, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_CREATURES, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.AMBIENT, settings.getSetting(BiomeStandardValues.SPAWN_AMBIENT_CREATURES, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.UNDERGROUND_WATER_CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_UNDERGROUND_WATER_CREATURES, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.WATER_CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_WATER_CREATURES, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.WATER_AMBIENT, settings.getSetting(BiomeStandardValues.SPAWN_WATER_AMBIENT_CREATURES, Collections.emptyList(), logger, materialReader));
-			spawnGroups.put(EntityCategory.MISC, settings.getSetting(BiomeStandardValues.SPAWN_MISC_CREATURES, Collections.emptyList(), logger, materialReader));
+        // Mob inheritance has to be done before the configs are actually loaded
+        // Unfortunately can't handle this like BiomeExtends so have to put these
+        // here and pass them to the BiomeConfig when it is created
 
-			for (EntityCategory category : EntityCategory.values())
-			{
-				this.spawnGroupsMerged.put(category, new ArrayList<>(this.spawnGroups.get(category)));
-			}
-		}
-		
-		public void mergeMobs(BiomeConfigStub parent)
-		{
-			for (EntityCategory category : EntityCategory.values())
-			{
-				mergeMobs(parent.spawnGroupsMerged.get(category), category);
-			}
-			inheritMobsBiomeNameProcessed = true;
-		}
-		
-		public void mergeMobs(List<WeightedMobSpawnGroup> inheritedSpawnGroups, EntityCategory entityCategory)
-		{
-			// Inherit only mobs that do not appear in this biomes' list
-			// This way a biome's mob spawn settings can override inherited settings.
-			List<WeightedMobSpawnGroup> childSpawnGroups = spawnGroupsMerged.get(entityCategory);
+        public boolean inheritMobsBiomeNameProcessed = false;
 
-			List<WeightedMobSpawnGroup> mergedSpawnList = new ArrayList<>(childSpawnGroups);
-			if(inheritedSpawnGroups != null)
-			{
-				for(WeightedMobSpawnGroup inheritedGroup : inheritedSpawnGroups)
-				{
-					boolean bFound = false;
-					for(WeightedMobSpawnGroup childSpawnGroup : childSpawnGroups)
-					{
-						// When using no resourcedomain in entity name, assume "minecraft:"
-						String compareFrom = childSpawnGroup.getMob().toLowerCase().trim();
-						String compareTo = inheritedGroup.getMob().toLowerCase().trim();
-						if(compareFrom.startsWith("minecraft:"))
-						{
-							if(!compareTo.contains(":"))
-							{
-								compareFrom = compareFrom.replace("minecraft:", "");
-							}
-						} else {
-							if(compareTo.startsWith("minecraft:"))
-							{
-								compareTo = compareTo.replace("minecraft:", "");
-							}
-						}
-						if(compareFrom.equals(compareTo))
-						{
-							bFound = true;
-							break;
-						}
-					}
-					if(!bFound)
-					{
-						mergedSpawnList.add(inheritedGroup);
-					}
-				}
-			}
+        private final ConcurrentHashMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new ConcurrentHashMap<>();
 
-			this.spawnGroupsMerged.put(entityCategory, mergedSpawnList);
-		}
+        private final ConcurrentHashMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new ConcurrentHashMap<>();
 
-		/**
-		 * Gets the file the biome is stored in.
-		 * @return The file.
-		 */
-		public Path getPath()
-		{
-			return file;
-		}
+        private BiomeConfigStub(SettingsMap settings, Path file, String biomeName, ILogger logger, IMaterialReader materialReader) {
+            super();
+            this.settings = settings;
+            this.file = file;
+            this.biomeName = biomeName;
 
-		/**
-		 * Gets the settings for the biome.
-		 * @return The settings.
-		 */
-		public SettingsMap getSettings()
-		{
-			return settings;
-		}
+            // Load mob settings here so we can process mob inheritance before loading the BiomeConfigs.
 
-		/**
-		 * Gets the name of this biome.
-		 * @return The name.
-		 */
-		public String getBiomeName()
-		{
-			return this.biomeName;
-		}
+            spawnGroups.put(EntityCategory.MONSTER, settings.getSetting(BiomeStandardValues.SPAWN_MONSTERS, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_CREATURES, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.AMBIENT, settings.getSetting(BiomeStandardValues.SPAWN_AMBIENT_CREATURES, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.UNDERGROUND_WATER_CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_UNDERGROUND_WATER_CREATURES, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.WATER_CREATURE, settings.getSetting(BiomeStandardValues.SPAWN_WATER_CREATURES, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.WATER_AMBIENT, settings.getSetting(BiomeStandardValues.SPAWN_WATER_AMBIENT_CREATURES, Collections.emptyList(), logger, materialReader));
+            spawnGroups.put(EntityCategory.MISC, settings.getSetting(BiomeStandardValues.SPAWN_MISC_CREATURES, Collections.emptyList(), logger, materialReader));
 
-		public Collection<? extends WeightedMobSpawnGroup> getSpawner(EntityCategory entityCategory)
-		{
-			return spawnGroups.get(entityCategory);
-		}
+            for (EntityCategory category : EntityCategory.values()) {
+                this.spawnGroupsMerged.put(category, new ArrayList<>(this.spawnGroups.get(category)));
+            }
+        }
 
-		public Collection<? extends WeightedMobSpawnGroup> getSpawnerMerged(EntityCategory entityCategory)
-		{
-			return spawnGroupsMerged.get(entityCategory);
-		}
-	}
+        public void mergeMobs(BiomeConfigStub parent) {
+            for (EntityCategory category : EntityCategory.values()) {
+                mergeMobs(parent.spawnGroupsMerged.get(category), category);
+            }
+            inheritMobsBiomeNameProcessed = true;
+        }
+
+        public void mergeMobs(List<WeightedMobSpawnGroup> inheritedSpawnGroups, EntityCategory entityCategory) {
+            // Inherit only mobs that do not appear in this biomes' list
+            // This way a biome's mob spawn settings can override inherited settings.
+            List<WeightedMobSpawnGroup> childSpawnGroups = spawnGroupsMerged.get(entityCategory);
+
+            List<WeightedMobSpawnGroup> mergedSpawnList = new ArrayList<>(childSpawnGroups);
+            if (inheritedSpawnGroups != null) {
+                for (WeightedMobSpawnGroup inheritedGroup : inheritedSpawnGroups) {
+                    boolean bFound = false;
+                    for (WeightedMobSpawnGroup childSpawnGroup : childSpawnGroups) {
+                        // When using no resourcedomain in entity name, assume "minecraft:"
+                        String compareFrom = childSpawnGroup.getMob().toLowerCase().trim();
+                        String compareTo = inheritedGroup.getMob().toLowerCase().trim();
+                        if (compareFrom.startsWith("minecraft:")) {
+                            if (!compareTo.contains(":")) {
+                                compareFrom = compareFrom.replace("minecraft:", "");
+                            }
+                        } else {
+                            if (compareTo.startsWith("minecraft:")) {
+                                compareTo = compareTo.replace("minecraft:", "");
+                            }
+                        }
+                        if (compareFrom.equals(compareTo)) {
+                            bFound = true;
+                            break;
+                        }
+                    }
+                    if (!bFound) {
+                        mergedSpawnList.add(inheritedGroup);
+                    }
+                }
+            }
+
+            this.spawnGroupsMerged.put(entityCategory, mergedSpawnList);
+        }
+
+        /**
+         * Gets the file the biome is stored in.
+         *
+         * @return The file.
+         */
+        public Path getPath() {
+            return file;
+        }
+
+        /**
+         * Gets the settings for the biome.
+         *
+         * @return The settings.
+         */
+        public SettingsMap getSettings() {
+            return settings;
+        }
+
+        /**
+         * Gets the name of this biome.
+         *
+         * @return The name.
+         */
+        public String getBiomeName() {
+            return this.biomeName;
+        }
+
+        public Collection<? extends WeightedMobSpawnGroup> getSpawner(EntityCategory entityCategory) {
+            return spawnGroups.get(entityCategory);
+        }
+
+        public Collection<? extends WeightedMobSpawnGroup> getSpawnerMerged(EntityCategory entityCategory) {
+            return spawnGroupsMerged.get(entityCategory);
+        }
+    }
 }

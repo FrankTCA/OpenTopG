@@ -7,38 +7,32 @@ import com.pg85.otg.interfaces.ILayerSampler;
 /**
  * Gets the biome id of the sample of this position by removing the extra land and other data.
  */
-class FinalizeWithRiverLayer implements MergingLayer
-{	
-	private final boolean riversEnabled;
-	private final int[] riverBiomes;
-	
-	public FinalizeWithRiverLayer(boolean riversEnabled, int[] riverBiomes)
-	{
-		this.riversEnabled = riversEnabled;
-		this.riverBiomes = riverBiomes;
-	}
+class FinalizeWithRiverLayer implements MergingLayer {
+    private final boolean riversEnabled;
+    private final int[] riverBiomes;
 
-	@Override
-	public int sample(LayerRandomnessSource context, ILayerSampler mainSampler, ILayerSampler riverSampler, int x, int z)
-	{
-		int sample = mainSampler.sample(x, z);
+    public FinalizeWithRiverLayer(boolean riversEnabled, int[] riverBiomes) {
+        this.riversEnabled = riversEnabled;
+        this.riverBiomes = riverBiomes;
+    }
 
-		// Remove all the metadata bits from the sample
-		sample = sample & BiomeLayers.BIOME_BITS;
+    @Override
+    public int sample(LayerRandomnessSource context, ILayerSampler mainSampler, ILayerSampler riverSampler, int x, int z) {
+        int sample = mainSampler.sample(x, z);
 
-		if (this.riversEnabled)
-		{
-			int currentRiver = riverSampler.sample(x, z);
-			if((currentRiver & BiomeLayers.RIVER_BITS) != 0)
-			{
-				int riverBiomeId = this.riverBiomes[sample];
-				if(riverBiomeId >= 0)
-				{
-					sample = riverBiomeId;
-				}
-			}
-		}
+        // Remove all the metadata bits from the sample
+        sample = sample & BiomeLayers.BIOME_BITS;
 
-		return sample;
-	}
+        if (this.riversEnabled) {
+            int currentRiver = riverSampler.sample(x, z);
+            if ((currentRiver & BiomeLayers.RIVER_BITS) != 0) {
+                int riverBiomeId = this.riverBiomes[sample];
+                if (riverBiomeId >= 0) {
+                    sample = riverBiomeId;
+                }
+            }
+        }
+
+        return sample;
+    }
 }

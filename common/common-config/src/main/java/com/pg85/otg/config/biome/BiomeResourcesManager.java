@@ -15,81 +15,64 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldConfig;
 
-public class BiomeResourcesManager implements IConfigFunctionProvider
-{
-	private Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
+public class BiomeResourcesManager implements IConfigFunctionProvider {
+    private Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
 
-	public BiomeResourcesManager(Map<String, Class<? extends ConfigFunction<?>>> configFunctions)
-	{
-		// Also store in this class
-		this.configFunctions = new HashMap<String, Class<? extends ConfigFunction<?>>>();
+    public BiomeResourcesManager(Map<String, Class<? extends ConfigFunction<?>>> configFunctions) {
+        // Also store in this class
+        this.configFunctions = new HashMap<String, Class<? extends ConfigFunction<?>>>();
 
-		for(Entry<String, Class<? extends ConfigFunction<?>>> resource : configFunctions.entrySet())
-		{
-			registerConfigFunction(resource.getKey(), resource.getValue());
-		}
-	}
+        for (Entry<String, Class<? extends ConfigFunction<?>>> resource : configFunctions.entrySet()) {
+            registerConfigFunction(resource.getKey(), resource.getValue());
+        }
+    }
 
-	private void registerConfigFunction(String name, Class<? extends ConfigFunction<?>> value)
-	{
-		configFunctions.put(name.toLowerCase(), value);
-	}
+    private void registerConfigFunction(String name, Class<? extends ConfigFunction<?>> value) {
+        configFunctions.put(name.toLowerCase(), value);
+    }
 
-	/**
-	 * Returns a config function with the given name.
-	 * @param <T>	Type of the holder of the config function.
-	 * @param name	The name of the config function.
-	 * @param holder The holder of the config function, like
-	 *				{@link IWorldConfig}.
-	 * @param args	The args of the function.
-	 * @return A config function with the given name, or null if the config
-	 * function requires another holder. For invalid or non-existing config
-	 * functions, it returns an instance of {@link ErroredFunction}.
-	 */
-	// It's checked with clazz.getConstructor(holder.getClass(), ...))
-	@SuppressWarnings("unchecked")
-	public <T> ConfigFunction<T> getConfigFunction(String name, T holder, List<String> args, ILogger logger, IMaterialReader materialReader)
-	{
-		// Get the class of the config function
-		Class<? extends ConfigFunction<?>> clazz = configFunctions.get(name.toLowerCase());
-		if (clazz == null)
-		{
-			return new ErroredFunction<T>(name, args, "Resource type " + name + " not found");
-		}
+    /**
+     * Returns a config function with the given name.
+     *
+     * @param <T>    Type of the holder of the config function.
+     * @param name   The name of the config function.
+     * @param holder The holder of the config function, like
+     *               {@link IWorldConfig}.
+     * @param args   The args of the function.
+     * @return A config function with the given name, or null if the config
+     * function requires another holder. For invalid or non-existing config
+     * functions, it returns an instance of {@link ErroredFunction}.
+     */
+    // It's checked with clazz.getConstructor(holder.getClass(), ...))
+    @SuppressWarnings("unchecked")
+    public <T> ConfigFunction<T> getConfigFunction(String name, T holder, List<String> args, ILogger logger, IMaterialReader materialReader) {
+        // Get the class of the config function
+        Class<? extends ConfigFunction<?>> clazz = configFunctions.get(name.toLowerCase());
+        if (clazz == null) {
+            return new ErroredFunction<T>(name, args, "Resource type " + name + " not found");
+        }
 
-		// Get a config function
-		try
-		{
-			Constructor<? extends ConfigFunction<?>> constructor = null;
-			if(holder instanceof IBiomeConfig)
-			{
-				// Every BiomeConfig resource should have a constructor that conforms to this method signature
-				constructor = clazz.getConstructor(IBiomeConfig.class, List.class, ILogger.class, IMaterialReader.class);
-			}
-			else if(holder instanceof IWorldConfig)
-			{
-				// Every WorldConfig resource should have a constructor that conforms to this method signature				
-				constructor = clazz.getConstructor(IWorldConfig.class, List.class, ILogger.class, IMaterialReader.class);				
-			}
-			return (ConfigFunction<T>) constructor.newInstance(holder, args, logger, materialReader);
-		}
-		catch (NoSuchMethodException e1)
-		{
-			// Probably uses another holder type
-			return null;
-		}
-		catch (InstantiationException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (InvocationTargetException e)
-		{
-			Throwable cause = e.getCause();
-			return new ErroredFunction<T>(name, args, "Resource type " + name + " had invalid parameters and could not be parsed, error: " + cause);
-		}
-	}
+        // Get a config function
+        try {
+            Constructor<? extends ConfigFunction<?>> constructor = null;
+            if (holder instanceof IBiomeConfig) {
+                // Every BiomeConfig resource should have a constructor that conforms to this method signature
+                constructor = clazz.getConstructor(IBiomeConfig.class, List.class, ILogger.class, IMaterialReader.class);
+            } else if (holder instanceof IWorldConfig) {
+                // Every WorldConfig resource should have a constructor that conforms to this method signature
+                constructor = clazz.getConstructor(IWorldConfig.class, List.class, ILogger.class, IMaterialReader.class);
+            }
+            return (ConfigFunction<T>) constructor.newInstance(holder, args, logger, materialReader);
+        } catch (NoSuchMethodException e1) {
+            // Probably uses another holder type
+            return null;
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            return new ErroredFunction<T>(name, args, "Resource type " + name + " had invalid parameters and could not be parsed, error: " + cause);
+        }
+    }
 }

@@ -1,8 +1,7 @@
-
 name: Bug report
 description: Report a bug with OpenTerrainGenerator, including crashes or other errors.
 title: "[Bug]: "
-labels: ["Bug", "Needs validation"]
+labels: [ "Bug", "Needs validation" ]
 assignees:
   - SXRWahrheit
 
@@ -22,8 +21,8 @@ body:
       label: Is there an existing issue for this?
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
-      - label: I have searched the existing issues
-        required: true
+        - label: I have searched the existing issues
+          required: true
 
   - type: textarea
     attributes:
@@ -69,7 +68,7 @@ body:
   - type: textarea
     attributes:
       label: Steps To Reproduce
-      description: | 
+      description: |
         Please include the steps necessary to create a [Minimal, Reproducible Example](https://stackoverflow.com/help/minimal-reproducible-example)
 
         You can attach files by clicking this area to highlight it and then dragging the files in.
@@ -85,7 +84,7 @@ body:
     id: logfile
     attributes:
       label: Log file
-      description: | 
+      description: |
         Please provide the full latest.log file from your server or game client; this is especially important if you are reporting an issue that includes stacktrace output. 
 
         You can attach log files by clicking this area to highlight it and then dragging files in.

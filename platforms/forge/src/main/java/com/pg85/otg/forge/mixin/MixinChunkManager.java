@@ -13,17 +13,14 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import java.util.function.Predicate;
 
 @Mixin(ChunkMap.class)
-public class MixinChunkManager
-{
-	@ModifyArg(method = "saveAllChunks(Z)V", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;filter(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;", ordinal = 0))
-	private Predicate<ChunkHolder> alwaysAccessibleFlush(Predicate<ChunkHolder> chunk)
-	{
-		return c -> true;
-	}
-	
-	@ModifyArg(method = "saveAllChunks(Z)V", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;filter(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;", ordinal = 1))
-	private Predicate<ChunkAccess> allowChunkPrimerFlush(Predicate<ChunkAccess> chunk)
-	{
-		return c -> c instanceof ProtoChunk || c instanceof ImposterProtoChunk || c instanceof LevelChunk;
-	}	
+public class MixinChunkManager {
+    @ModifyArg(method = "saveAllChunks(Z)V", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;filter(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;", ordinal = 0))
+    private Predicate<ChunkHolder> alwaysAccessibleFlush(Predicate<ChunkHolder> chunk) {
+        return c -> true;
+    }
+
+    @ModifyArg(method = "saveAllChunks(Z)V", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;filter(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;", ordinal = 1))
+    private Predicate<ChunkAccess> allowChunkPrimerFlush(Predicate<ChunkAccess> chunk) {
+        return c -> c instanceof ProtoChunk || c instanceof ImposterProtoChunk || c instanceof LevelChunk;
+    }
 }

@@ -9,39 +9,33 @@ import com.pg85.otg.util.helpers.StringHelper;
  *
  * <p>Numbers are limited to the given min and max values.
  */
-class IntSetting extends Setting<Integer>
-{
-	private final int defaultValue;
-	private final int minValue;
-	private final int maxValue;
+class IntSetting extends Setting<Integer> {
+    private final int defaultValue;
+    private final int minValue;
+    private final int maxValue;
 
-	IntSetting(String name, int defaultValue, int minValue, int maxValue)
-	{
-		super(name);
-		this.defaultValue = defaultValue;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-	}
+    IntSetting(String name, int defaultValue, int minValue, int maxValue) {
+        super(name);
+        this.defaultValue = defaultValue;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
 
-	@Override
-	public Integer getDefaultValue(IMaterialReader materialReader)
-	{
-		return defaultValue;
-	}
+    @Override
+    public Integer getDefaultValue(IMaterialReader materialReader) {
+        return defaultValue;
+    }
 
-	@Override
-	public Integer read(String string, IMaterialReader materialReader) throws InvalidConfigException
-	{
-		return StringHelper.readInt(string, minValue, maxValue);
-	}
+    @Override
+    public Integer read(String string, IMaterialReader materialReader) throws InvalidConfigException {
+        return StringHelper.readInt(string, minValue, maxValue);
+    }
 
-	public Integer getMinValue()
-	{
-		return minValue;
-	}
-	
-	public Integer getMaxValue()
-	{
-		return maxValue;
-	}
+    public Integer getMinValue() {
+        return minValue;
+    }
+
+    public Integer getMaxValue() {
+        return maxValue;
+    }
 }

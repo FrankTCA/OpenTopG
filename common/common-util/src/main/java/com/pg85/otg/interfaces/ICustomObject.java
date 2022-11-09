@@ -1,6 +1,5 @@
 package com.pg85.otg.interfaces;
 
-public interface ICustomObject
-{
-	public String getName();
+public interface ICustomObject {
+    public String getName();
 }

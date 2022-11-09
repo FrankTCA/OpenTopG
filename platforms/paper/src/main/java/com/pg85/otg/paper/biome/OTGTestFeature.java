@@ -54,7 +54,7 @@ public class OTGTestFeature extends Feature<CountConfiguration> {
         BlockPos blockPos = context.origin();
         int j = context.config().count().sample(random);
         OTG.getEngine().getLogger().log(LogLevel.INFO, LogCategory.MAIN, "OTG Test Resource is being placed");
-        for(int k = 0; k < j; ++k) {
+        for (int k = 0; k < j; ++k) {
             int l = random.nextInt(8) - random.nextInt(8);
             int m = random.nextInt(8) - random.nextInt(8);
             int n = worldGenLevel.getHeight(Heightmap.Types.OCEAN_FLOOR, blockPos.getX() + l, blockPos.getZ() + m);

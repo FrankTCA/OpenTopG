@@ -7,14 +7,13 @@ import com.pg85.otg.interfaces.ILogger;
 
 import java.io.File;
 
-public class BO2Loader implements CustomObjectLoader
-{
-	@Override
-	public CustomObject loadFromFile(String objectName, File file, ILogger logger)
-	{
-		return new BO2(new FileSettingsReaderBO4(objectName, file, logger));
-	}
+public class BO2Loader implements CustomObjectLoader {
+    @Override
+    public CustomObject loadFromFile(String objectName, File file, ILogger logger) {
+        return new BO2(new FileSettingsReaderBO4(objectName, file, logger));
+    }
 
-	@Override
-	public void onShutdown() { }
+    @Override
+    public void onShutdown() {
+    }
 }

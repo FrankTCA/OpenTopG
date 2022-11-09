@@ -1,14 +1,13 @@
 package com.pg85.otg.interfaces;
 
-public interface IChunkDecorator
-{
-	Object getLockingObject();
+public interface IChunkDecorator {
+    Object getLockingObject();
 
-	boolean isDecorating();
+    boolean isDecorating();
 
-	public void beginSave();
+    public void beginSave();
 
-	public void endSave();
+    public void endSave();
 
-	boolean getIsSaveRequired();
+    boolean getIsSaveRequired();
 }
