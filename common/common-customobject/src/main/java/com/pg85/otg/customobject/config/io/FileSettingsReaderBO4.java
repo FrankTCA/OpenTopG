@@ -264,7 +264,11 @@ public class FileSettingsReaderBO4 implements SettingsReaderBO4 {
                 }
             }
         } catch (IOException e) {
-            logger.log(LogLevel.ERROR, LogCategory.CONFIGS, String.format("Exception when reading file: ", (Object[]) e.getStackTrace()));
+            /*
+            * There seems to be a major false positive here.
+            * We should take a look at why this is happening later
+             */
+            //logger.log(LogLevel.ERROR, LogCategory.CONFIGS, String.format("Exception when reading file: ", (Object[]) e.getStackTrace()));
         } finally {
             if (settingsReader != null) {
                 try {
