@@ -120,7 +120,9 @@ public class CachedBiomeProvider implements ICachedBiomeProvider {
                 for (int chunkZ = 0; chunkZ < widthHeightInChunks; chunkZ++) {
                     chunkBiomes = getBiomesForChunk(ChunkCoordinate.fromChunkCoords(chunkCoord.getChunkX() + chunkX, chunkCoord.getChunkZ() + chunkZ));
                     for (int x = 0; x < Constants.CHUNK_SIZE; x++) {
-						System.arraycopy(chunkBiomes, x * 16 + 0, biomes, (chunkX * Constants.CHUNK_SIZE + x) * widthHeightInBlocks + (chunkZ * Constants.CHUNK_SIZE + z), Constants.CHUNK_SIZE);
+                        for(int z = 0; z < Constants.CHUNK_SIZE; z++) {
+                            biomes[(chunkX * Constants.CHUNK_SIZE + x) * widthHeightInBlocks + (chunkZ * Constants.CHUNK_SIZE + z)] = chunkBiomes[x * Constants.CHUNK_SIZE + z];
+                        }
                     }
                 }
             }

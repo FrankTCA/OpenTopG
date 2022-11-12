@@ -2,6 +2,10 @@ package com.pg85.otg.customobject.bo3.bo3function;
 
 import com.pg85.otg.customobject.bo3.BO3Config;
 import com.pg85.otg.customobject.bofunctions.MinecraftObjectFunction;
+import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.util.biome.ReplaceBlockMatrix;
+
+import java.util.Random;
 
 /**
  * Represents a block in a BO3.
@@ -20,5 +24,10 @@ public class BO3MinecraftObjectFunction extends MinecraftObjectFunction<BO3Confi
     @Override
     public Class<BO3Config> getHolderType() {
         return BO3Config.class;
+    }
+
+    @Override
+    public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks) {
+
     }
 }
