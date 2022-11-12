@@ -41,7 +41,7 @@ public class ReplaceBlockMatrix
 			if (values.length == 5)
 			{
 				// Replace in TC 2.3 style found
-				values = new String[] {values[0], values[1] + ":" + values[2], values[3], "" + (Integer.parseInt(values[4]) - 1)};
+				values = new String[] {values[0], values[1] + ":" + values[2], values[3], Integer.toString(Integer.parseInt(values[4]) - 1)};
 			}
 
 			if (values.length != 2 && values.length != 4)
