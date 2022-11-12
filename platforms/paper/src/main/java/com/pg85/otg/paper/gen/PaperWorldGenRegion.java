@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.Random;
 
+import com.pg85.otg.util.helpers.PerfHelper;
 import net.kyori.adventure.text.Component;
 import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.data.worldgen.placement.CavePlacements;
@@ -71,8 +72,6 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		super(presetFolderName, OTG.getEngine().getPluginConfig(), worldConfig, OTG.getEngine().getLogger(), worldGenRegion.getCenter().x, worldGenRegion.getCenter().z, chunkGenerator.getCachedBiomeProvider());
 		this.worldGenRegion = worldGenRegion;
 		this.chunkGenerator = chunkGenerator;
-		this.maxY = worldConfig.getWorldMaxY();
-		this.minY = worldConfig.getWorldMinY();
 	}
 
 	/** Creates a LocalWorldGenRegion to be used for OTG worlds outside of decoration, only used for /otg spawn/edit/export. */
@@ -166,7 +165,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterial(int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(y))
 		{
 			return null;
 		}
@@ -278,7 +277,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 		BlockState blockState;
 		Block block;
 
-		for (int i = heightMapY; i >= getWorldMinY(); i--)
+		for (int i = heightMapY; i >= Constants.WORLD_DEPTH; i--)
 		{
 			// TODO: mutable
 			blockState = chunk.getBlockState(new BlockPos(internalX, i, internalZ));
@@ -331,13 +330,13 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 				}
 				if ((findSolid && isLiquid) || (findLiquid && isSolid))
 				{
-					return getWorldMinY()-1;
+					return Constants.WORLD_DEPTH-1;
 				}
 			}
 		}
 
 		// Can happen if this is a chunk filled with air
-		return getWorldMinY()-1;
+		return Constants.WORLD_DEPTH-1;
 	}	
 
 	@Override
@@ -349,7 +348,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public int getLightLevel (int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(y))
 		{
 			return -1;
 		}
@@ -401,7 +400,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void setBlock (int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
 	{
-		if (y < minY || y > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(y))
 		{
 			return;
 		}
@@ -500,7 +499,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	public boolean placeTree(TreeType type, Random rd, int x, int y, int z)
 	{
 		RandomSource rand = new RandomSourceWrapper(rd);
-		if (y < minY || y > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(y))
 		{
 			return false;
 		}
@@ -612,7 +611,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void spawnEntity (IEntityFunction entityData)
 	{
-		if (entityData.getY() < minY || entityData.getY() > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(entityData.getY()))
 		{
 			if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
 			{
@@ -772,7 +771,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterialWithoutLoading(int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (PerfHelper.isYOutOfWorldBounds(y))
 		{
 			return null;
 		}
