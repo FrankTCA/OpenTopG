@@ -14,29 +14,29 @@ import com.pg85.otg.constants.SettingsEnums.LogLevels;
  * IPluginConfig should be used wherever settings are used in code.
  */
 public interface IPluginConfig {
-    public LogLevels getLogLevel();
+    LogLevels getLogLevel();
 
-    public int getMaxWorkerThreads();
+    int getMaxWorkerThreads();
 
-    public boolean getDeveloperModeEnabled();
+    boolean getDeveloperModeEnabled();
 
-    public boolean logCustomObjects();
+    boolean logCustomObjects();
 
-    public boolean logStructurePlotting();
+    boolean logStructurePlotting();
 
-    public boolean logConfigs();
+    boolean logConfigs();
 
-    public boolean logPerformance();
+    boolean logPerformance();
 
-    public boolean logDecoration();
+    boolean logDecoration();
 
-    public boolean logBiomeRegistry();
+    boolean logBiomeRegistry();
 
-    public boolean getDecorationEnabled();
+    boolean getDecorationEnabled();
 
-    public boolean logMobs();
+    boolean logMobs();
 
-    public String logPresets();
+    String logPresets();
 
-    public ConfigMode getSettingsMode();
+    ConfigMode getSettingsMode();
 }

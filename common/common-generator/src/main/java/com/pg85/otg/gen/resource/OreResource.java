@@ -98,14 +98,14 @@ public class OreResource extends BiomeResourceBase implements IBasicResource {
         }
 
         float randomAngle = rand.nextFloat() * (float) Math.PI;
-        double randomX1 = (double) ((float) (x) - MathHelper.sin(randomAngle) * (float) this.numberOfBlocks / 8.0F);
-        double randomX2 = (double) ((float) (x) + MathHelper.sin(randomAngle) * (float) this.numberOfBlocks / 8.0F);
-        double randomZ1 = (double) ((float) (z) - MathHelper.cos(randomAngle) * (float) this.numberOfBlocks / 8.0F);
-        double randomZ2 = (double) ((float) (z) + MathHelper.cos(randomAngle) * (float) this.numberOfBlocks / 8.0F);
+        double randomX1 = (float) (x) - MathHelper.sin(randomAngle) * (float) this.numberOfBlocks / 8.0F;
+        double randomX2 = (float) (x) + MathHelper.sin(randomAngle) * (float) this.numberOfBlocks / 8.0F;
+        double randomZ1 = (float) (z) - MathHelper.cos(randomAngle) * (float) this.numberOfBlocks / 8.0F;
+        double randomZ2 = (float) (z) + MathHelper.cos(randomAngle) * (float) this.numberOfBlocks / 8.0F;
 
         int randomY = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);
-        double randomY1 = (double) (randomY + rand.nextInt(3) - 2);
-        double randomY2 = (double) (randomY + rand.nextInt(3) - 2);
+        double randomY1 = randomY + rand.nextInt(3) - 2;
+        double randomY2 = randomY + rand.nextInt(3) - 2;
 
         float currentNumberOfBlocksFraction;
         double xCenter;

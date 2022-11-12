@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Random;
 
 public class BasaltColumnResource extends FrequencyResourceBase {
-    private int baseSize;
-    private int sizeVariance;
-    private int baseHeight;
-    private int heightVariance;
-    private int minAltitude;
-    private int maxAltitude;
-    private LocalMaterialData material;
+    private final int baseSize;
+    private final int sizeVariance;
+    private final int baseHeight;
+    private final int heightVariance;
+    private final int minAltitude;
+    private final int maxAltitude;
+    private final LocalMaterialData material;
     private final MaterialSet sourceBlocks;
 
     public BasaltColumnResource(IBiomeConfig biomeConfig, List<String> args, ILogger logger, IMaterialReader materialReader)

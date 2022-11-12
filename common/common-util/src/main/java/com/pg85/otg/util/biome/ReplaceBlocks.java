@@ -143,17 +143,13 @@ public final class ReplaceBlocks {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof ReplaceBlocks)) {
+        if (!(obj instanceof ReplaceBlocks other)) {
             return false;
         }
-        ReplaceBlocks other = (ReplaceBlocks) obj;
         if (sourceBlock != other.sourceBlock || targetBlock != other.targetBlock) {
             return false;
         }
-        if (!sourceBlock.equals(other.sourceBlock) || !targetBlock.equals(other.targetBlock)) {
-            return false;
-        }
-        return true;
+        return sourceBlock.equals(other.sourceBlock) && targetBlock.equals(other.targetBlock);
     }
 
     private static String removeFirstAndLastChar(String string) {

@@ -93,7 +93,7 @@ public class IcebergResource extends BiomeResourceBase implements IBasicResource
         for (int x1 = -irandom6; x1 < irandom6; x1++) {
             for (int z1 = -irandom6; z1 < irandom6; z1++) {
                 for (int y1 = -1; y1 > -irandom4; y1--) {
-                    int irandom7 = flag2 ? MathHelper.ceil((float) irandom6 * (1.0F - (float) Math.pow((double) y1, 2.0D) / ((float) irandom4 * 8.0F))) : irandom6;
+                    int irandom7 = flag2 ? MathHelper.ceil((float) irandom6 * (1.0F - (float) Math.pow(y1, 2.0D) / ((float) irandom4 * 8.0F))) : irandom6;
                     int heightDependentRadiusSteep = heightDependentRadiusSteep(random, -y1, irandom4, irandom5);
                     if (x1 < heightDependentRadiusSteep) {
                         generateIcebergBlock(world, random, x, y, z, irandom4, x1, y1, z1, heightDependentRadiusSteep, irandom7, flag2, irandom2, drandom1, flag1, material, material2);
@@ -225,7 +225,7 @@ public class IcebergResource extends BiomeResourceBase implements IBasicResource
 
     private double signedDistanceCircle(int x1, int z1, int x, int y, int z, int irandom, Random random) {
         float frandom = 10.0F * MathHelper.clamp(random.nextFloat(), 0.2F, 0.8F) / (float) irandom;
-        return (double) frandom + Math.pow((double) (x1 - x), 2.0D) + Math.pow((double) (z1 - z), 2.0D) - Math.pow((double) irandom, 2.0D);
+        return (double) frandom + Math.pow(x1 - x, 2.0D) + Math.pow(z1 - z, 2.0D) - Math.pow(irandom, 2.0D);
     }
 
     private double signedDistanceEllipse(int x1, int z1, int x, int y, int z, int irandom, int iellipsec, double drandom) {
@@ -234,7 +234,7 @@ public class IcebergResource extends BiomeResourceBase implements IBasicResource
 
     private int heightDependentRadiusRound(Random random, int irandom1, int irandom2, int irandom3) {
         float frandom1 = 3.5F - random.nextFloat();
-        float frandom2 = (1.0F - (float) Math.pow((double) irandom1, 2.0D) / ((float) irandom2 * frandom1)) * (float) irandom3;
+        float frandom2 = (1.0F - (float) Math.pow(irandom1, 2.0D) / ((float) irandom2 * frandom1)) * (float) irandom3;
         if (irandom2 > 15 + random.nextInt(5)) {
             int irandom4 = irandom1 < 3 + random.nextInt(6) ? irandom1 / 2 : irandom1;
             frandom2 = (1.0F - (float) irandom4 / ((float) irandom2 * frandom1 * 0.4F)) * (float) irandom3;
@@ -243,7 +243,7 @@ public class IcebergResource extends BiomeResourceBase implements IBasicResource
     }
 
     private int heightDependentRadiusEllipse(int irandomy, int irandom1, int irandom2) {
-        float frandom = (1.0F - (float) Math.pow((double) irandomy, 2.0D) / ((float) irandom1 * 1.0F)) * (float) irandom2;
+        float frandom = (1.0F - (float) Math.pow(irandomy, 2.0D) / ((float) irandom1)) * (float) irandom2;
         return MathHelper.ceil(frandom / 2.0F);
     }
 

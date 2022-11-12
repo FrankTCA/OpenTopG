@@ -199,7 +199,7 @@ public class BO4 implements StructuredCustomObject {
         }
 
         try {
-            replaceBelowMaterial = config.replaceBelow != null && config.replaceBelow.toLowerCase().equals("none") ? null : replaceBelow != null && replaceBelow.length() > 0 ? materialReader.readMaterial(replaceBelow) : null;
+            replaceBelowMaterial = config.replaceBelow != null && config.replaceBelow.equalsIgnoreCase("none") ? null : replaceBelow != null && replaceBelow.length() > 0 ? materialReader.readMaterial(replaceBelow) : null;
         } catch (InvalidConfigException e1) {
             replaceBelowMaterial = LocalMaterials.DIRT;
             if (logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS)) {
@@ -207,7 +207,7 @@ public class BO4 implements StructuredCustomObject {
             }
         }
         try {
-            replaceAboveMaterial = config.replaceAbove != null && config.replaceAbove.toLowerCase().equals("none") ? null : replaceAbove != null && replaceAbove.length() > 0 ? materialReader.readMaterial(replaceAbove) : null;
+            replaceAboveMaterial = config.replaceAbove != null && config.replaceAbove.equalsIgnoreCase("none") ? null : replaceAbove != null && replaceAbove.length() > 0 ? materialReader.readMaterial(replaceAbove) : null;
         } catch (InvalidConfigException e1) {
             replaceAboveMaterial = LocalMaterials.AIR;
             if (logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS)) {

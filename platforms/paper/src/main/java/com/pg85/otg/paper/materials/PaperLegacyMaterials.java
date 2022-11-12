@@ -757,12 +757,10 @@ public class PaperLegacyMaterials {
                 case "yellow_glazed_terracotta":
                     return getGlazedTerracottaWithData(15, data);
                 case "snow":
-                    switch (data) {
-                        case 0:
-                            return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, 1);
-                        default:
-                            return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, data);
+                    if (data == 0) {
+                        return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, 1);
                     }
+                    return Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, data);
                 default:
                     return null;
             }

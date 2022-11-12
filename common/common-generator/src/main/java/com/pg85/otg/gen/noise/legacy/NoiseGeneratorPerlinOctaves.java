@@ -7,8 +7,8 @@ import java.util.Random;
 @Deprecated
 public class NoiseGeneratorPerlinOctaves {
 
-    private NoiseGeneratorPerlin[] noiseArray;
-    private int numOctaves;
+    private final NoiseGeneratorPerlin[] noiseArray;
+    private final int numOctaves;
 
     public NoiseGeneratorPerlinOctaves(Random random, int numOctaves) {
         this.numOctaves = numOctaves;

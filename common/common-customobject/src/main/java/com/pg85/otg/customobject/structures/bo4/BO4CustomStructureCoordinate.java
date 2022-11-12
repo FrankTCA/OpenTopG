@@ -84,10 +84,9 @@ public class BO4CustomStructureCoordinate extends CustomStructureCoordinate {
         if (otherObject == null) {
             return false;
         }
-        if (!(otherObject instanceof BO4CustomStructureCoordinate)) {
+        if (!(otherObject instanceof BO4CustomStructureCoordinate otherCoord)) {
             return false;
         }
-        BO4CustomStructureCoordinate otherCoord = (BO4CustomStructureCoordinate) otherObject;
         if (otherCoord.x != x) {
             return false;
         }
@@ -100,10 +99,7 @@ public class BO4CustomStructureCoordinate extends CustomStructureCoordinate {
         if (!otherCoord.rotation.equals(rotation)) {
             return false;
         }
-        if (!otherCoord.object.getName().equals(object.getName())) {
-            return false;
-        }
-        return true;
+        return otherCoord.object.getName().equals(object.getName());
     }
 
     /**

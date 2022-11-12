@@ -4,8 +4,8 @@ import java.util.Random;
 
 @Deprecated
 public class NoiseGeneratorSurfacePatchOctaves {
-    private NoiseGeneratorSurfacePatch[] noiseArray;
-    private int numOctaves;
+    private final NoiseGeneratorSurfacePatch[] noiseArray;
+    private final int numOctaves;
 
     public NoiseGeneratorSurfacePatchOctaves(Random random, int numOctaves) {
         this.numOctaves = numOctaves;

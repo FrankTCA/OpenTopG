@@ -287,7 +287,7 @@ public class IcebergSurfaceGenerator extends MultipleLayersSurfaceGenerator {
             // Delete last ", "
             stringBuilder.deleteCharAt(stringBuilder.length() - 2);
         }
-        return "Iceberg " + stringBuilder.toString();
+        return "Iceberg " + stringBuilder;
     }
 
     public static IcebergSurfaceGenerator getFor(String settingValue, IMaterialReader materialReader) throws InvalidConfigException {

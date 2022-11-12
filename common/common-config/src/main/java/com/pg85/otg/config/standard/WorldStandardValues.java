@@ -132,7 +132,7 @@ public class WorldStandardValues extends Settings {
             NETHERFOSSIL_SEPARATION = intSetting("NetherFossilSeparation", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     public static final Setting<Long>
-            FIXED_TIME = longSetting("FixedTime", -1l, -1l, 24000);
+            FIXED_TIME = longSetting("FixedTime", -1L, -1L, 24000);
 
     public static final Setting<Boolean>
             FORCE_LAND_AT_SPAWN = booleanSetting("ForceLandAtSpawn", true),

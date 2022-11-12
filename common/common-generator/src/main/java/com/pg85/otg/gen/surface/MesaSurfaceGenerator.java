@@ -18,20 +18,20 @@ import java.util.Random;
 final class MesaSurfaceGenerator implements SurfaceGenerator {
     private LocalMaterialData[] clayBands;
     private long worldSeed;
-    private boolean hasForest;
-    private boolean brycePillars;
+    private final boolean hasForest;
+    private final boolean brycePillars;
     private NoiseGeneratorPerlinMesaBlocks pillarNoise;
     private NoiseGeneratorPerlinMesaBlocks pillarRoofNoise;
     private NoiseGeneratorPerlinMesaBlocks clayBandsOffsetNoise;
 
-    private LocalMaterialData hardClay = LocalMaterials.TERRACOTTA;
-    private LocalMaterialData orangeClay = LocalMaterials.ORANGE_TERRACOTTA;
-    private LocalMaterialData yellowClay = LocalMaterials.YELLOW_TERRACOTTA;
-    private LocalMaterialData brownClay = LocalMaterials.BROWN_TERRACOTTA;
-    private LocalMaterialData redClay = LocalMaterials.RED_TERRACOTTA;
-    private LocalMaterialData whiteClay = LocalMaterials.WHITE_TERRACOTTA;
-    private LocalMaterialData silverClay = LocalMaterials.SILVER_TERRACOTTA;
-    private LocalMaterialData redSand = LocalMaterials.RED_SAND;
+    private final LocalMaterialData hardClay = LocalMaterials.TERRACOTTA;
+    private final LocalMaterialData orangeClay = LocalMaterials.ORANGE_TERRACOTTA;
+    private final LocalMaterialData yellowClay = LocalMaterials.YELLOW_TERRACOTTA;
+    private final LocalMaterialData brownClay = LocalMaterials.BROWN_TERRACOTTA;
+    private final LocalMaterialData redClay = LocalMaterials.RED_TERRACOTTA;
+    private final LocalMaterialData whiteClay = LocalMaterials.WHITE_TERRACOTTA;
+    private final LocalMaterialData silverClay = LocalMaterials.SILVER_TERRACOTTA;
+    private final LocalMaterialData redSand = LocalMaterials.RED_SAND;
 
     private boolean initialized;
     private boolean hardClayIsReplaced;

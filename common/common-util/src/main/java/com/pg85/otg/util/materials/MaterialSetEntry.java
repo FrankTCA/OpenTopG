@@ -1,7 +1,7 @@
 package com.pg85.otg.util.materials;
 
 class MaterialSetEntry {
-    private LocalMaterialBase material;
+    private final LocalMaterialBase material;
 
     MaterialSetEntry(LocalMaterialBase material) {
         this.material = material;

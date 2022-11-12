@@ -35,9 +35,9 @@ class BranchDataItem {
     int maxDepth = 0;
 
     private boolean minimumSize = false;
-    private Random random;
-    private Stack<BranchDataItem> children = new Stack<BranchDataItem>();
-    private String startBO3Name;
+    private final Random random;
+    private final Stack<BranchDataItem> children = new Stack<BranchDataItem>();
+    private final String startBO3Name;
 
     BranchDataItem(Random random, BranchDataItem parent, BO4CustomStructureCoordinate branch, String startBO3Name, int currentDepth, int maxDepth, boolean minimumSize) {
         this.random = random;

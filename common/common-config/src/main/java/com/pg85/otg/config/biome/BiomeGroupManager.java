@@ -13,8 +13,8 @@ import java.util.*;
 public final class BiomeGroupManager {
     static final int MAX_BIOME_GROUP_COUNT = 127;
     private int cumulativeGroupRarity = 0;
-    private Map<String, BiomeGroup> nameToGroup = new LinkedHashMap<String, BiomeGroup>(4);
-    private Map<Integer, BiomeGroup> idToGroup = new LinkedHashMap<Integer, BiomeGroup>(4);
+    private final Map<String, BiomeGroup> nameToGroup = new LinkedHashMap<String, BiomeGroup>(4);
+    private final Map<Integer, BiomeGroup> idToGroup = new LinkedHashMap<Integer, BiomeGroup>(4);
 
     public BiomeGroupManager() {
     }
@@ -108,7 +108,7 @@ public final class BiomeGroupManager {
     }
 
     // TODO: Turn into array?
-    private HashMap<Integer, TreeMap<Integer, BiomeGroup>> cachedGroupDepthMaps = new HashMap<Integer, TreeMap<Integer, BiomeGroup>>();
+    private final HashMap<Integer, TreeMap<Integer, BiomeGroup>> cachedGroupDepthMaps = new HashMap<Integer, TreeMap<Integer, BiomeGroup>>();
 
     public SortedMap<Integer, BiomeGroup> getGroupDepthMap(int depth) {
         TreeMap<Integer, BiomeGroup> map = cachedGroupDepthMaps.get(Integer.valueOf(depth));

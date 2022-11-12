@@ -107,7 +107,7 @@ public enum EntityNames {
     WITHER_SKULL("wither_skull", "witherskull");
 
     // Contains all aliases (alias, internalName)
-    private static ConcurrentMap<String, String> MobAliases = new ConcurrentHashMap<String, String>();
+    private static final ConcurrentMap<String, String> MobAliases = new ConcurrentHashMap<String, String>();
 
     // Auto-register all aliases in the enum
     static {
@@ -149,10 +149,10 @@ public enum EntityNames {
         }
     }
 
-    private String[] aliases;
-    private String internalMinecraftName;
+    private final String[] aliases;
+    private final String internalMinecraftName;
 
-    private EntityNames(String internalMinecraftName, String... aliases) {
+    EntityNames(String internalMinecraftName, String... aliases) {
         this.internalMinecraftName = internalMinecraftName;
         this.aliases = aliases;
     }

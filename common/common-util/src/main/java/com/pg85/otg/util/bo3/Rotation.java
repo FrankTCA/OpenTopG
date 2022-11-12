@@ -15,7 +15,7 @@ public enum Rotation {
 
     private final int ROTATION_ID;
 
-    private Rotation(int id) {
+    Rotation(int id) {
         this.ROTATION_ID = id;
     }
 
@@ -29,16 +29,16 @@ public enum Rotation {
     }
 
     public static Rotation FromString(String rotation) {
-        if (rotation.toLowerCase().equals("north")) {
+        if (rotation.equalsIgnoreCase("north")) {
             return NORTH;
         }
-        if (rotation.toLowerCase().equals("east")) {
+        if (rotation.equalsIgnoreCase("east")) {
             return EAST;
         }
-        if (rotation.toLowerCase().equals("south")) {
+        if (rotation.equalsIgnoreCase("south")) {
             return SOUTH;
         }
-        if (rotation.toLowerCase().equals("west")) {
+        if (rotation.equalsIgnoreCase("west")) {
             return WEST;
         } else {
             return WEST; // WEST is the default

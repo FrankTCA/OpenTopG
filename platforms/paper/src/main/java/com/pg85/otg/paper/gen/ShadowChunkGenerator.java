@@ -110,11 +110,7 @@ public class ShadowChunkGenerator {
 
     public ChunkAccess getChunkFromCache(ChunkCoordinate chunkCoord) {
         ChunkAccess cachedChunk = this.unloadedChunksCache.get(chunkCoord);
-        if (cachedChunk != null) {
-            return cachedChunk;
-        } else {
-            return null;
-        }
+        return cachedChunk;
     }
 
     public void fillWorldGenChunkFromShadowChunk(ChunkCoordinate chunkCoord, org.bukkit.generator.ChunkGenerator.ChunkData chunk, ChunkAccess cachedChunk) {
@@ -221,26 +217,20 @@ public class ShadowChunkGenerator {
             @SuppressWarnings("unchecked")
             ArrayList<StructureType<?>>[] structuresPerDistance = new ArrayList[radiusInChunks];
             structuresPerDistance[4] = new ArrayList<StructureType<?>>(Arrays.asList(
-                    new StructureType<?>[]{
-                            StructureType.END_CITY,
-                            StructureType.OCEAN_MONUMENT,
-                            StructureType.WOODLAND_MANSION
-                    }
-            ));
-            structuresPerDistance[3] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
-            structuresPerDistance[2] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
+                    StructureType.END_CITY,
+                    StructureType.OCEAN_MONUMENT,
+                    StructureType.WOODLAND_MANSION));
+            structuresPerDistance[3] = new ArrayList<StructureType<?>>(List.of());
+            structuresPerDistance[2] = new ArrayList<StructureType<?>>(List.of());
             structuresPerDistance[1] = new ArrayList<StructureType<?>>(Arrays.asList(
-                    new StructureType<?>[]{
-                            StructureType.JUNGLE_TEMPLE,
-                            StructureType.DESERT_PYRAMID,
-                            StructureType.RUINED_PORTAL,
-                            StructureType.SWAMP_HUT,
-                            StructureType.IGLOO,
-                            StructureType.SHIPWRECK,
-                            StructureType.OCEAN_RUIN
-                    }
-            ));
-            structuresPerDistance[0] = new ArrayList<StructureType<?>>(Arrays.asList(new StructureType<?>[]{}));
+                    StructureType.JUNGLE_TEMPLE,
+                    StructureType.DESERT_PYRAMID,
+                    StructureType.RUINED_PORTAL,
+                    StructureType.SWAMP_HUT,
+                    StructureType.IGLOO,
+                    StructureType.SHIPWRECK,
+                    StructureType.OCEAN_RUIN));
+            structuresPerDistance[0] = new ArrayList<StructureType<?>>(List.of());
             Set<Biome> biomesInArea = new HashSet<>();
 
             for (ChunkCoordinate chunkToHandle : chunksToHandle) {

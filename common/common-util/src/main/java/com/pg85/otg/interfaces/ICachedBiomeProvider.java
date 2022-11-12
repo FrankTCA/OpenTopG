@@ -3,21 +3,21 @@ package com.pg85.otg.interfaces;
 import com.pg85.otg.util.ChunkCoordinate;
 
 public interface ICachedBiomeProvider {
-    public IBiomeConfig[] getBiomeConfigsForChunk(ChunkCoordinate chunkCoordinate);
+    IBiomeConfig[] getBiomeConfigsForChunk(ChunkCoordinate chunkCoordinate);
 
-    public IBiome[] getBiomesForChunk(ChunkCoordinate chunkCoordinate);
+    IBiome[] getBiomesForChunk(ChunkCoordinate chunkCoordinate);
 
-    public IBiome[] getBiomesForChunks(ChunkCoordinate chunkCoord, int widthHeightInChunks);
+    IBiome[] getBiomesForChunks(ChunkCoordinate chunkCoord, int widthHeightInChunks);
 
-    public IBiomeConfig getBiomeConfig(int x, int z, boolean cacheChunk);
+    IBiomeConfig getBiomeConfig(int x, int z, boolean cacheChunk);
 
-    public IBiomeConfig getBiomeConfig(int x, int z);
+    IBiomeConfig getBiomeConfig(int x, int z);
 
-    public IBiome getBiome(int x, int z);
+    IBiome getBiome(int x, int z);
 
-    public IBiomeConfig[] getNoiseBiomeConfigsForRegion(int noiseStartX, int noiseStartZ, int widthHeight);
+    IBiomeConfig[] getNoiseBiomeConfigsForRegion(int noiseStartX, int noiseStartZ, int widthHeight);
 
-    public IBiomeConfig getNoiseBiomeConfig(int x, int z, boolean cacheChunk);
+    IBiomeConfig getNoiseBiomeConfig(int x, int z, boolean cacheChunk);
 
-    public IBiome getNoiseBiome(int x, int z);
+    IBiome getNoiseBiome(int x, int z);
 }

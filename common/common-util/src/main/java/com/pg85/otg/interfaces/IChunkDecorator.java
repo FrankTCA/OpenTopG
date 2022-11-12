@@ -5,9 +5,9 @@ public interface IChunkDecorator {
 
     boolean isDecorating();
 
-    public void beginSave();
+    void beginSave();
 
-    public void endSave();
+    void endSave();
 
     boolean getIsSaveRequired();
 }

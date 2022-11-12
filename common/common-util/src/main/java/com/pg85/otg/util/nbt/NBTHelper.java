@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class NBTHelper {
     // A list of already loaded meta Tags. The path is the key, a NBT Tag is the value.
-    private static ConcurrentMap<String, NamedBinaryTag> LoadedTags = new ConcurrentHashMap<String, NamedBinaryTag>();
+    private static final ConcurrentMap<String, NamedBinaryTag> LoadedTags = new ConcurrentHashMap<String, NamedBinaryTag>();
 
     private static NamedBinaryTag loadTileEntityFromNBT(String path, ILogger logger) {
         // Load from file
@@ -76,8 +76,7 @@ public class NBTHelper {
                 return metadata;
             }
             // No id tag found, so check for type 2
-            if (metadata.getValue() instanceof NamedBinaryTag[]) {
-                NamedBinaryTag[] subtag = (NamedBinaryTag[]) metadata.getValue();
+            if (metadata.getValue() instanceof NamedBinaryTag[] subtag) {
                 if (subtag.length != 0) {
                     return subtag[0];
                 }

@@ -112,7 +112,7 @@ public class BiomeConfig extends BiomeConfigBase {
         private double volatilityWeightRaw1;
         private double volatilityWeightRaw2;
 
-        private Map<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new HashMap<>();
+        private final Map<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new HashMap<>();
     }
 
     public BiomeConfig(String biomeName) {

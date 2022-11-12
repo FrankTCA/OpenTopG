@@ -83,7 +83,7 @@ public abstract class LocalPresetLoader {
     }
 
     public String getDefaultPresetFolderName() {
-        return this.presets.keySet().size() == 0 ? Constants.DEFAULT_PRESET_NAME : this.presets.keySet().contains(Constants.DEFAULT_PRESET_NAME) ? Constants.DEFAULT_PRESET_NAME : (String) this.presets.keySet().toArray()[0];
+        return this.presets.keySet().size() == 0 ? Constants.DEFAULT_PRESET_NAME : this.presets.containsKey(Constants.DEFAULT_PRESET_NAME) ? Constants.DEFAULT_PRESET_NAME : (String) this.presets.keySet().toArray()[0];
     }
 
     public void loadPresetsFromDisk(IConfigFunctionProvider biomeResourcesManager, ILogger logger) {

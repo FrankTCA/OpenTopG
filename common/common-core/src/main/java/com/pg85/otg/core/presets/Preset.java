@@ -14,8 +14,8 @@ import java.util.HashMap;
  */
 public class Preset {
     private final Path presetFolder;
-    private String presetFolderName;
-    private String shortPresetName;
+    private final String presetFolderName;
+    private final String shortPresetName;
 
     // Note: Since we're not using Supplier<>, we need to be careful about any classes fetching
     // and caching our worldconfig/biomeconfigs etc, or they won't update when reloaded from disk.

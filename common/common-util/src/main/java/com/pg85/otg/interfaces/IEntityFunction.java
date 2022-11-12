@@ -3,21 +3,21 @@ package com.pg85.otg.interfaces;
 import com.pg85.otg.util.nbt.NamedBinaryTag;
 
 public interface IEntityFunction {
-    public double getX();
+    double getX();
 
-    public int getY();
+    int getY();
 
-    public double getZ();
+    double getZ();
 
-    public int getGroupSize();
+    int getGroupSize();
 
-    public String getNameTagOrNBTFileName();
+    String getNameTagOrNBTFileName();
 
-    public String getResourceLocation();
+    String getResourceLocation();
 
-    public String getMetaData();
+    String getMetaData();
 
     NamedBinaryTag getNBTTag();
 
-    public String makeString();
+    String makeString();
 }

@@ -32,7 +32,7 @@ public class SmoothingAreaGenerator {
     // A smoothing area is drawn around all outer blocks (or blocks neighbouring air) on the lowest layer of blocks in each BO3 of this branching structure that has a SmoothRadius set greater than 0.
     // Holds all unspawned smoothing area lines per chunk.
     public ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
-    private ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawnPerLineDestination = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+    private final ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawnPerLineDestination = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
 
     public ArrayList<ChunkCoordinate> getSmoothingAreaChunkCoords() {
         return new ArrayList<ChunkCoordinate>(smoothingAreasToSpawn.keySet());
@@ -169,7 +169,7 @@ public class SmoothingAreaGenerator {
                                 if (!bFoundNeighbour4 && block.z + 1 > 15) {
                                     // Check if the BO4 contains a block at the location of the neighbouring block
                                     // Normalize the coordinates of the neighbouring block taking into consideration rotation
-                                    neighbouringBlockCoords = BO4CustomStructureCoordinate.getRotatedSmoothingCoords(block.x, (short) block.y, block.z + 1, objectInChunk.getRotation());
+                                    neighbouringBlockCoords = BO4CustomStructureCoordinate.getRotatedSmoothingCoords(block.x, block.y, block.z + 1, objectInChunk.getRotation());
                                     normalizedNeigbouringBlockX = neighbouringBlockCoords.getX() + (objectInChunk.getX());
                                     normalizedNeigbouringBlockY = neighbouringBlockCoords.getY() + objectInChunk.getY();
                                     normalizedNeigbouringBlockZ = neighbouringBlockCoords.getZ() + (objectInChunk.getZ());
@@ -318,7 +318,7 @@ public class SmoothingAreaGenerator {
                             for (int z = 0; z < 16; z++) {
                                 blockToCheck = neighbouringBO3HeightMap[x][z];
                                 if (blockToCheck != null) {
-                                    blockToCheckCoords = BO4CustomStructureCoordinate.getRotatedSmoothingCoords(blockToCheck.x, (short) blockToCheck.y, blockToCheck.z, bO3ToCheck.getRotation());
+                                    blockToCheckCoords = BO4CustomStructureCoordinate.getRotatedSmoothingCoords(blockToCheck.x, blockToCheck.y, blockToCheck.z, bO3ToCheck.getRotation());
                                     normalizedBlockToCheckX = blockToCheckCoords.getX() + (bO3ToCheck.getX());
                                     normalizedBlockToCheckY = blockToCheckCoords.getY() + bO3ToCheck.getY();
                                     normalizedBlockToCheckZ = blockToCheckCoords.getZ() + (bO3ToCheck.getZ());
@@ -366,25 +366,19 @@ public class SmoothingAreaGenerator {
         }
 
         // Neighbouring block found
-        if (
-                isSmoothAreaAnchor ||
-                        (
-                                !(
-                                        blockToCheck instanceof BO4RandomBlockFunction
-                                ) &&
-                                        blockToCheck.material.isSmoothAreaAnchor(
-                                                startBO4Config.overrideChildSettings &&
-                                                        bo4ToCheckConfig.overrideChildSettings ?
-                                                        startBO4Config.smoothStartWood :
-                                                        bo4ToCheckConfig.smoothStartWood,
-                                                startBO4Config.spawnUnderWater
-                                        )
-                        )
-        ) {
-            return true;
-        }
-
-        return false;
+        return isSmoothAreaAnchor ||
+                (
+                        !(
+                                blockToCheck instanceof BO4RandomBlockFunction
+                        ) &&
+                                blockToCheck.material.isSmoothAreaAnchor(
+                                        startBO4Config.overrideChildSettings &&
+                                                bo4ToCheckConfig.overrideChildSettings ?
+                                                startBO4Config.smoothStartWood :
+                                                bo4ToCheckConfig.smoothStartWood,
+                                        startBO4Config.spawnUnderWater
+                                )
+                );
     }
 
 
@@ -878,17 +872,14 @@ public class SmoothingAreaGenerator {
             // Get beginPointY based on position in line
             if (smoothingBeginAndEndPoints.beginPointY == -1) {
                 relativeY = (short) Math.round(
-                        (double)
+                        (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
                                 (
-                                        (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
-                                                (double) (
-                                                        Point2D.distance(
-                                                                smoothingBeginAndEndPoints.originPointX,
-                                                                smoothingBeginAndEndPoints.originPointZ,
-                                                                smoothingBeginAndEndPoints.beginPointX,
-                                                                smoothingBeginAndEndPoints.beginPointZ
-                                                        ) / (double) smoothRadius
-                                                )
+                                        Point2D.distance(
+                                                smoothingBeginAndEndPoints.originPointX,
+                                                smoothingBeginAndEndPoints.originPointZ,
+                                                smoothingBeginAndEndPoints.beginPointX,
+                                                smoothingBeginAndEndPoints.beginPointZ
+                                        ) / (double) smoothRadius
                                 )
                 );
                 if (smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY) {
@@ -901,17 +892,14 @@ public class SmoothingAreaGenerator {
             // Get endpointY based on position in line
             if (smoothingBeginAndEndPoints.endPointY == -1) {
                 relativeY = (short) Math.round(
-                        (double)
+                        (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
                                 (
-                                        (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
-                                                (double) (
-                                                        Point2D.distance(
-                                                                smoothingBeginAndEndPoints.originPointX,
-                                                                smoothingBeginAndEndPoints.originPointZ,
-                                                                smoothingBeginAndEndPoints.endPointX,
-                                                                smoothingBeginAndEndPoints.endPointZ
-                                                        ) / (double) smoothRadius
-                                                )
+                                        Point2D.distance(
+                                                smoothingBeginAndEndPoints.originPointX,
+                                                smoothingBeginAndEndPoints.originPointZ,
+                                                smoothingBeginAndEndPoints.endPointX,
+                                                smoothingBeginAndEndPoints.endPointZ
+                                        ) / (double) smoothRadius
                                 )
                 );
                 if (smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY) {
@@ -967,17 +955,14 @@ public class SmoothingAreaGenerator {
                 ChunkCoordinate currentChunk = ChunkCoordinate.fromBlockCoords(x, z);
                 if (currentChunk.equals(chunkBeingSpawned)) {
                     relativeY = (short) Math.round(
-                            (double)
+                            (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
                                     (
-                                            (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
-                                                    (double) (
-                                                            Point2D.distance(
-                                                                    smoothingBeginAndEndPoints.originPointX,
-                                                                    smoothingBeginAndEndPoints.originPointZ,
-                                                                    x,
-                                                                    z
-                                                            ) / (double) smoothRadius
-                                                    )
+                                            Point2D.distance(
+                                                    smoothingBeginAndEndPoints.originPointX,
+                                                    smoothingBeginAndEndPoints.originPointZ,
+                                                    x,
+                                                    z
+                                            ) / (double) smoothRadius
                                     )
                     );
                     if (smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY) {
@@ -995,7 +980,7 @@ public class SmoothingAreaGenerator {
                     column.addBlock(
                             new SmoothingAreaBlock(
                                     x,
-                                    (short) blockY,
+                                    blockY,
                                     z,
                                     smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? EnumSmoothingBlockType.FILLING : EnumSmoothingBlockType.CUTTING
                             )
@@ -1019,17 +1004,14 @@ public class SmoothingAreaGenerator {
                 ChunkCoordinate currentChunk = ChunkCoordinate.fromBlockCoords(x, z);
                 if (currentChunk.equals(chunkBeingSpawned)) {
                     relativeY = (short) Math.round(
-                            (double)
+                            (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
                                     (
-                                            (double) Math.abs(smoothingBeginAndEndPoints.originPointY - smoothingBeginAndEndPoints.finalDestinationPointY) *
-                                                    (double) (
-                                                            Point2D.distance(
-                                                                    smoothingBeginAndEndPoints.originPointX,
-                                                                    smoothingBeginAndEndPoints.originPointZ,
-                                                                    x,
-                                                                    z
-                                                            ) / (double) smoothRadius
-                                                    )
+                                            Point2D.distance(
+                                                    smoothingBeginAndEndPoints.originPointX,
+                                                    smoothingBeginAndEndPoints.originPointZ,
+                                                    x,
+                                                    z
+                                            ) / (double) smoothRadius
                                     )
                     );
                     if (smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY) {
@@ -1047,7 +1029,7 @@ public class SmoothingAreaGenerator {
                     column.addBlock(
                             new SmoothingAreaBlock(
                                     x,
-                                    (short) blockY,
+                                    blockY,
                                     z,
                                     smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? EnumSmoothingBlockType.FILLING : EnumSmoothingBlockType.CUTTING
                             )

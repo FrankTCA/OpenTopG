@@ -47,11 +47,11 @@ public abstract class CustomStructureCoordinate {
     }
 
     public final int getChunkX() {
-        return (int) MathHelper.floor(x / (double) 16);
+        return MathHelper.floor(x / (double) 16);
     }
 
     public final int getChunkZ() {
-        return (int) MathHelper.floor(z / (double) 16);
+        return MathHelper.floor(z / (double) 16);
     }
 
     /**
@@ -88,10 +88,9 @@ public abstract class CustomStructureCoordinate {
         if (otherObject == null) {
             return false;
         }
-        if (!(otherObject instanceof CustomStructureCoordinate)) {
+        if (!(otherObject instanceof CustomStructureCoordinate otherCoord)) {
             return false;
         }
-        CustomStructureCoordinate otherCoord = (CustomStructureCoordinate) otherObject;
         if (otherCoord.x != x) {
             return false;
         }
@@ -104,9 +103,6 @@ public abstract class CustomStructureCoordinate {
         if (!otherCoord.rotation.equals(rotation)) {
             return false;
         }
-        if (!otherCoord.object.getName().equals(object.getName())) {
-            return false;
-        }
-        return true;
+        return otherCoord.object.getName().equals(object.getName());
     }
 }

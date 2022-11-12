@@ -65,10 +65,7 @@ public final class GeneratingChunk {
             if (!disableBedrock && y == -64) {
                 return true;
             }
-            if (ceilingBedrock && y >= this.heightCap - 1) {
-                return true;
-            }
-            return false;
+            return ceilingBedrock && y >= this.heightCap - 1;
         }
 
         // Otherwise we have normal bedrock

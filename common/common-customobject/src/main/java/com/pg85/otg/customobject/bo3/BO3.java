@@ -141,7 +141,7 @@ public class BO3 implements StructuredCustomObject {
                 blocksToSpawn.add(block);
             }
 
-            oeh.addBlock((BO3BlockFunction) block);
+            oeh.addBlock(block);
         }
 
         ReplaceBlockMatrix replaceBlocks = null;
@@ -343,7 +343,7 @@ public class BO3 implements StructuredCustomObject {
                 blocksToSpawn.add(block);
             }
             if (block instanceof BO3BlockFunction) {
-                oeh.addBlock((BO3BlockFunction) block);
+                oeh.addBlock(block);
             }
         }
 

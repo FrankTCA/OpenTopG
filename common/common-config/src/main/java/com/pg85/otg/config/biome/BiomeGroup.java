@@ -25,8 +25,8 @@ import java.util.List;
  */
 public final class BiomeGroup extends ConfigFunction<IWorldConfig> {
     private int groupId;
-    private String name;
-    private int groupRarity;
+    private final String name;
+    private final int groupRarity;
     private int generationDepth = 0;
     private double minTemp = 0;
     private double maxTemp = 0;

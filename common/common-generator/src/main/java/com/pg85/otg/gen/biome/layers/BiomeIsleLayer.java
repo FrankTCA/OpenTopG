@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BiomeIsleLayer implements DiagonalCrossSamplingLayer {
     public static class IslesList {
-        private List<Isle> isles = new ArrayList<>();
+        private final List<Isle> isles = new ArrayList<>();
 
         public List<Isle> getIsles() {
             return this.isles;

@@ -54,17 +54,13 @@ public final class ChunkCoordinate {
         if (otherObject == null) {
             return false;
         }
-        if (!(otherObject instanceof ChunkCoordinate)) {
+        if (!(otherObject instanceof ChunkCoordinate otherChunkCoordinate)) {
             return false;
         }
-        ChunkCoordinate otherChunkCoordinate = (ChunkCoordinate) otherObject;
         if (otherChunkCoordinate.chunkX != chunkX) {
             return false;
         }
-        if (otherChunkCoordinate.chunkZ != chunkZ) {
-            return false;
-        }
-        return true;
+        return otherChunkCoordinate.chunkZ == chunkZ;
     }
 
     /**

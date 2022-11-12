@@ -346,7 +346,7 @@ public class WorldConfig extends WorldConfigBase {
         // Dimension settings
 
         long fixedTime = reader.getSetting(WorldStandardValues.FIXED_TIME, logger);
-        this.fixedTime = fixedTime == -1l ? OptionalLong.empty() : OptionalLong.of(fixedTime);
+        this.fixedTime = fixedTime == -1L ? OptionalLong.empty() : OptionalLong.of(fixedTime);
         this.hasSkyLight = reader.getSetting(WorldStandardValues.HAS_SKYLIGHT, logger);
         this.hasCeiling = reader.getSetting(WorldStandardValues.HAS_CEILING, logger);
         this.ultraWarm = reader.getSetting(WorldStandardValues.ULTRA_WARM, logger);

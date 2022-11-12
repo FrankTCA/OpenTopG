@@ -298,10 +298,9 @@ public final class PaperMaterialData extends LocalMaterialData {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof PaperMaterialData)) {
+        if (!(obj instanceof PaperMaterialData other)) {
             return false;
         }
-        PaperMaterialData other = (PaperMaterialData) obj;
         return
                 (this.isBlank && other.isBlank) ||
                         (

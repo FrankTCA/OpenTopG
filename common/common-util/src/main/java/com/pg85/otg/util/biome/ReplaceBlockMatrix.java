@@ -118,11 +118,11 @@ public class ReplaceBlockMatrix {
 
     public ReplaceBlockMatrix(String setting, int maxHeight, IMaterialReader reader) throws InvalidConfigException {
         this.maxHeight = maxHeight;
-        this.targetsAtHeights = (ReplaceBlockEntry[]) new ReplaceBlockEntry[256];
+        this.targetsAtHeights = new ReplaceBlockEntry[256];
 
         // Parse
         if (setting.isEmpty() || setting.equalsIgnoreCase(NO_REPLACE)) {
-            setInstructions(Collections.<ReplacedBlocksInstruction>emptyList());
+            setInstructions(Collections.emptyList());
             return;
         }
 
@@ -165,7 +165,7 @@ public class ReplaceBlockMatrix {
                 for (ReplacedBlocksInstruction existing : targetsAtHeight.targets) {
                     // If this instruction replaces the output of a previously added
                     // instruction, override the output of the previous instruction.
-                    LocalMaterialData existingTo = (LocalMaterialData) existing.to;
+                    LocalMaterialData existingTo = existing.to;
                     if (!instruction.from.isTag()) {
                         LocalMaterialData newFrom = (LocalMaterialData) instruction.from;
                         if (

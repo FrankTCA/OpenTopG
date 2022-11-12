@@ -116,7 +116,7 @@ public final class FileSettingsWriterBO4 implements SettingsWriterBO4 {
                 builder.append(' ');
             flag = !flag;
         }
-        writer.write("# |" + builder.toString() + "| #");
+        writer.write("# |" + builder + "| #");
         writer.newLine();
         writer.write("# +-----------------------------------------------------------------+ #");
         writer.newLine();

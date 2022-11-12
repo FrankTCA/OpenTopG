@@ -20,20 +20,20 @@ import java.util.stream.Collectors;
  * directory, or can be loaded manually and then added to this collection.
  */
 public class CustomObjectCollection {
-    private Object indexingFilesLock = new Object();
+    private final Object indexingFilesLock = new Object();
 
-    private ArrayList<CustomObject> objectsGlobalObjects = new ArrayList<CustomObject>();
-    private HashMap<String, CustomObject> objectsByNameGlobalObjects = new HashMap<String, CustomObject>();
-    private ArrayList<String> objectsNotFoundGlobalObjects = new ArrayList<String>();
+    private final ArrayList<CustomObject> objectsGlobalObjects = new ArrayList<CustomObject>();
+    private final HashMap<String, CustomObject> objectsByNameGlobalObjects = new HashMap<String, CustomObject>();
+    private final ArrayList<String> objectsNotFoundGlobalObjects = new ArrayList<String>();
 
-    private HashMap<String, ArrayList<CustomObject>> objectsPerPreset = new HashMap<String, ArrayList<CustomObject>>();
-    private HashMap<String, HashMap<String, CustomObject>> objectsByNamePerPreset = new HashMap<String, HashMap<String, CustomObject>>();
-    private HashMap<String, ArrayList<String>> objectsNotFoundPerPreset = new HashMap<String, ArrayList<String>>();
+    private final HashMap<String, ArrayList<CustomObject>> objectsPerPreset = new HashMap<String, ArrayList<CustomObject>>();
+    private final HashMap<String, HashMap<String, CustomObject>> objectsByNamePerPreset = new HashMap<String, HashMap<String, CustomObject>>();
+    private final HashMap<String, ArrayList<String>> objectsNotFoundPerPreset = new HashMap<String, ArrayList<String>>();
 
     private HashMap<String, File> customObjectFilesGlobalObjects = null;
     private HashMap<String, File> globalTemplates = null;
-    private HashMap<String, HashMap<String, File>> customObjectFilesPerPreset = new HashMap<String, HashMap<String, File>>();
-    private HashMap<String, HashMap<String, File>> boTemplateFilesPerPreset = new HashMap<>();
+    private final HashMap<String, HashMap<String, File>> customObjectFilesPerPreset = new HashMap<String, HashMap<String, File>>();
+    private final HashMap<String, HashMap<String, File>> boTemplateFilesPerPreset = new HashMap<>();
 
     public CustomObject loadObject(File file, String presetFolderName, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker) {
         synchronized (this.indexingFilesLock) {
@@ -46,7 +46,7 @@ public class CustomObjectCollection {
                 // If we come across a directory descend into it without enabling
                 // the objects
                 if (index != -1) {
-                    String objectType = fileName.substring(index + 1, fileName.length());
+                    String objectType = fileName.substring(index + 1);
                     String objectName = fileName.substring(0, index);
 
                     // Get the object
@@ -327,12 +327,9 @@ public class CustomObjectCollection {
 
             // Check if the object has been queried before but could not be found
 
-            boolean bSearchedGlobalObjects = false;
+            boolean bSearchedGlobalObjects = this.objectsNotFoundGlobalObjects != null && this.objectsNotFoundGlobalObjects.contains(name);
 
-            if (this.objectsNotFoundGlobalObjects != null && this.objectsNotFoundGlobalObjects.contains(name)) {
-                // TODO: If a user adds a new object while the game is running, it won't be picked up, even when developermode:true.
-                bSearchedGlobalObjects = true;
-            }
+            // TODO: If a user adds a new object while the game is running, it won't be picked up, even when developermode:true.
 
             if ((!searchGlobalObjects || bSearchedGlobalObjects) && (presetFolderName == null || bSearchedPresetObjects)) {
                 return null;

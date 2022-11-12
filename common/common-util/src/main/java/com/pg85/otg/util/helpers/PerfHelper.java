@@ -14,9 +14,6 @@ public final class PerfHelper {
     }
 
     public static boolean isYOutOfWorldBounds(int y) {
-        if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH) {
-            return true;
-        }
-        return false;
+        return y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH;
     }
 }

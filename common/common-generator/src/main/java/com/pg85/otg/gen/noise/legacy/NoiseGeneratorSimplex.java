@@ -8,10 +8,10 @@ class NoiseGeneratorSimplex {
     private static final int[][] grad3 = new int[][]{{1, 1, 0}, {-1, 1, 0}, {1, -1, 0}, {-1, -1, 0}, {1, 0, 1}, {-1, 0, 1}, {1, 0, -1}, {-1, 0, -1}, {0, 1, 1}, {0, -1, 1}, {0, 1, -1}, {0, -1, -1}};
     private static final double SQRT_3 = Math.sqrt(3.0D);
     private final int[] p;
-    private double xo;
-    private double yo;
+    private final double xo;
+    private final double yo;
     @SuppressWarnings("unused")
-    private double zo;
+    private final double zo;
     private static final double F2 = 0.5D * (SQRT_3 - 1.0D);
     private static final double G2 = (3.0D - SQRT_3) / 6.0D;
 
@@ -26,7 +26,6 @@ class NoiseGeneratorSimplex {
         this.zo = seed.nextDouble() * 256.0D;
 
         for (int i = 0; i < 256; this.p[i] = i++) {
-            ;
         }
 
         for (int l = 0; l < 256; ++l) {

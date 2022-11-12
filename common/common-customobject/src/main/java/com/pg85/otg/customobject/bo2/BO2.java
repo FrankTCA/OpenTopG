@@ -35,7 +35,7 @@ import java.util.Random;
  * The good old BO2.
  */
 public class BO2 extends CustomObjectConfigFile implements CustomObject {
-    private ObjectCoordinate[][] data = new ObjectCoordinate[4][];
+    private final ObjectCoordinate[][] data = new ObjectCoordinate[4][];
     private boolean isEnabled = false;
     public MaterialSet spawnOnBlockType;
     private MaterialSet collisionBlockType;
@@ -131,8 +131,7 @@ public class BO2 extends CustomObjectConfigFile implements CustomObject {
         newConfig.extractBlocks(Arrays.asList(getBlockFunctions(presetFolderName, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker)));
         newConfig.addBlockCheckFromBO2(this.spawnOnBlockType);
         for (BlockFunction<?> res : newConfig.getBlockFunctions(presetFolderName, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker)) {
-            if (res instanceof BO3BlockFunction) {
-                BO3BlockFunction block = (BO3BlockFunction) res;
+            if (res instanceof BO3BlockFunction block) {
                 box.expandToFit(block.x, block.y, block.z);
             }
         }

@@ -27,7 +27,7 @@ public enum SaplingType {
     // Custom represents any non-vanilla tree species, used in Forge.
 
     // Case insensitive index
-    private static ConcurrentMap<String, SaplingType> BY_NAME = new ConcurrentHashMap<String, SaplingType>();
+    private static final ConcurrentMap<String, SaplingType> BY_NAME = new ConcurrentHashMap<String, SaplingType>();
 
     static {
         for (SaplingType type : values()) {

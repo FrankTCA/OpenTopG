@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public final class TemplateBiome extends ConfigFunction<IWorldConfig> {
-    private String name;
+    private final String name;
     private double minTemp;
     private double maxTemp;
     private final List<String> tags = new ArrayList<String>();
