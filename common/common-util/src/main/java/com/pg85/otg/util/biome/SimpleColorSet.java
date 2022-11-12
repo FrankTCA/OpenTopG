@@ -35,10 +35,10 @@ public class SimpleColorSet extends ColorSet
 		StringBuilder stringBuilder = new StringBuilder();
 		for (ColorThreshold layer : this.layers)
 		{
-			stringBuilder.append("#" + Integer.toHexString(layer.getColor() | 0x1000000).substring(1).toUpperCase());
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(layer.maxNoise);
-			stringBuilder.append(',').append(' ');
+			stringBuilder.append("#" + Integer.toHexString(layer.getColor() | 0x1000000).substring(1).toUpperCase())
+				.append(", ")
+				.append(layer.maxNoise)
+				.append(", ");
 		}
 		// Delete last ", "
 		stringBuilder.deleteCharAt(stringBuilder.length() - 2);

@@ -114,14 +114,14 @@ class MultipleLayersSurfaceGenerator extends SimpleSurfaceGenerator
 		StringBuilder stringBuilder = new StringBuilder();
 		for (MultipleLayersSurfaceGeneratorLayer groundLayer : this.layers)
 		{
-			stringBuilder.append(groundLayer.surfaceBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.underWaterSurfaceBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.groundBlock);
-			stringBuilder.append(',').append(' ');
-			stringBuilder.append(groundLayer.maxNoise);
-			stringBuilder.append(',').append(' ');
+			stringBuilder.append(groundLayer.surfaceBlock)
+				.append(", ")
+				.append(groundLayer.underWaterSurfaceBlock)
+				.append(", ")
+				.append(groundLayer.groundBlock)
+				.append(", ")
+				.append(groundLayer.maxNoise)
+				.append(", ");
 		}
 		// Delete last ", "
 		if(stringBuilder.length() > 0)
