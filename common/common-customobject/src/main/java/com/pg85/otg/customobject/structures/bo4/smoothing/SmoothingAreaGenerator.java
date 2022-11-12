@@ -17,7 +17,7 @@ import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
 import com.pg85.otg.customobject.structures.CustomStructureCoordinate;
 import com.pg85.otg.customobject.structures.bo4.BO4CustomStructureCoordinate;
-import com.pg85.otg.customobject.structures.bo4.smoothing.SmoothingAreaBlock.enumSmoothingBlockType;
+import com.pg85.otg.customobject.structures.bo4.smoothing.SmoothingAreaBlock.EnumSmoothingBlockType;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
@@ -1140,7 +1140,7 @@ public class SmoothingAreaGenerator
 							x,
 							(short)blockY,
 							z,
-							smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? enumSmoothingBlockType.FILLING : enumSmoothingBlockType.CUTTING
+							smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? EnumSmoothingBlockType.FILLING : EnumSmoothingBlockType.CUTTING
 						)
 					);
 				}
@@ -1198,7 +1198,7 @@ public class SmoothingAreaGenerator
 							x,
 							(short)blockY,
 							z,
-							smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? enumSmoothingBlockType.FILLING : enumSmoothingBlockType.CUTTING
+							smoothingBeginAndEndPoints.originPointY >= smoothingBeginAndEndPoints.finalDestinationPointY ? EnumSmoothingBlockType.FILLING : EnumSmoothingBlockType.CUTTING
 						)
 					);
 				}

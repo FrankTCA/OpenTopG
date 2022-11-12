@@ -2,7 +2,7 @@ package com.pg85.otg.customobject.structures.bo4.smoothing;
 
 class SmoothingAreaBlock
 {
-	enum enumSmoothingBlockType
+	enum EnumSmoothingBlockType
 	{
 		FILLING,
 		CUTTING
@@ -11,11 +11,11 @@ class SmoothingAreaBlock
 	int x = 0;
 	short y = -1;
 	int z = 0;
-	enumSmoothingBlockType smoothingBlockType = null;
+	EnumSmoothingBlockType smoothingBlockType = null;
 
 	public SmoothingAreaBlock() { } 
 	
-	public SmoothingAreaBlock(int x, short y, int z, enumSmoothingBlockType smoothingBlockType)
+	public SmoothingAreaBlock(int x, short y, int z, EnumSmoothingBlockType smoothingBlockType)
 	{
 		this.x = x;
 		this.y = y;

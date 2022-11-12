@@ -20,7 +20,7 @@ import com.pg85.otg.util.logging.LogLevel;
 
 class BranchDataItem
 {
-	private static int BranchDataItemCounter = -1;
+	private static int branchDataItemCounter = -1;
 	
 	BO4CustomStructureCoordinate branch;
 	ChunkCoordinate chunkCoordinate;
@@ -51,8 +51,8 @@ class BranchDataItem
 		this.minimumSize = minimumSize;
 		this.chunkCoordinate = com.pg85.otg.util.ChunkCoordinate.fromBlockCoords(this.branch.getX(), this.branch.getZ());
 
-		BranchDataItem.BranchDataItemCounter += 1; // TODO: Reset this somewhere for each new world created?
-		branchNumber = BranchDataItem.BranchDataItemCounter;
+		BranchDataItem.branchDataItemCounter += 1; // TODO: Reset this somewhere for each new world created?
+		branchNumber = BranchDataItem.branchDataItemCounter;
 	}	
 	
 	Stack<BranchDataItem> getChildren(boolean dontSpawn, IWorldGenRegion worldGenRegion, ChunkCoordinate chunkBeingDecorated, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker)

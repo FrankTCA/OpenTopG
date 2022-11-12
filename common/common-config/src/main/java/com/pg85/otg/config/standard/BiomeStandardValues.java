@@ -24,7 +24,7 @@ import java.util.List;
 public class BiomeStandardValues extends Settings
 {
 	// >> Biome Extensions & Related
-	public static final Collection<String> BiomeConfigExtensions = Arrays.asList(
+	public static final Collection<String> biomeConfigExtensions = Arrays.asList(
 		"BiomeConfig.ini", 
 		".biome", 
 		".bc", 

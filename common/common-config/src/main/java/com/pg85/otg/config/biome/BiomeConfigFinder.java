@@ -140,7 +140,7 @@ public final class BiomeConfigFinder
 	private String toBiomeName(File file)
 	{
 		String fileName = file.getName();
-		for (String extension : BiomeStandardValues.BiomeConfigExtensions)
+		for (String extension : BiomeStandardValues.biomeConfigExtensions)
 		{
 			if (fileName.endsWith(extension))
 			{

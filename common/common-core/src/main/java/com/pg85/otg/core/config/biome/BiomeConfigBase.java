@@ -91,7 +91,7 @@ abstract class BiomeConfigBase extends ConfigFile implements IBiomeConfig
 		protected float biomeHeight;
 		protected float biomeVolatility;
 		protected int smoothRadius;
-		protected int CHCSmoothRadius;
+		protected int cHCSmoothRadius;
 		protected double maxAverageHeight;
 		protected double maxAverageDepth;
 		protected double volatility1;
@@ -536,7 +536,7 @@ abstract class BiomeConfigBase extends ConfigFile implements IBiomeConfig
 	@Override
 	public int getCHCSmoothRadius()
 	{
-		return this.settings.CHCSmoothRadius;
+		return this.settings.cHCSmoothRadius;
 	}
 	
 	@Override

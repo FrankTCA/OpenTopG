@@ -52,10 +52,7 @@ public abstract class MinecraftObjectFunction<T extends CustomObjectConfigFile> 
 	}
 	
 	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks)
-	{
-		// TODO: Implement this?	
-	}
+	public abstract void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks);
 
 	@Override
 	public boolean isAnalogousTo(CustomObjectConfigFunction<T> other)
