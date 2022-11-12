@@ -1,6 +1,7 @@
 package com.pg85.otg.paper.materials;
 
 import com.pg85.otg.core.OTG;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.BlockNames;
@@ -232,7 +233,7 @@ public class PaperLegacyMaterials
 
 	static BlockState fromLegacyBlockNameOrIdWithData (String blockName, int data)
 	{
-		if (blockName == null || blockName.trim().isEmpty())
+		if (PerfHelper.stringIsEmpty(blockName))
 		{
 			return null;
 		}

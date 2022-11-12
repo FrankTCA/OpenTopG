@@ -6,6 +6,7 @@ import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.helpers.StringHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
@@ -283,10 +284,8 @@ public class FileSettingsReaderBO4 implements SettingsReaderBO4
 			while ((thisLine = settingsReader.readLine()) != null)
 			{
 				lineNumber++;
-				if (thisLine.trim().isEmpty())
-				{
-					// Empty line, ignore
-				} else if (thisLine.startsWith("#") || thisLine.startsWith("<"))
+				if (PerfHelper.stringIsEmpty(thisLine)) {}
+				else if (thisLine.startsWith("#") || thisLine.startsWith("<"))
 				{
 					// Comment, ignore
 				} else if (thisLine.contains(":") || thisLine.toLowerCase().contains("("))

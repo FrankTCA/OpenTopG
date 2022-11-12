@@ -6,6 +6,7 @@ import com.pg85.otg.core.OTG;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.FifoMap;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
@@ -85,7 +86,7 @@ public class PaperMaterialReader implements IMaterialReader
 
 	private LocalMaterialData materialFromString(String input) throws InvalidConfigException
 	{
-		if (input == null || input.trim().isEmpty())
+		if (PerfHelper.stringIsEmpty(input))
 		{
 			return null;
 		}

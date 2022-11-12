@@ -9,6 +9,7 @@ import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
@@ -73,7 +74,7 @@ class SmoothingAreaColumn
 		IBiomeConfig biomeConfig = worldGenRegion.getBiomeConfigForDecoration(this.x, this.z);
 
 		LocalMaterialData replaceAboveMaterial = null;
-		if(bo4Config.replaceAbove != null && !bo4Config.replaceAbove.trim().isEmpty())
+		if(PerfHelper.stringIsEmpty(bo4Config.replaceAbove))
 		{
 			try {
 				replaceAboveMaterial = materialReader.readMaterial(bo4Config.replaceAbove);
@@ -87,7 +88,7 @@ class SmoothingAreaColumn
 
 		LocalMaterialData smoothingSurfaceBlock = null;
 		LocalMaterialData smoothingGroundBlock = null;
-		if(bo4Config.smoothingSurfaceBlock != null && !bo4Config.smoothingSurfaceBlock.trim().isEmpty())
+		if(PerfHelper.stringIsEmpty(bo4Config.smoothingSurfaceBlock))
 		{
 			try {
 				smoothingSurfaceBlock = materialReader.readMaterial(bo4Config.smoothingSurfaceBlock);
@@ -98,7 +99,7 @@ class SmoothingAreaColumn
 				}
 			}
 		}
-		if(bo4Config.smoothingGroundBlock != null && !bo4Config.smoothingGroundBlock.trim().isEmpty())
+		if(PerfHelper.stringIsEmpty(bo4Config.smoothingGroundBlock))
 		{
 			try {
 				smoothingGroundBlock = materialReader.readMaterial(bo4Config.smoothingGroundBlock);

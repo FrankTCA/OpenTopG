@@ -2,6 +2,7 @@ package com.pg85.otg.config.io;
 
 import com.pg85.otg.config.io.RawSettingValue.ValueType;
 import com.pg85.otg.interfaces.ILogger;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 
@@ -45,7 +46,7 @@ public class FileSettingsReader
 		while ((thisLine = fileContents.readLine()) != null)
 		{
 			lineNumber++;
-			if (thisLine.trim().isEmpty())
+			if (PerfHelper.stringIsEmpty(thisLine))
 			{
 				// Empty line, ignore
 			}
