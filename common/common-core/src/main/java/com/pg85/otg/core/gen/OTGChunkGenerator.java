@@ -443,7 +443,7 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider
 		OreVeinData data = this.oreVeinGenerator == null ? null : this.oreVeinGenerator.getForChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ());
 		
 		// Fill waterLevel array, used when placing stone/ground/surface blocks.
-		int[] waterLevel = new int[383];
+		int[] waterLevel = new int[256];
 
 		int blockX = chunkCoord.getBlockX();
 		int blockZ = chunkCoord.getBlockZ();
