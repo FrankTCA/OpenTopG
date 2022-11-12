@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +26,12 @@ public class NBTHelper
 	{
 		// Load from file
 		NamedBinaryTag metadata;
-		FileInputStream stream = null;
+		InputStream stream = null;
+		Path thePath = Path.of(path);
 		try
 		{
 			// Read it from a file next to the BO3
-			stream = new FileInputStream(path);
+			stream = Files.newInputStream(thePath);
 			// Get the tag
 			metadata = NamedBinaryTag.readFrom(stream, true);
 		} catch (FileNotFoundException e) {
@@ -43,11 +46,11 @@ public class NBTHelper
 			tryToClose(stream);
 
 			// Not a compressed NBT file, try uncompressed
-			FileInputStream streamForUncompressed = null;
+			InputStream streamForUncompressed = null;
 			try
 			{
 				// Read it from a file next to the BO3
-				streamForUncompressed = new FileInputStream(path);
+				streamForUncompressed = Files.newInputStream(thePath);
 				// Get the tag
 				metadata = NamedBinaryTag.readFrom(streamForUncompressed, false);
 			}			 

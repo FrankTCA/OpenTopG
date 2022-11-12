@@ -1,11 +1,6 @@
 package com.pg85.otg.customobject.structures;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -101,7 +96,7 @@ public class CustomStructureFileManager
 				}
 
 				DataOutputStream dos2 = null;
-				FileOutputStream fos = null;
+				OutputStream fos = null;
 				try {
 					if(!occupiedChunksFile.exists())
 					{
@@ -111,7 +106,7 @@ public class CustomStructureFileManager
 					}
 					byte[] compressedBytes = com.pg85.otg.util.CompressionUtils.compress(bos.toByteArray(), logger);
 					dos.close();
-					fos = new FileOutputStream(occupiedChunksFile);
+					fos = Files.newOutputStream(occupiedChunksFile.toPath());
 					dos2 = new DataOutputStream(fos);
 					dos2.write(compressedBytes, 0, compressedBytes.length);
 				}
@@ -230,7 +225,7 @@ public class CustomStructureFileManager
 					int regionZ = Integer.parseInt(chunkCoords[1]);
 					regionCoord = ChunkCoordinate.fromChunkCoords(regionX, regionZ);
 					
-					fis = new FileInputStream(occupiedChunksFile);			
+					fis = new FileInputStream(occupiedChunksFile);
 					ByteBuffer buffer = fis.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, fis.getChannel().size());				
 					
 					byte[] compressedBytes = new byte[(int) fis.getChannel().size()];
@@ -588,7 +583,7 @@ public class CustomStructureFileManager
 		}
 			
 		DataOutputStream dos2 = null;
-		FileOutputStream fos = null;
+		OutputStream fos = null;
 		try {
 			if(!structuresRegionFile.exists())
 			{
@@ -598,7 +593,7 @@ public class CustomStructureFileManager
 			}
 			byte[] compressedBytes = com.pg85.otg.util.CompressionUtils.compress(bos.toByteArray(), logger);
 			dos.close();
-			fos = new FileOutputStream(structuresRegionFile);
+			fos = Files.newOutputStream(structuresRegionFile.toPath());
 			dos2 = new DataOutputStream(fos);
 			dos2.write(compressedBytes, 0, compressedBytes.length);
 		}
@@ -1011,7 +1006,7 @@ public class CustomStructureFileManager
 			}			
 			
 			DataOutputStream dos2 = null;
-			FileOutputStream fos = null;
+			OutputStream fos = null;
 			try
 			{				
 				if(!occupiedChunksFile.exists())
@@ -1021,7 +1016,7 @@ public class CustomStructureFileManager
 					Files.move(occupiedChunksFile.toPath(), occupiedChunksBackupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				}
 				byte[] compressedBytes = com.pg85.otg.util.CompressionUtils.compress(bos.toByteArray(), logger);
-				fos = new FileOutputStream(occupiedChunksFile);
+				fos = Files.newOutputStream(occupiedChunksFile.toPath());
 				dos2 = new DataOutputStream(fos);
 				dos2.write(compressedBytes, 0, compressedBytes.length);
 			} catch (IOException e) {

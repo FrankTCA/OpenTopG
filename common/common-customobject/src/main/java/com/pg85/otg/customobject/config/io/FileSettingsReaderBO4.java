@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -276,7 +277,7 @@ public class FileSettingsReaderBO4 implements SettingsReaderBO4
 
 		try
 		{
-			settingsReader = new BufferedReader(new FileReader(file));
+			settingsReader = Files.newBufferedReader(file.toPath());
 			int lineNumber = 0;
 			String thisLine;
 			while ((thisLine = settingsReader.readLine()) != null)

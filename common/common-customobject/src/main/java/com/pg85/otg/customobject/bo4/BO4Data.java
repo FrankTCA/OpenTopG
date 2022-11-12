@@ -1,11 +1,7 @@
 package com.pg85.otg.customobject.bo4;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -48,7 +44,7 @@ public class BO4Data
 				config.writeToStream(dos, presetFolderName, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
 				byte[] compressedBytes = com.pg85.otg.util.CompressionUtils.compress(bos.toByteArray(), logger);
 				dos.close();
-				FileOutputStream fos = new FileOutputStream(file);
+				OutputStream fos = Files.newOutputStream(file.toPath());
 				DataOutputStream dos2 = new DataOutputStream(fos);
 				dos2.write(compressedBytes, 0, compressedBytes.length);
 				dos2.close();
