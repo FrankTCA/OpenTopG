@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileSettingsWriterBO4 implements SettingsWriterBO4
+public final class FileSettingsWriterBO4 implements SettingsWriterBO4
 {
 	private final File file;
 	private boolean writeComments;

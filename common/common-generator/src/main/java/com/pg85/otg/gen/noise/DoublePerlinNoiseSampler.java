@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleListIterator;
 
 import java.util.Random;
 
-public class DoublePerlinNoiseSampler {
+public final class DoublePerlinNoiseSampler {
    private final double amplitude;
    private final OctavePerlinNoiseSampler firstSampler;
    private final OctavePerlinNoiseSampler secondSampler;

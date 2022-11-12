@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Implementation of LocalMaterial that wraps one of Minecraft's Blocks.
  */
-public class PaperMaterialData extends LocalMaterialData
+public final class PaperMaterialData extends LocalMaterialData
 {
 	static final LocalMaterialData blank = new PaperMaterialData(null, null, true);
 	private static final ConcurrentHashMap<BlockState, LocalMaterialData> stateToMaterialDataMap = new ConcurrentHashMap<>(); // TODO: Move to SpigotMaterialReader?

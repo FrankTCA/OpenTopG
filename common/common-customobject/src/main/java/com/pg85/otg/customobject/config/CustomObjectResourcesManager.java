@@ -37,7 +37,6 @@ public class CustomObjectResourcesManager implements ICustomObjectResourcesManag
 	 * @param <T>	Type of the holder of the config function.
 	 * @param name	The name of the config function.
 	 * @param holder The holder of the config function, like
-	 *				{@link WorldConfig}.
 	 * @param args	The args of the function.
 	 * @return A config function with the given name, or null if the config
 	 * function requires another holder. For invalid or non-existing config
@@ -69,11 +68,10 @@ public class CustomObjectResourcesManager implements ICustomObjectResourcesManag
 			{
 				// TODO fix deprecated method usages
 				configFunction = (CustomObjectConfigFunction<T>) clazz.newInstance();
-			} catch (Exception e)
-			{
+			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException("Reflection error while loading the resources: ", e);
 			}
-	
+
 			// Check if config function is of the right type
 			boolean matchingTypes = holder.getClass().isAssignableFrom(configFunction.getHolderType());
 			if (!matchingTypes)

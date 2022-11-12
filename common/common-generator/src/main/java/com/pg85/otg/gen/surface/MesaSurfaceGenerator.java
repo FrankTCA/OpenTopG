@@ -15,7 +15,7 @@ import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 
 @SuppressWarnings("deprecation")
-class MesaSurfaceGenerator implements SurfaceGenerator
+final class MesaSurfaceGenerator implements SurfaceGenerator
 {
 	private LocalMaterialData[] clayBands;
 	private long worldSeed;

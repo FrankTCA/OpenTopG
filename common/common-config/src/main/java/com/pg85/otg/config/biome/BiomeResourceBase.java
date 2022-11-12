@@ -1,5 +1,6 @@
 package com.pg85.otg.config.biome;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public abstract class BiomeResourceBase extends ConfigFunction<IBiomeConfig>
 		try
 		{
 			return clazz.getConstructor(IBiomeConfig.class, List.class, ILogger.class, IMaterialReader.class).newInstance(config, stringArgs, logger, materialReader);
-		} catch (Exception e) {
+		} catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
 	}
