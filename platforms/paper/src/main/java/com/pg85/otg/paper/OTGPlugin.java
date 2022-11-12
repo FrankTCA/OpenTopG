@@ -187,13 +187,22 @@ public class OTGPlugin extends JavaPlugin implements Listener
 		if (OTGGen.generator == null)
 		{
 			RegistryAccess registryAccess = ((CraftServer) Bukkit.getServer()).getServer().registryAccess();
+			Field frozen;
+			Registry<NoiseGeneratorSettings> noiseGeneratorSettingsReg = registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY);
+			try {
+				frozen = ObfuscationHelper.getField(MappedRegistry.class, "frozen", "ca");
+				frozen.setAccessible(true);
+				frozen.set(noiseGeneratorSettingsReg, false);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
 			OTGDelegate = new OTGNoiseChunkGenerator(
 				OTGGen.getPreset().getFolderName(),
 				new OTGBiomeProvider(OTGGen.getPreset().getFolderName(), world.getSeed(), false, false, registryAccess.registryOrThrow(Registry.BIOME_REGISTRY)),
 				registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY),
 				registryAccess.registryOrThrow(Registry.NOISE_REGISTRY),
 				world.getSeed(),
-				NoiseGeneratorSettings.bootstrap(registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY))
+				NoiseGeneratorSettings.bootstrap(noiseGeneratorSettingsReg)
 			);
 			// add the weird Spigot config; it was complaining about this
 			OTGDelegate.conf = serverWorld.spigotConfig;
