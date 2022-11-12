@@ -175,7 +175,7 @@ public class WeightedMobSpawnGroup
 		json.append(getMin());
 		json.append(", \"max\": ");
 		json.append(getMax());
-		json.append("}");
+		json.append('}');
 	}
 
 	@Override

@@ -62,13 +62,13 @@ public class GlowLichenResource extends BiomeResourceBase
 	public String toString()
 	{
 		StringBuilder s = new StringBuilder("GlowLichen(" + nearbyAttempts + "," + canPlaceOnWall + "," + canPlaceOnCeiling + "," + canPlaceOnWall+ "," + chanceOfSpreading);
-		s.append(",").append(minX).append(",").append(maxX).append(",").append(countMin).append(",").append(countMax);
+		s.append(',').append(minX).append(',').append(maxX).append(',').append(countMin).append(',').append(countMax);
 		for (LocalMaterialBase localMaterialBase : canBePlacedOn)
 		{
-			s.append(",");
+			s.append(',');
 			s.append(localMaterialBase.toString());
 		}
-		s.append(")");
+		s.append(')');
 		return s.toString();
 	}
 }

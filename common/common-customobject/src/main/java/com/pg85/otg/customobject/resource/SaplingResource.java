@@ -210,11 +210,11 @@ public class SaplingResource extends ConfigFunction<IBiomeConfig> implements ISa
 		StringBuilder sb = new StringBuilder("Sapling(").append(this.saplingType);
 		if (this.saplingType == SaplingType.Custom)
 		{
-			sb.append(",").append(this.saplingMaterial.getName()).append(",").append(this.wideTrunk);
+			sb.append(',').append(this.saplingMaterial.getName()).append(',').append(this.wideTrunk);
 		}		
 		for (int i = 0; i < this.treeNames.size(); i++)
 		{
-			sb.append(",").append(this.treeNames.get(i)).append(",").append(this.treeChances.get(i));
+			sb.append(',').append(this.treeNames.get(i)).append(',').append(this.treeChances.get(i));
 		}		
 		return sb.append(')').toString();
 	}
