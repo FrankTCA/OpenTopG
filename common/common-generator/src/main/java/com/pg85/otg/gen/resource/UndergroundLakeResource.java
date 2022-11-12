@@ -29,15 +29,15 @@ public class UndergroundLakeResource extends FrequencyResourceBase
 		this.maxSize = readInt(args.get(1), this.minSize, 60);
 		this.frequency = readInt(args.get(2), 1, 100);
 		this.rarity = readRarity(args.get(3));
-		this.minAltitude = readInt(args.get(4), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(4), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 	}
 
 	@Override
-	public void spawn(IWorldGenRegion world, Random rand, int x, int z)
+	public void spawn(IWorldGenRegion worldGenRegion, Random rand, int x, int z)
 	{
-		int y = getValidYInRange(rand, this.minAltitude, this.maxAltitude, world);
-		if (y >= world.getHighestBlockAboveYAt(x, z))
+		int y = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);
+		if (y >= worldGenRegion.getHighestBlockAboveYAt(x, z))
 		{
 			return;
 		}
@@ -83,7 +83,7 @@ public class UndergroundLakeResource extends FrequencyResourceBase
 				{
 					for (int zLake = (int) (zAdjusted - horizontalSize / 2.0D); zLake <= (int) (zAdjusted + horizontalSize / 2.0D); zLake++)
 					{
-						material = world.getMaterial(xLake, yLake, zLake);
+						material = worldGenRegion.getMaterial(xLake, yLake, zLake);
 						if (material == null || material.isEmptyOrAir() || material.isMaterial(LocalMaterials.BEDROCK))
 						{
 							// Don't replace air or bedrock
@@ -98,14 +98,14 @@ public class UndergroundLakeResource extends FrequencyResourceBase
 							continue;
 						}
 
-						materialBelow = world.getMaterial(xLake, yLake - 1, zLake);
+						materialBelow = worldGenRegion.getMaterial(xLake, yLake - 1, zLake);
 						if (materialBelow != null && materialBelow.isAir())
 						{
 							// Air block, also set position above to air
-							world.setBlock(xLake, yLake, zLake, LocalMaterials.AIR);
+							worldGenRegion.setBlock(xLake, yLake, zLake, LocalMaterials.AIR);
 						} else {
 							// Not air, set position above to water
-							world.setBlock(xLake, yLake, zLake, LocalMaterials.WATER);
+							worldGenRegion.setBlock(xLake, yLake, zLake, LocalMaterials.WATER);
 						}
 					}
 				}

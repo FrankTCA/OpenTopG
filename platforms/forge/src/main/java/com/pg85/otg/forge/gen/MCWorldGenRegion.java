@@ -60,7 +60,7 @@ public class MCWorldGenRegion extends ForgeWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterial(int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
 		{
 			return null;
 		}
@@ -106,7 +106,7 @@ public class MCWorldGenRegion extends ForgeWorldGenRegion
 	@Override
 	public void setBlock(int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
 	{
-		if(y < minY || y > maxY)
+		if(y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return;
 		}
@@ -129,6 +129,48 @@ public class MCWorldGenRegion extends ForgeWorldGenRegion
 		if (nbt != null)
 		{
 			this.attachNBT(x, y, z, nbt);
+		}
+	}
+
+	private void attachNBT(int x, int y, int z, NamedBinaryTag nbt)
+	{
+		CompoundTag nms = ForgeNBTHelper.getNMSFromNBTTagCompound(nbt);
+		nms.put("x", IntTag.valueOf(x));
+		nms.put("y", IntTag.valueOf(y));
+		nms.put("z", IntTag.valueOf(z));
+
+		BlockEntity tileEntity = this.worldGenRegion.getBlockEntity(new BlockPos(x, y, z));
+		if (tileEntity != null)
+		{
+			try {
+				tileEntity.deserializeNBT(nms);
+			} catch (JsonSyntaxException e) {
+				if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
+				{
+					this.logger.log(
+						LogLevel.ERROR,
+						LogCategory.CUSTOM_OBJECTS,
+						MessageFormat.format(
+							"Badly formatted json for tile entity with id '{0}' at {1},{2},{3}", 
+							nms.getString("id"), 
+							x, y, z
+						)
+					);
+				}
+			}
+		} else {
+			if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
+			{
+				this.logger.log(
+					LogLevel.ERROR,
+					LogCategory.CUSTOM_OBJECTS,
+					MessageFormat.format(
+						"Skipping tile entity with id {0}, cannot be placed at {1},{2},{3}", 
+						nms.getString("id"), 
+						x, y, z
+					)
+				);
+			}
 		}
 	}
 	

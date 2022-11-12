@@ -32,8 +32,8 @@ public class VinesResource extends FrequencyResourceBase
 		assureSize(4, args);
 		this.frequency = readInt(args.get(0), 1, 100);
 		this.rarity = readRarity(args.get(1));
-		this.minAltitude = readInt(args.get(2), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(3), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(2), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(3), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 	}
 	
 	private boolean canPlace(IWorldGenRegion worldGenRegion, int x, int y, int z, int direction)
@@ -67,7 +67,7 @@ public class VinesResource extends FrequencyResourceBase
 	{
 		int _x = x;
 		int _z = z;
-		int y = Math.max(this.minAltitude, worldGenRegion.getWorldMinY());
+		int y = this.minAltitude;
 
 		LocalMaterialData worldMaterial;		
 		while (y <= this.maxAltitude)

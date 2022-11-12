@@ -104,7 +104,7 @@ public class FrozenSurfaceHelper
 	 * @param z Location Z
 	 * @param thawedMaterial The material to be checked and if passed, frozen
 	 * @param frozenMaterial The material to freeze the thawed material to if checks pass
-	 * @param source The first material to check for
+	 * @param check1 The first material to check for
 	 */
 	private static boolean shouldFreeze(int x, int y, int z, LocalMaterialData thawedMaterial, LocalMaterialData frozenMaterial, LocalMaterialData source)
 	{
@@ -134,7 +134,7 @@ public class FrozenSurfaceHelper
 			snowHeight = 0;
 		}
 		while (
-			y > worldGenRegion.getWorldMinY() + 1 &&
+			y > Constants.WORLD_DEPTH + 1 && 
 			decreaseFactor < 8 &&
 			snowHeight - decreaseFactor >= 0
 		)

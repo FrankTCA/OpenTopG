@@ -3,13 +3,11 @@ package com.pg85.otg.config.io;
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.config.ErroredFunction;
 import com.pg85.otg.config.io.RawSettingValue.ValueType;
-import com.pg85.otg.config.settingType.BiomeSetting;
 import com.pg85.otg.config.settingType.Setting;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IPluginConfig;
-import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.util.helpers.StringHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
@@ -163,20 +161,9 @@ public final class SimpleSettingsMap implements SettingsMap
 	{
 		return getSetting(setting, defaultValue, logger, null);
 	}
-
-	@Override
-	public <S> S getSetting(Setting<S> setting, ILogger logger, IMaterialReader materialReader, IWorldConfig worldConfig) {
-		return getSetting(setting, setting.getDefaultValue(materialReader), logger, materialReader, worldConfig);
-	}
-
+	
 	@Override
 	public <S> S getSetting(Setting<S> setting, S defaultValue, ILogger logger, IMaterialReader materialReader)
-	{
-		return getSetting(setting, defaultValue, logger, materialReader, null);
-	}
-
-	@Override
-	public <S> S getSetting(Setting<S> setting, S defaultValue, ILogger logger, IMaterialReader materialReader, IWorldConfig worldConfig)
 	{
 		// Try reading the setting from the file
 		RawSettingValue stringWithLineNumber = this.settingsCache.get(setting.getName().toLowerCase());
@@ -185,10 +172,6 @@ public final class SimpleSettingsMap implements SettingsMap
 			String stringValue = stringWithLineNumber.getRawValue().split(":", 2)[1].trim();
 			try
 			{
-				if (setting instanceof BiomeSetting<S> biomeSetting)
-				{
-					return biomeSetting.read(stringValue, materialReader, worldConfig);
-				}
 				return setting.read(stringValue, materialReader);
 			}
 			catch (InvalidConfigException e)
@@ -196,16 +179,16 @@ public final class SimpleSettingsMap implements SettingsMap
 				if(logger.getLogCategoryEnabled(LogCategory.CONFIGS))
 				{
 					logger.log(
-							LogLevel.ERROR,
-							LogCategory.CONFIGS,
-							MessageFormat.format(
-									"The value \"{0}\" is not valid for the setting {1} in {2} on line {3}: {4}",
-									stringValue,
-									setting,
-									name,
-									stringWithLineNumber.getLineNumber(),
-									e.getMessage()
-							)
+						LogLevel.ERROR,
+						LogCategory.CONFIGS,
+						MessageFormat.format(
+							"The value \"{0}\" is not valid for the setting {1} in {2} on line {3}: {4}", 
+							stringValue, 
+							setting, 
+							name, 
+							stringWithLineNumber.getLineNumber(), 
+							e.getMessage()
+						)
 					);
 				}
 			}

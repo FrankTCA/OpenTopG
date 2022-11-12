@@ -9,7 +9,6 @@ import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
-import com.pg85.otg.util.helpers.RandomHelper;
 
 // Frequency resources uses frequency and rarity settings to spawn in each chunk being decorated.
 // Within the 2x2 chunk decoration area, a 16x16 area in the center (8 blocks margin on each side)
@@ -44,5 +43,5 @@ public abstract class FrequencyResourceBase extends BiomeResourceBase implements
 		}
 	}
 
-	public abstract void spawn(IWorldGenRegion world, Random random, int x, int z);
+	public abstract void spawn(IWorldGenRegion world, Random random, int x, int z);	
 }

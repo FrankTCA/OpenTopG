@@ -147,19 +147,19 @@ public class EditCommand extends BaseCommand
 			}
 
 			// Use ForgeWorldGenRegion as a wrapper for the world that ObjectCreator can interact with
-			ForgeWorldGenRegion world = ObjectUtils.getWorldGenRegion(preset, source.getLevel());
+			ForgeWorldGenRegion worldGenRegion = ObjectUtils.getWorldGenRegion(preset, source.getLevel());
 
-			RegionCommand.Region region = ObjectUtils.getRegionFromObject(source.getEntity().blockPosition(), inputObject, world.getWorldMinY(), world.getWorldMaxY());
+			RegionCommand.Region region = ObjectUtils.getRegionFromObject(source.getEntity().blockPosition(), inputObject);
 			Corner center = region.getCenter();
 
 			// Prepare area for spawning
 
-			ObjectUtils.cleanArea(world, region.getMin(), region.getMax(), true);
+			ObjectUtils.cleanArea(worldGenRegion, region.getMin(), region.getMax(), true);
 
 			// -- Spawn and update --
 
 			// Spawn code, taken and modified from BO3.java :: spawnForced()
-			ArrayList<BlockFunction<?>> extraBlocks = spawnAndFixObject(center.x, center.y, center.z, inputObject, world, doFixing,
+			ArrayList<BlockFunction<?>> extraBlocks = spawnAndFixObject(center.x, center.y, center.z, inputObject, worldGenRegion, doFixing,
 				presetFolderName, OTG.getEngine().getOTGRootFolder(), OTG.getEngine().getLogger(), OTG.getEngine().getCustomObjectManager(),
 				OTG.getEngine().getPresetLoader().getMaterialReader(presetFolderName), OTG.getEngine().getCustomObjectResourcesManager(), OTG.getEngine().getModLoadedChecker());
 
@@ -168,12 +168,12 @@ public class EditCommand extends BaseCommand
 				.resolve(ObjectUtils.getFoldersFromObject(inputObject));
 			if (immediate)
 			{
-				new Thread(ObjectUtils.getExportRunnable(type, region, center, inputObject, path, extraBlocks, presetFolderName, true, leaveIllegalLeaves, source, world
+				new Thread(ObjectUtils.getExportRunnable(type, region, center, inputObject, path, extraBlocks, presetFolderName, true, leaveIllegalLeaves, source, worldGenRegion
 				)).start();
 				return 0;
 			}
 			// Store the info, wait for /otg finishedit
-			sessionsMap.put(source.getEntity(), new EditSession(type, world, inputObject, extraBlocks,
+			sessionsMap.put(source.getEntity(), new EditSession(type, worldGenRegion, inputObject, extraBlocks,
 				path, preset.getFolderName(), center, leaveIllegalLeaves));
 			source.sendSuccess(new TextComponent("You can now edit the object"), false);
 			source.sendSuccess(new TextComponent("To change the area of the object, use /otg region"), false);

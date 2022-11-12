@@ -6,8 +6,6 @@ import com.pg85.otg.config.settingType.Setting;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IPluginConfig;
-import com.pg85.otg.interfaces.IWorldConfig;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +26,7 @@ public interface SettingsMap
 
 	/**
 	 * Adds a {@link ConfigFunction} to this settings map, so that it can be read back
-	 * using getConfigFunctions().
+	 * using {@link #getConfigFunctions(Object, boolean)}.
 	 *
 	 * @param functions The function to add.
 	 */
@@ -40,6 +38,7 @@ public interface SettingsMap
 	 *
 	 * @param <T> The type of the config functions.
 	 * @param holder	  The holder of all config functions.
+	 * @param useFallback True if the {@link #setFallback(SettingsMap)
 	 * fallback reader} must be used, false otherwise.
 	 * @return The config functions.
 	 */
@@ -70,17 +69,7 @@ public interface SettingsMap
 	 * @return The setting value.
 	 */
 	<S> S getSetting(Setting<S> setting, ILogger logger, IMaterialReader materialReader);
-
-	/**
-	 * Reads a setting. If the setting does not exist, the default value for the
-	 * setting is returned. Used to load BiomeConfigs with settings appropriate to their preset.
-	 * @param <S>	 Type of the value of the setting.
-	 * @param setting The setting to read.
-	 * @param worldConfig The world config of the preset being loaded
-	 * @return The setting value.
-	 */
-	<S> S getSetting(Setting<S> setting, ILogger logger, IMaterialReader materialReader, IWorldConfig worldConfig);
-
+	
 	/**
 	 * Reads a setting. If the setting does not exist, the default value for the
 	 * setting is returned.
@@ -111,9 +100,7 @@ public interface SettingsMap
 	 * @return The value of the setting.
 	 */
 	<S> S getSetting(Setting<S> setting, S defaultValue, ILogger logger);
-
-	<S> S getSetting(Setting<S> setting, S defaultValue, ILogger logger, IMaterialReader materialReader, IWorldConfig worldConfig);
-
+	
 	/**
 	 * Gets whether the reader has a value of the given setting. If this
 	 * method returns false, trying to get the setting will return the default
@@ -151,7 +138,7 @@ public interface SettingsMap
 	void renameOldSetting(String oldName, Setting<?> newSetting);
 
 	/**
-	 * When {@link #getSetting(Setting, Object, ILogger)} can't read a setting, it will
+	 * When {@link #getSetting(Setting, Object)} can't read a setting, it will
 	 * ask this reader to provide the setting value instead. This essentially
 	 * makes the given reader a fallback.
 	 *

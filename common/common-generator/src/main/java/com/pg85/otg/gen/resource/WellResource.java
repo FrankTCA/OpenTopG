@@ -31,27 +31,27 @@ public class WellResource extends FrequencyResourceBase
 		this.water = readMaterial(args.get(2), materialReader);
 		this.frequency = readInt(args.get(3), 1, 100);
 		this.rarity = readRarity(args.get(4));
-		this.minAltitude = readInt(args.get(5), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(6), this.minAltitude + 1, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(5), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(6), this.minAltitude + 1, Constants.WORLD_HEIGHT - 1);
 		this.sourceBlocks = readMaterials(args, 7, materialReader);
 	}
 
 	@Override
-	public void spawn(IWorldGenRegion world, Random random, int x, int z)
+	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int z)
 	{
-		int y = getValidYInRange(random, this.minAltitude, this.maxAltitude, world);;
+		int y = random.nextInt(this.maxAltitude - this.minAltitude) + this.minAltitude;
 
 		LocalMaterialData worldMaterial;
 		while (
 			y > this.minAltitude && 
-			(worldMaterial = world.getMaterial(x, y, z)) != null &&
+			(worldMaterial = worldGenRegion.getMaterial(x, y, z)) != null && 
 			worldMaterial.isAir()
 		)
 		{
 			--y;
 		}
 
-		worldMaterial = world.getMaterial(x, y, z);
+		worldMaterial = worldGenRegion.getMaterial(x, y, z);
 		if (worldMaterial == null || !this.sourceBlocks.contains(worldMaterial))
 		{
 			return;
@@ -65,9 +65,9 @@ public class WellResource extends FrequencyResourceBase
 			for (j = -2; j <= 2; ++j)
 			{
 				if (
-					(worldMaterial = world.getMaterial(x + i, y - 1, z + j)) == null ||
+					(worldMaterial = worldGenRegion.getMaterial(x + i, y - 1, z + j)) == null ||
 					worldMaterial.isAir() ||
-					(worldMaterial = world.getMaterial(x + i, y - 2, z + j)) == null ||
+					(worldMaterial = worldGenRegion.getMaterial(x + i, y - 2, z + j)) == null ||
 					worldMaterial.isAir()
 				)
 				{
@@ -82,16 +82,16 @@ public class WellResource extends FrequencyResourceBase
 			{
 				for (int var9 = -2; var9 <= 2; ++var9)
 				{
-					world.setBlock(x + j, y + i, z + var9, this.material);
+					worldGenRegion.setBlock(x + j, y + i, z + var9, this.material);
 				}
 			}
 		}
 
-		world.setBlock(x, y, z, this.water);
-		world.setBlock(x - 1, y, z, this.water);
-		world.setBlock(x + 1, y, z, this.water);
-		world.setBlock(x, y, z - 1, this.water);
-		world.setBlock(x, y, z + 1, this.water);
+		worldGenRegion.setBlock(x, y, z, this.water);
+		worldGenRegion.setBlock(x - 1, y, z, this.water);
+		worldGenRegion.setBlock(x + 1, y, z, this.water);
+		worldGenRegion.setBlock(x, y, z - 1, this.water);
+		worldGenRegion.setBlock(x, y, z + 1, this.water);
 
 		for (i = -2; i <= 2; ++i)
 		{
@@ -99,15 +99,15 @@ public class WellResource extends FrequencyResourceBase
 			{
 				if (i == -2 || i == 2 || j == -2 || j == 2)
 				{
-					world.setBlock(x + i, y + 1, z + j, this.material);
+					worldGenRegion.setBlock(x + i, y + 1, z + j, this.material);
 				}
 			}
 		}
 
-		world.setBlock(x + 2, y + 1, z, this.slab);
-		world.setBlock(x - 2, y + 1, z, this.slab);
-		world.setBlock(x, y + 1, z + 2, this.slab);
-		world.setBlock(x, y + 1, z - 2, this.slab);
+		worldGenRegion.setBlock(x + 2, y + 1, z, this.slab);
+		worldGenRegion.setBlock(x - 2, y + 1, z, this.slab);
+		worldGenRegion.setBlock(x, y + 1, z + 2, this.slab);
+		worldGenRegion.setBlock(x, y + 1, z - 2, this.slab);
 
 		for (i = -1; i <= 1; ++i)
 		{
@@ -115,19 +115,19 @@ public class WellResource extends FrequencyResourceBase
 			{
 				if (i == 0 && j == 0)
 				{
-					world.setBlock(x + i, y + 4, z + j, this.material);
+					worldGenRegion.setBlock(x + i, y + 4, z + j, this.material);
 				} else {
-					world.setBlock(x + i, y + 4, z + j, this.slab);
+					worldGenRegion.setBlock(x + i, y + 4, z + j, this.slab);
 				}
 			}
 		}
 
 		for (i = 1; i <= 3; ++i)
 		{
-			world.setBlock(x - 1, y + i, z - 1, this.material);
-			world.setBlock(x - 1, y + i, z + 1, this.material);
-			world.setBlock(x + 1, y + i, z - 1, this.material);
-			world.setBlock(x + 1, y + i, z + 1, this.material);
+			worldGenRegion.setBlock(x - 1, y + i, z - 1, this.material);
+			worldGenRegion.setBlock(x - 1, y + i, z + 1, this.material);
+			worldGenRegion.setBlock(x + 1, y + i, z - 1, this.material);
+			worldGenRegion.setBlock(x + 1, y + i, z + 1, this.material);
 		}
 	}
 	

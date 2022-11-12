@@ -24,8 +24,8 @@ public final class FossilResource extends FrequencyResourceBase
 
 		this.frequency = 1;
 		this.rarity = readInt(args.get(0), 1, Integer.MAX_VALUE);
-		this.minAltitude = readInt(args.get(1), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(2), minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(1), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(2), minAltitude, Constants.WORLD_HEIGHT - 1);		
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public final class FossilResource extends FrequencyResourceBase
 	@Override
 	public void spawn(IWorldGenRegion world, Random random, int x, int z)
 	{
-		int y = getValidYInRange(random, this.minAltitude, this.maxAltitude, world);
+		int y = RandomHelper.numberInRange(random, this.minAltitude, this.maxAltitude);		
 		world.placeFossil(random, world.getDecorationArea().getChunkBeingDecoratedCenterX(), y, world.getDecorationArea().getChunkBeingDecoratedCenterZ());
 	}
 }

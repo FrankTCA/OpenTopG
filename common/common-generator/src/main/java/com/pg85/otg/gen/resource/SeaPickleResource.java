@@ -21,7 +21,7 @@ public class SeaPickleResource extends FrequencyResourceBase
 		super(biomeConfig, args, logger, materialReader);
 		this.frequency = readInt(args.get(0), 1, 500);
 		this.rarity = readRarity(args.get(1));
-		this.attempts = readInt(args.get(2), 1, 260);
+		this.attempts = readInt(args.get(2), 1, 256);
 	}
 
 	@Override

@@ -62,9 +62,14 @@ public class GrassResource  extends BiomeResourceBase implements IBasicResource
 	@Override
 	public void spawnForChunkDecoration(IWorldGenRegion worldGenRegion, Random random, ILogger logger, IMaterialReader materialReader)
 	{
-		switch (this.groupOption) {
-			case Grouped -> spawnGrouped(worldGenRegion, random);
-			case NotGrouped -> spawnNotGrouped(worldGenRegion, random);
+		switch (this.groupOption)
+		{
+			case Grouped:
+				spawnGrouped(worldGenRegion, random);
+				break;
+			case NotGrouped:
+				spawnNotGrouped(worldGenRegion, random);
+				break;
 		}
 	}
 	
@@ -77,7 +82,7 @@ public class GrassResource  extends BiomeResourceBase implements IBasicResource
 			int centerZ = worldGenregion.getDecorationArea().getChunkBeingDecoratedCenterZ() + random.nextInt(Constants.CHUNK_SIZE);
 			int centerY = worldGenregion.getHighestBlockAboveYAt(centerX, centerZ);
 			
-			if(centerY < worldGenregion.getWorldMinY())
+			if(centerY < Constants.WORLD_DEPTH)
 			{
 				return;
 			}
@@ -87,7 +92,7 @@ public class GrassResource  extends BiomeResourceBase implements IBasicResource
 			// Fix y position
 			while (
 				(
-					(centerY >= worldGenregion.getWorldMinY() && centerY <= worldGenregion.getWorldMaxY()) &&
+					(centerY >= Constants.WORLD_DEPTH && centerY < Constants.WORLD_HEIGHT) &&
 					(worldMaterial = worldGenregion.getMaterial(centerX, centerY, centerZ)) != null &&
 					(
 						worldMaterial.isAir() || 
@@ -146,7 +151,7 @@ public class GrassResource  extends BiomeResourceBase implements IBasicResource
 			z = worldGenregion.getDecorationArea().getChunkBeingDecoratedCenterZ() + random.nextInt(Constants.CHUNK_SIZE);
 			y = worldGenregion.getHighestBlockAboveYAt(x, z);
 
-			if(y < worldGenregion.getWorldMinY())
+			if(y < Constants.WORLD_DEPTH)
 			{
 				return;
 			}

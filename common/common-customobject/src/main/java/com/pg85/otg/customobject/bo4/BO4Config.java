@@ -1233,7 +1233,7 @@ public class BO4Config extends CustomObjectConfigFile
 		this.spawnHeight = readSettings(BO4Settings.SPAWN_HEIGHT, logger, materialReader, manager);
 		this.minHeight = readSettings(BO4Settings.MIN_HEIGHT, logger, materialReader, manager);
 		this.maxHeight = readSettings(BO4Settings.MAX_HEIGHT, logger, materialReader, manager);
-		this.maxHeight = Math.max(this.maxHeight, this.minHeight);
+		this.maxHeight = this.maxHeight < this.minHeight ? this.minHeight : this.maxHeight;
 
 		this.doReplaceBlocks = readSettings(BO4Settings.DO_REPLACE_BLOCKS, logger, materialReader, manager);
 

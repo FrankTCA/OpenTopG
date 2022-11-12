@@ -26,246 +26,242 @@ public interface IWorldConfig
 {
 	// Misc
 
-	ConfigMode getSettingsMode();
+	public ConfigMode getSettingsMode();
 	String getShortPresetName();
-	int getMajorVersion();
-	String getAuthor();
-	String getDescription();
+	public int getMajorVersion();
+	public String getAuthor();
+	public String getDescription();
 
 	// Visual settings
 	
-	int getFogColor();
+	public int getFogColor();
 	
 	// Biome resources
 
-	boolean isDisableOreGen();
-	boolean getBedrockDisabled();
-	boolean improvedBorderDecoration();
+	public boolean isDisableOreGen();
+	public boolean getBedrockDisabled();
+	public boolean improvedBorderDecoration();
 
 	// Blocks
 
-	boolean getRemoveSurfaceStone();
-	LocalMaterialData getWaterBlock();
-	LocalMaterialData getBedrockBlockReplaced(ReplaceBlockMatrix replacedBlocks, int y);
-	LocalMaterialData getDefaultBedrockBlock();
-	LocalMaterialData getCooledLavaBlock();
-	LocalMaterialData getIceBlock();
-	LocalMaterialData getCarverLavaBlock();
+	public boolean getRemoveSurfaceStone();
+	public LocalMaterialData getWaterBlock();
+	public LocalMaterialData getBedrockBlockReplaced(ReplaceBlockMatrix replacedBlocks, int y);
+	public LocalMaterialData getDefaultBedrockBlock();
+	public LocalMaterialData getCooledLavaBlock();
+	public LocalMaterialData getIceBlock();
+	public LocalMaterialData getCarverLavaBlock();
 
 	// Bedrock
 
-	boolean getIsCeilingBedrock();
-	boolean getIsFlatBedrock();
-	int getCarverLavaBlockHeight();
+	public boolean getIsCeilingBedrock();
+	public boolean getIsFlatBedrock();
+	public int getCarverLavaBlockHeight();
 
 	// Biome settings
 
-	ArrayList<String> getWorldBiomes();
-	List<String> getBlackListedBiomes();
-	int getBiomeRarityScale();
+	public ArrayList<String> getWorldBiomes();
+	public List<String> getBlackListedBiomes();
+	public int getBiomeRarityScale();
 	boolean getOldGroupRarity();
 	boolean getOldLandRarity();
-	int getGenerationDepth();
-	int getLandFuzzy();
-	int getLandRarity();
-	int getLandSize();
-	int getOceanBiomeSize();
-	String getDefaultOceanBiome();
-	String getDefaultWarmOceanBiome();
-	String getDefaultLukewarmOceanBiome();
-	String getDefaultColdOceanBiome();
-	String getDefaultFrozenOceanBiome();
-	BiomeMode getBiomeMode();
+	public int getGenerationDepth();
+	public int getLandFuzzy();
+	public int getLandRarity();
+	public int getLandSize();
+	public int getOceanBiomeSize();
+	public String getDefaultOceanBiome();
+	public String getDefaultWarmOceanBiome();
+	public String getDefaultLukewarmOceanBiome();
+	public String getDefaultColdOceanBiome();
+	public String getDefaultFrozenOceanBiome();
+	public BiomeMode getBiomeMode();
 	double getFrozenOceanTemperature();
-	List<String> getIsleBiomes();
-	List<String> getBorderBiomes();
-	boolean getIsRandomRivers();
-	int getRiverRarity();
-	int getRiverSize();
-	boolean getRiversEnabled();
-	boolean getBiomeConfigsHaveReplacement();
-	void setBiomeConfigsHaveReplacement(boolean biomeConfigsHaveReplacement);
+	public List<String> getIsleBiomes();
+	public List<String> getBorderBiomes();
+	public boolean getIsRandomRivers();
+	public int getRiverRarity();
+	public int getRiverSize();
+	public boolean getRiversEnabled();
+	public boolean getBiomeConfigsHaveReplacement();
+	public boolean setBiomeConfigsHaveReplacement(boolean biomeConfigsHaveReplacement);
 
 	// Terrain settings
 
-	double getFractureHorizontal();
-	double getFractureVertical();
-    int getWorldMinY();
-	int getWorldMaxY();
-	int getWorldHeight();
-
-	int getWorldHeightCap();
-	int getWorldHeightScale();
-	void setMaxSmoothRadius(int smoothRadius);
-	int getMaxSmoothRadius();
-	boolean isBetterSnowFall();
-	int getWaterLevelMax();
-	int getWaterLevelMin();
+	public double getFractureHorizontal();
+	public double getFractureVertical();
+	public int getWorldHeightCap();
+	public int getWorldHeightScale();
+	public void setMaxSmoothRadius(int smoothRadius);
+	public int getMaxSmoothRadius();
+	public boolean isBetterSnowFall();
+	public int getWaterLevelMax();
+	public int getWaterLevelMin();
 
 	// FromImageMode
 
-	ImageOrientation getImageOrientation();
-	String getImageFile();
-	String getImageFillBiome();
-	ImageMode getImageMode();
-	int getImageZOffset();
-	int getImageXOffset();
+	public ImageOrientation getImageOrientation();
+	public String getImageFile();
+	public String getImageFillBiome();
+	public ImageMode getImageMode();
+	public int getImageZOffset();
+	public int getImageXOffset();
 
 	// Vanilla structures
 
-	boolean getWoodlandMansionsEnabled();
-	boolean getNetherFortressesEnabled();
-	boolean getBuriedTreasureEnabled();
-	boolean getOceanRuinsEnabled();
-	boolean getPillagerOutpostsEnabled();
-	boolean getBastionRemnantsEnabled();
-	boolean getNetherFossilsEnabled();
-	boolean getEndCitiesEnabled();
-	boolean getRuinedPortalsEnabled();
-	boolean getShipWrecksEnabled();
-	boolean getStrongholdsEnabled();
-	boolean getVillagesEnabled();
-	boolean getMineshaftsEnabled();
-	boolean getOceanMonumentsEnabled();
-	boolean getRareBuildingsEnabled();
+	public boolean getWoodlandMansionsEnabled();
+	public boolean getNetherFortressesEnabled();
+	public boolean getBuriedTreasureEnabled();
+	public boolean getOceanRuinsEnabled();
+	public boolean getPillagerOutpostsEnabled();
+	public boolean getBastionRemnantsEnabled();
+	public boolean getNetherFossilsEnabled();
+	public boolean getEndCitiesEnabled();
+	public boolean getRuinedPortalsEnabled();
+	public boolean getShipWrecksEnabled();
+	public boolean getStrongholdsEnabled();
+	public boolean getVillagesEnabled();
+	public boolean getMineshaftsEnabled();
+	public boolean getOceanMonumentsEnabled();
+	public boolean getRareBuildingsEnabled();
 
-	int getVillageSpacing();
-	int getVillageSeparation();
-	int getDesertPyramidSpacing();
-	int getDesertPyramidSeparation();
-	int getIglooSpacing();
-	int getIglooSeparation();
-	int getJungleTempleSpacing();
-	int getJungleTempleSeparation();
-	int getSwampHutSpacing();
-	int getSwampHutSeparation();
-	int getPillagerOutpostSpacing();
-	int getPillagerOutpostSeparation();
-	int getStrongholdSpacing();
-	int getStrongholdSeparation();
-	int getStrongHoldDistance();
-	int getStrongHoldSpread();
-	int getStrongHoldCount();
-	int getOceanMonumentSpacing();
-	int getOceanMonumentSeparation();
-	int getWoodlandMansionSpacing();
-	int getWoodlandMansionSeparation();
-	int getBuriedTreasureSpacing();
-	int getBuriedTreasureSeparation();
-	int getMineshaftSpacing();
-	int getMineshaftSeparation();
-	int getRuinedPortalSpacing();
-	int getRuinedPortalSeparation();
-	int getShipwreckSpacing();
-	int getShipwreckSeparation();
-	int getOceanRuinSpacing();
-	int getOceanRuinSeparation();
-	int getEndCitySpacing();
-	int getEndCitySeparation();
-	int getBastionRemnantSpacing();
-	int getBastionRemnantSeparation();
-	int getNetherFortressSpacing();
-	int getNetherFortressSeparation();
-	int getNetherFossilSpacing();
-	int getNetherFossilSeparation();
+	public int getVillageSpacing();
+	public int getVillageSeparation();
+	public int getDesertPyramidSpacing();
+	public int getDesertPyramidSeparation();
+	public int getIglooSpacing();
+	public int getIglooSeparation();
+	public int getJungleTempleSpacing();
+	public int getJungleTempleSeparation();
+	public int getSwampHutSpacing();
+	public int getSwampHutSeparation();
+	public int getPillagerOutpostSpacing();
+	public int getPillagerOutpostSeparation();
+	public int getStrongholdSpacing();
+	public int getStrongholdSeparation();
+	public int getStrongHoldDistance();
+	public int getStrongHoldSpread();
+	public int getStrongHoldCount();
+	public int getOceanMonumentSpacing();
+	public int getOceanMonumentSeparation();	
+	public int getWoodlandMansionSpacing();
+	public int getWoodlandMansionSeparation();
+	public int getBuriedTreasureSpacing();
+	public int getBuriedTreasureSeparation();
+	public int getMineshaftSpacing();
+	public int getMineshaftSeparation();
+	public int getRuinedPortalSpacing();
+	public int getRuinedPortalSeparation();
+	public int getShipwreckSpacing();
+	public int getShipwreckSeparation();
+	public int getOceanRuinSpacing();
+	public int getOceanRuinSeparation();	
+	public int getEndCitySpacing();
+	public int getEndCitySeparation();
+	public int getBastionRemnantSpacing();
+	public int getBastionRemnantSeparation();
+	public int getNetherFortressSpacing();
+	public int getNetherFortressSeparation();
+	public int getNetherFossilSpacing();
+	public int getNetherFossilSeparation();
 	
 	// OTG Custom structures
 
-	String getBO3AtSpawn();
-	CustomStructureType getCustomStructureType();
-	boolean getUseOldBO3StructureRarity();
+	public String getBO3AtSpawn();
+	public CustomStructureType getCustomStructureType();
+	public boolean getUseOldBO3StructureRarity();
 	// TODO: Reimplement this, or forbid any spawning outside of decoration for 1.16.
-	boolean doPopulationBoundsCheck();
-	int getMaximumCustomStructureRadius();
+	public boolean doPopulationBoundsCheck();
+	public int getMaximumCustomStructureRadius();
 
 	// Caves & Ravines
 
-	boolean getCavesEnabled();
-	int getCaveFrequency();
-	int getCaveRarity();
-	boolean isEvenCaveDistribution();
-	int getCaveMinAltitude();
-	int getCaveMaxAltitude();
-	int getCaveSystemFrequency();
-	int getIndividualCaveRarity();
-	int getCaveSystemPocketMinSize();
-	int getCaveSystemPocketChance();
-	int getCaveSystemPocketMaxSize();
-	boolean getRavinesEnabled();
-	int getRavineRarity();
-	int getRavineMinLength();
-	int getRavineMaxLength();
-	double getRavineDepth();
-	int getRavineMinAltitude();
-	int getRavineMaxAltitude();
+	public boolean getCavesEnabled();
+	public int getCaveFrequency();
+	public int getCaveRarity();
+	public boolean isEvenCaveDistribution();
+	public int getCaveMinAltitude();
+	public int getCaveMaxAltitude();
+	public int getCaveSystemFrequency();
+	public int getIndividualCaveRarity();
+	public int getCaveSystemPocketMinSize();
+	public int getCaveSystemPocketChance();
+	public int getCaveSystemPocketMaxSize();
+	public boolean getRavinesEnabled();
+	public int getRavineRarity();
+	public int getRavineMinLength();
+	public int getRavineMaxLength();
+	public double getRavineDepth();
+	public int getRavineMinAltitude();
+	public int getRavineMaxAltitude();
 	
 	// Dimension settings
 
-	OptionalLong getFixedTime();
-	boolean getHasSkyLight();
-	boolean getHasCeiling();
-	boolean getUltraWarm();
-	boolean getNatural();
-	double getCoordinateScale();
-	boolean getCreateDragonFight();
-	boolean getPiglinSafe();
-	boolean getBedWorks();
-	boolean getRespawnAnchorWorks();
-	boolean getHasRaids();
-	int getLogicalHeight();
-	String getInfiniburn();
-	String getEffectsLocation();
-	float getAmbientLight();
+	public OptionalLong getFixedTime();
+	public boolean getHasSkyLight();
+	public boolean getHasCeiling();
+	public boolean getUltraWarm();
+	public boolean getNatural();
+	public double getCoordinateScale();
+	public boolean getCreateDragonFight();
+	public boolean getPiglinSafe();
+	public boolean getBedWorks();
+	public boolean getRespawnAnchorWorks();
+	public boolean getHasRaids();
+	public int getLogicalHeight();
+	public String getInfiniburn();
+	public String getEffectsLocation();
+	public float getAmbientLight();
 	
 	// Portal settings
 	
-	List<LocalMaterialData> getPortalBlocks();
-	String getPortalColor();
-	String getPortalMob();
-	String getPortalIgnitionSource();
+	public List<LocalMaterialData> getPortalBlocks();
+	public String getPortalColor();
+	public String getPortalMob();
+	public String getPortalIgnitionSource();
 
 	// Spawn point settings
 	
-	boolean getSpawnPointSet();
-	int getSpawnPointX();
-	int getSpawnPointY();
-	int getSpawnPointZ();
-	float getSpawnPointAngle();
+	public boolean getSpawnPointSet();
+	public int getSpawnPointX();
+	public int getSpawnPointY();
+	public int getSpawnPointZ();
+	public float getSpawnPointAngle();	
 	
 	// Game rules
 	
-	boolean getOverrideGameRules();
-	boolean getDoFireTick();
-	boolean getMobGriefing();
-	boolean getKeepInventory();
-	boolean getDoMobSpawning();
-	boolean getDoMobLoot();
-	boolean getDoTileDrops();
-	boolean getDoEntityDrops();
-	boolean getCommandBlockOutput();
-	boolean getNaturalRegeneration();
-	boolean getDoDaylightCycle();
-	boolean getLogAdminCommands();
-	boolean getShowDeathMessages();
-	int getRandomTickSpeed();
-	boolean getSendCommandFeedback();
-	boolean getSpectatorsGenerateChunks();
-	int getSpawnRadius();
-	boolean getDisableElytraMovementCheck();
-	int getMaxEntityCramming();
-	boolean getDoWeatherCycle();
-	boolean getDoLimitedCrafting();
-	int getMaxCommandChainLength();
-	boolean getAnnounceAdvancements();
-	boolean getDisableRaids();
-	boolean getDoInsomnia();
-	boolean getDrowningDamage();
-	boolean getFallDamage();
-	boolean getFireDamage();
-	boolean getDoPatrolSpawning();
-	boolean getDoTraderSpawning();
-	boolean getForgiveDeadPlayers();
-	boolean getUniversalAnger();
+	public boolean getOverrideGameRules();	
+	public boolean getDoFireTick();
+	public boolean getMobGriefing();
+	public boolean getKeepInventory();
+	public boolean getDoMobSpawning();
+	public boolean getDoMobLoot();
+	public boolean getDoTileDrops();
+	public boolean getDoEntityDrops();
+	public boolean getCommandBlockOutput();
+	public boolean getNaturalRegeneration();
+	public boolean getDoDaylightCycle();
+	public boolean getLogAdminCommands();
+	public boolean getShowDeathMessages();
+	public int getRandomTickSpeed();
+	public boolean getSendCommandFeedback();
+	public boolean getSpectatorsGenerateChunks();
+	public int getSpawnRadius();
+	public boolean getDisableElytraMovementCheck();
+	public int getMaxEntityCramming();
+	public boolean getDoWeatherCycle();
+	public boolean getDoLimitedCrafting();
+	public int getMaxCommandChainLength();
+	public boolean getAnnounceAdvancements();
+	public boolean getDisableRaids();
+	public boolean getDoInsomnia();
+	public boolean getDrowningDamage();
+	public boolean getFallDamage();
+	public boolean getFireDamage();
+	public boolean getDoPatrolSpawning();
+	public boolean getDoTraderSpawning();
+	public boolean getForgiveDeadPlayers();
+	public boolean getUniversalAnger();
 	boolean getForceLandAtSpawn();
 
 	boolean getLargeOreVeins();

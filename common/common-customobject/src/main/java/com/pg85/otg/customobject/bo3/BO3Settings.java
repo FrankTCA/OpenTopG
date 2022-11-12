@@ -25,8 +25,8 @@ class BO3Settings extends Settings
 	static final Setting<Integer>
 		FREQUENCY = intSetting("Frequency", 0, 0, 9999),
 		MAX_SPAWN = intSetting("MaxSpawn", 0, 0, 9999),
-		MIN_HEIGHT = intSetting("MinHeight", Constants.WORLD_DEFAULT_MIN_Y, Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y),
-		MAX_HEIGHT = intSetting("MaxHeight", Constants.WORLD_DEFAULT_MAX_Y, Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y),
+		MIN_HEIGHT = intSetting("MinHeight", 0, Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1),
+		MAX_HEIGHT = intSetting("MaxHeight", 256, Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1),
 		MAX_BRANCH_DEPTH = intSetting("MaxBranchDepth", 10, 1, 100),
 		MAX_PERCENTAGE_OUTSIDE_SOURCE_BLOCK = intSetting("MaxPercentageOutsideSourceBlock", 100, 0, 100),
 		SPAWN_HEIGHT_OFFSET = intSetting("SpawnHeightOffset", 0, -255, 255),

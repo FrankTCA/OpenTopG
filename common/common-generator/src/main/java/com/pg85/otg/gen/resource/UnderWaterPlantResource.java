@@ -30,15 +30,15 @@ public class UnderWaterPlantResource extends FrequencyResourceBase
 		this.plant = PlantType.getPlant(args.get(0), materialReader);
 		this.frequency = readInt(args.get(1), 1, 100);
 		this.rarity = readRarity(args.get(2));
-		this.minAltitude = readInt(args.get(3), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(3), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 		this.sourceBlocks = readMaterials(args, 5, materialReader);
 	}
 
 	@Override
-	public void spawn(IWorldGenRegion world, Random rand, int x, int z)
+	public void spawn(IWorldGenRegion worldGenregion, Random rand, int x, int z)
 	{
-		int y = getValidYInRange(rand, this.minAltitude, this.maxAltitude, world);
+		int y = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);
 
 		int j;
 		int k;
@@ -50,8 +50,8 @@ public class UnderWaterPlantResource extends FrequencyResourceBase
 			j = x + rand.nextInt(8) - rand.nextInt(8);
 			k = y + rand.nextInt(4) - rand.nextInt(4);
 			m = z + rand.nextInt(8) - rand.nextInt(8);
-			worldMaterial = world.getMaterial(j, k , m);
-			worldMaterialBelow = world.getMaterial(j, k - 1, m);
+			worldMaterial = worldGenregion.getMaterial(j, k , m);
+			worldMaterialBelow = worldGenregion.getMaterial(j, k - 1, m);
 			if (
 				(worldMaterial == null || !worldMaterial.isMaterial(LocalMaterials.WATER)) ||
 				(worldMaterialBelow == null || !this.sourceBlocks.contains(worldMaterialBelow))
@@ -59,7 +59,7 @@ public class UnderWaterPlantResource extends FrequencyResourceBase
 			{
 				continue;
 			}
-			this.plant.spawn(world, j, k, m);
+			this.plant.spawn(worldGenregion, j, k, m);
 		}
 	}
 	

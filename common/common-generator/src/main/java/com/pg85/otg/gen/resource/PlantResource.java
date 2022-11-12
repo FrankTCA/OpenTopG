@@ -37,19 +37,19 @@ public class PlantResource extends FrequencyResourceBase
 		}
 		this.frequency = readInt(args.get(1 + i), 1, 100);
 		this.rarity = readRarity(args.get(2 + i));
-		this.minAltitude = readInt(args.get(3 + i), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(4 + i), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(3 + i), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(4 + i), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 		this.sourceBlocks = readMaterials(args, 5 + i, materialReader);
 	}
 
 	@Override
-	public void spawn(IWorldGenRegion world, Random rand, int x, int z)
+	public void spawn(IWorldGenRegion worldGenregion, Random rand, int x, int z)
 	{
 		if (sparseOption != null && plant == PlantType.BerryBush){
-			BerryBush.spawnBerryBushes(world, rand, x, z, plant, frequency, minAltitude, maxAltitude, sourceBlocks, sparseOption);
+			BerryBush.spawnBerryBushes(worldGenregion, rand, x, z, plant, frequency, minAltitude, maxAltitude, sourceBlocks, sparseOption);
 			return;
 		}
-		int y = getValidYInRange(rand, this.minAltitude, this.maxAltitude, world);
+		int y = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);
 
 		LocalMaterialData worldMaterial;
 		LocalMaterialData worldMaterialBelow;
@@ -62,8 +62,8 @@ public class PlantResource extends FrequencyResourceBase
 			localX = x + rand.nextInt(8) - rand.nextInt(8);
 			localY = y + rand.nextInt(4) - rand.nextInt(4);
 			localZ = z + rand.nextInt(8) - rand.nextInt(8);
-			worldMaterial = world.getMaterial(localX, localY, localZ);
-			worldMaterialBelow = world.getMaterial(localX, localY - 1, localZ);
+			worldMaterial = worldGenregion.getMaterial(localX, localY, localZ);
+			worldMaterialBelow = worldGenregion.getMaterial(localX, localY - 1, localZ);
 			if (
 				(worldMaterial == null || !worldMaterial.isAir()) ||
 				(worldMaterialBelow == null || !this.sourceBlocks.contains(worldMaterialBelow))
@@ -72,7 +72,7 @@ public class PlantResource extends FrequencyResourceBase
 				continue;
 			}
 
-			this.plant.spawn(world, localX, localY, localZ);
+			this.plant.spawn(worldGenregion, localX, localY, localZ);
 		}
 	}
 	

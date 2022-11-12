@@ -15,8 +15,8 @@ import java.util.List;
 
 public class GlowLichenResource extends BiomeResourceBase
 {
-	public int minAltitude;
-	public int maxAltitude;
+	public int minX;
+	public int maxX;
 	public int countMin;
 	public int countMax;
 	public int nearbyAttempts;
@@ -33,8 +33,8 @@ public class GlowLichenResource extends BiomeResourceBase
 		canPlaceOnCeiling = args.get(2).equalsIgnoreCase("true");
 		canPlaceOnWall = args.get(3).equalsIgnoreCase("true");
 		chanceOfSpreading = (float) readDouble(args.get(4), 0.0, 1.0);
-		minAltitude = readInt(args.get(5), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		maxAltitude = readInt(args.get(6), minAltitude, Constants.MAX_POSSIBLE_Y);
+		minX = readInt(args.get(5), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT);
+		maxX = readInt(args.get(6), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT);
 		countMin = readInt(args.get(7), 0, 1000);
 		countMax = readInt(args.get(8), 0, 1000);
 
@@ -62,7 +62,7 @@ public class GlowLichenResource extends BiomeResourceBase
 	public String toString()
 	{
 		StringBuilder s = new StringBuilder("GlowLichen(" + nearbyAttempts + "," + canPlaceOnWall + "," + canPlaceOnCeiling + "," + canPlaceOnWall+ "," + chanceOfSpreading);
-		s.append(",").append(minAltitude).append(",").append(maxAltitude).append(",").append(countMin).append(",").append(countMax);
+		s.append(",").append(minX).append(",").append(maxX).append(",").append(countMin).append(",").append(countMax);
 		for (LocalMaterialBase localMaterialBase : canBePlacedOn)
 		{
 			s.append(",");

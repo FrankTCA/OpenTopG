@@ -55,7 +55,7 @@ public class MCWorldGenRegion extends PaperWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterial(int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
 		{
 			return null;
 		}
@@ -100,7 +100,7 @@ public class MCWorldGenRegion extends PaperWorldGenRegion
 	@Override
 	public void setBlock (int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
 	{
-		if (y < minY || y > maxY)
+		if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return;
 		}

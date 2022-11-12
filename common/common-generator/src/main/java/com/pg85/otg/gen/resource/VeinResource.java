@@ -40,23 +40,23 @@ public class VeinResource extends BiomeResourceBase implements IBasicResource
 		this.oreAvgSize = readInt(args.get(4), 1, 64);
 		this.oreFrequency = readInt(args.get(5), 1, 100);
 		this.oreRarity = readInt(args.get(6), 1, 100);
-		this.minAltitude = readInt(args.get(7), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(8), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(7), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(8), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 		this.sourceBlocks = readMaterials(args, 9, materialReader);
 	}
 
 	/**
 	 * @return The vein that starts in the chunk, or null.
 	 */
-	private Vein getVeinStartInChunk(IWorldGenRegion world, int chunkX, int chunkZ)
+	private Vein getVeinStartInChunk(IWorldGenRegion worldGenRegion, int chunkX, int chunkZ)
 	{
 		// Create a random generator that is constant for this chunk and vein
-		Random random = RandomHelper.getRandomForCoords(chunkX, chunkZ, this.material.hashCode() * (this.minSizeInBlocks + this.maxSizeInBlocks + 100) + world.getSeed());
+		Random random = RandomHelper.getRandomForCoords(chunkX, chunkZ, this.material.hashCode() * (this.minSizeInBlocks + this.maxSizeInBlocks + 100) + worldGenRegion.getSeed());
 
 		if (random.nextDouble() * 100.0 < this.veinRarity)
 		{
 			int veinX = chunkX * 16 + random.nextInt(16) + DecorationArea.DECORATION_OFFSET;
-			int veinY = getValidYInRange(random, this.minAltitude, this.maxAltitude, world);
+			int veinY = RandomHelper.numberInRange(random, this.minAltitude, this.maxAltitude);
 			int veinZ = chunkZ * 16 + random.nextInt(16) + DecorationArea.DECORATION_OFFSET;
 			int veinSize = RandomHelper.numberInRange(random, this.minSizeInBlocks, this.maxSizeInBlocks);
 			return new Vein(veinX, veinY, veinZ, veinSize);

@@ -167,7 +167,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterial(int x, int y, int z)
 	{
-		if (y > maxY || y < minY)
+		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
 		{
 			return null;
 		}
@@ -194,7 +194,54 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 		int internalZ = z & 0xF;
 		return ForgeMaterialData.ofBlockState(chunk.getBlockState(new BlockPos(internalX, y, internalZ)));
 	}
+	
+	@Override
+	public int getBlockAboveLiquidHeight(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, false, true, false, false, false);
+		if(highestY >= 0)
+		{
+			return highestY + 1;
+		} else {
+			return -1;
+		}
+	}
 
+	@Override
+	public int getBlockAboveSolidHeight(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, true, false, true, true, false);
+		if(highestY >= 0)
+		{
+			return highestY + 1;
+		} else {
+			return -1;
+		}
+	}
+
+	@Override
+	public int getHighestBlockAboveYAt(int x, int z)
+	{
+		int highestY = getHighestBlockYAt(x, z, true, true, false, false, false);
+		if(highestY >= 0)
+		{
+			return highestY + 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	@Override
+	public int getHighestBlockAboveYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
+	{
+		int highestY = getHighestBlockYAt(x, z, findSolid, findLiquid, ignoreLiquid, ignoreSnow, ignoreLeaves);
+		if(highestY >= 0)
+		{
+			return highestY + 1;
+		} else {
+			return -1;
+		}
+	}
 	
 	@Override
 	public int getHighestBlockYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
@@ -303,7 +350,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public int getLightLevel(int x, int y, int z)
 	{
-		if(y < minY || y > maxY)
+		if(y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return -1;
 		}
@@ -355,7 +402,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void setBlock(int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
 	{
-		if(y < minY || y > maxY)
+		if(y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return;
 		}
@@ -399,7 +446,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 		}
 	}
 
-	protected void attachNBT(int x, int y, int z, NamedBinaryTag nbt)
+	private void attachNBT(int x, int y, int z, NamedBinaryTag nbt)
 	{
 		CompoundTag nms = ForgeNBTHelper.getNMSFromNBTTagCompound(nbt);
 		nms.put("x", IntTag.valueOf(x));
@@ -451,7 +498,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@SuppressWarnings("unchecked")	
 	public boolean placeTree(TreeType type, Random rand, int x, int y, int z)
 	{
-		if(y < minY || y > maxY)
+		if(y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
 		{
 			return false;
 		}
@@ -580,7 +627,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public void spawnEntity(IEntityFunction entityData)
 	{
-		if (entityData.getY() < minY || entityData.getY() > maxY)
+		if (entityData.getY() < Constants.WORLD_DEPTH || entityData.getY() >= Constants.WORLD_HEIGHT)
 		{
 			if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
 			{
@@ -802,7 +849,7 @@ public class ForgeWorldGenRegion extends LocalWorldGenRegion
 	@Override
 	public LocalMaterialData getMaterialWithoutLoading(int x, int y, int z)
 	{
-		if (y < minY || y > maxY)
+		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
 		{
 			return null;
 		}

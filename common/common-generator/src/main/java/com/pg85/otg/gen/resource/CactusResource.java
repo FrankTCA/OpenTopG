@@ -28,16 +28,15 @@ public class CactusResource extends FrequencyResourceBase
 		this.material = materialReader.readMaterial(args.get(0));
 		this.frequency = readInt(args.get(1), 1, 100);
 		this.rarity = readRarity(args.get(2));
-		this.minAltitude = readInt(args.get(3), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(3), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(4), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 		this.sourceBlocks = readMaterials(args, 5, materialReader);
 	}
 
 	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random rand, int x, int z)
+	public void spawn(IWorldGenRegion worldGenregion, Random rand, int x, int z)
 	{
-		int y = RandomHelper.numberInRange(rand, Math.max(this.minAltitude, worldGenRegion.getWorldMinY()), Math.min(this.maxAltitude, worldGenRegion.getWorldMaxY()));
-
+		int y = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);		
 		LocalMaterialData worldMaterial;
 		int cactusX;
 		int cactusBaseY;
@@ -49,39 +48,39 @@ public class CactusResource extends FrequencyResourceBase
 			cactusBaseY = y + rand.nextInt(4) - rand.nextInt(4);
 			cactusZ = z + rand.nextInt(8) - rand.nextInt(8);
 
-			worldMaterial = worldGenRegion.getMaterial(cactusX, cactusBaseY, cactusZ);
+			worldMaterial = worldGenregion.getMaterial(cactusX, cactusBaseY, cactusZ);
 			if(worldMaterial == null || !worldMaterial.isAir())
 			{
 				continue;
 			}
 			
 			// Check foundation
-			worldMaterial = worldGenRegion.getMaterial(cactusX, cactusBaseY - 1, cactusZ);
+			worldMaterial = worldGenregion.getMaterial(cactusX, cactusBaseY - 1, cactusZ);
 			if (worldMaterial == null || !this.sourceBlocks.contains(worldMaterial))
 			{
 				continue;
 			}
 
 			// Check neighbors
-			worldMaterial = worldGenRegion.getMaterial(cactusX - 1, cactusBaseY, cactusZ);
+			worldMaterial = worldGenregion.getMaterial(cactusX - 1, cactusBaseY, cactusZ);
 			if (worldMaterial == null || !worldMaterial.isAir())
 			{
 				continue;
 			}
 			
-			worldMaterial = worldGenRegion.getMaterial(cactusX + 1, cactusBaseY, cactusZ);
+			worldMaterial = worldGenregion.getMaterial(cactusX + 1, cactusBaseY, cactusZ);
 			if (worldMaterial == null || !worldMaterial.isAir())
 			{
 				continue;
 			}
 			
-			worldMaterial = worldGenRegion.getMaterial(cactusX, cactusBaseY, cactusZ - 1);
+			worldMaterial = worldGenregion.getMaterial(cactusX, cactusBaseY, cactusZ - 1);
 			if (worldMaterial == null || !worldMaterial.isAir())
 			{
 				continue;
 			}
 			
-			worldMaterial = worldGenRegion.getMaterial(cactusX, cactusBaseY, cactusZ + 1);
+			worldMaterial = worldGenregion.getMaterial(cactusX, cactusBaseY, cactusZ + 1);
 			if (worldMaterial == null || !worldMaterial.isAir())
 			{
 				continue;
@@ -91,7 +90,7 @@ public class CactusResource extends FrequencyResourceBase
 			cactusHeight = 1 + rand.nextInt(rand.nextInt(3) + 1);
 			for (int dY = 0; dY < cactusHeight; dY++)
 			{
-				worldGenRegion.setBlock(cactusX, cactusBaseY + dY, cactusZ, this.material);
+				worldGenregion.setBlock(cactusX, cactusBaseY + dY, cactusZ, this.material);
 			}
 		}
 	}

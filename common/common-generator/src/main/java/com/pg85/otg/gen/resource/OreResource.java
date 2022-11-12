@@ -39,8 +39,8 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 		this.numberOfBlocks = readInt(args.get(1), 1, 128);
 		this.frequency = readInt(args.get(2), 1, 100);
 		this.rarity = readRarity(args.get(3));
-		this.minAltitude = readInt(args.get(4), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(4), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 
 		// If there is a boolean parameter "true" after source blocks, read extended parameters (maxSpawn)
 		boolean useExtendedParams = false;		
@@ -99,9 +99,9 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 		}
 	}
 	
-	public boolean spawn(IWorldGenRegion world, Random rand, boolean villageInChunk, int x, int z, byte[] highestBlocksCache, int width, int height, int startX, int startZ)
+	public boolean spawn(IWorldGenRegion worldGenRegion, Random rand, boolean villageInChunk, int x, int z, byte[] highestBlocksCache, int width, int height, int startX, int startZ)
 	{
-		if(world.getWorldConfig().isDisableOreGen())
+		if(worldGenRegion.getWorldConfig().isDisableOreGen())
 		{
 			if(this.material.isOre())
 			{
@@ -110,14 +110,14 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 		}
 
 		float randomAngle = rand.nextFloat() * (float)Math.PI;
-		double randomX1 = (float)(x) - MathHelper.sin(randomAngle) * (float)this.numberOfBlocks / 8.0F;
-		double randomX2 = (float)(x) + MathHelper.sin(randomAngle) * (float)this.numberOfBlocks / 8.0F;
-		double randomZ1 = (float)(z) - MathHelper.cos(randomAngle) * (float)this.numberOfBlocks / 8.0F;
-		double randomZ2 = (float)(z) + MathHelper.cos(randomAngle) * (float)this.numberOfBlocks / 8.0F;
-
-		int randomY = getValidYInRange(rand, this.minAltitude, this.maxAltitude, world);
-		double randomY1 = randomY + rand.nextInt(3) - 2;
-		double randomY2 = randomY + rand.nextInt(3) - 2;
+		double randomX1 = (double)((float)(x) - MathHelper.sin(randomAngle) * (float)this.numberOfBlocks / 8.0F);
+		double randomX2 = (double)((float)(x) + MathHelper.sin(randomAngle) * (float)this.numberOfBlocks / 8.0F);
+		double randomZ1 = (double)((float)(z) - MathHelper.cos(randomAngle) * (float)this.numberOfBlocks / 8.0F);
+		double randomZ2 = (double)((float)(z) + MathHelper.cos(randomAngle) * (float)this.numberOfBlocks / 8.0F);
+	
+		int randomY = RandomHelper.numberInRange(rand, this.minAltitude, this.maxAltitude);
+		double randomY1 = (double)(randomY + rand.nextInt(3) - 2);		
+		double randomY2 = (double)(randomY + rand.nextInt(3) - 2);
 
 		float currentNumberOfBlocksFraction;
 		double xCenter;
@@ -160,22 +160,22 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 			endWorldZ = MathHelper.floor(zCenter + xzRadius);
 
 			if(
-				!world.getDecorationArea().isInAreaBeingDecorated(startWorldX, startWorldZ) ||
-				!world.getDecorationArea().isInAreaBeingDecorated(endWorldX, endWorldZ) ||
-				endWorldY < world.getWorldMinY() ||
-				startWorldY > world.getWorldMaxY()
+				!worldGenRegion.getDecorationArea().isInAreaBeingDecorated(startWorldX, startWorldZ) ||
+				!worldGenRegion.getDecorationArea().isInAreaBeingDecorated(endWorldX, endWorldZ) ||
+				endWorldY < Constants.WORLD_DEPTH ||
+				startWorldY >= Constants.WORLD_HEIGHT
 			)
 			{
 				continue;
 			}
 			
-			if(startWorldY < world.getWorldMinY())
+			if(startWorldY < Constants.WORLD_DEPTH)
 			{
-				startWorldY = world.getWorldMinY();
+				startWorldY = Constants.WORLD_DEPTH;
 			}
-			if(endWorldY > world.getWorldMaxY())
+			if(endWorldY >= Constants.WORLD_HEIGHT)
 			{
-				endWorldY = world.getWorldMaxY();
+				endWorldY = Constants.WORLD_HEIGHT;
 			}
 
 			for (int worldX = startWorldX; worldX <= endWorldX; worldX++)
@@ -198,7 +198,7 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 								highestSolidBlock = highestBlocksCache[(worldX - startX) * height + (worldZ - startZ)] & 0xFF; // byte to int conversion
 								if(highestSolidBlock == 0)  // 0 is default / unset.
 								{
-									highestSolidBlock = world.getHeightMapHeight(worldX, worldZ);
+									highestSolidBlock = worldGenRegion.getHeightMapHeight(worldX, worldZ);
 									// TODO: This causes getHeightMapHeight to be called every time on a 0 height column, 
 									// can't use -1 tho since we're using byte arrays. At least we're aborting the column 
 									// immediately, since OreGen shouldn't be used to spawn things in empty columns. If
@@ -216,16 +216,16 @@ public class OreResource extends BiomeResourceBase implements IBasicResource
 									endWorldY = highestSolidBlock;
 								}
 							}
-							for (int worldY = startWorldY; worldY < endWorldY; worldY++)
+							for (int worldY = startWorldY; worldY <= endWorldY; worldY++)
 							{
 								yDistanceToCenterFraction = ((double)worldY + 0.5D - yCenter) / yRadius;
 								// Get the distance to the center as a fraction for each axis, then square it to get rid of negative values.
 								// Add up all squared results, the result must be < 1.0D, otherwise it exceeded xzRadius/yRadius so exclude.
 								if (xDistanceToCenterFraction * xDistanceToCenterFraction + yDistanceToCenterFraction * yDistanceToCenterFraction + zDistanceToCenterFraction * zDistanceToCenterFraction < 1.0D)
 								{
-									if(this.sourceBlocks.contains(world.getMaterial(worldX, worldY, worldZ)))
+									if(this.sourceBlocks.contains(worldGenRegion.getMaterial(worldX, worldY, worldZ)))
 									{
-										world.setBlock(worldX, worldY, worldZ, this.material);
+										worldGenRegion.setBlock(worldX, worldY, worldZ, this.material);
 										hasSpawned = true;
 									}
 								}

@@ -17,7 +17,7 @@ public class BlockCheck extends BO3Check
 	@Override
 	public boolean preventsSpawn(IWorldGenRegion worldGenregion, int x, int y, int z)
 	{
-		return y >= worldGenregion.getWorldMinY() && y <= worldGenregion.getWorldMaxY() && !this.toCheck.contains(worldGenregion.getMaterial(x, y, z));
+		return y > Constants.WORLD_DEPTH && y < Constants.WORLD_HEIGHT && !this.toCheck.contains(worldGenregion.getMaterial(x, y, z));
 	}
 
 	@Override

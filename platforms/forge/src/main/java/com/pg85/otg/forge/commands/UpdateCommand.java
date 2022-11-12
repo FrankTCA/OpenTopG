@@ -84,7 +84,7 @@ public class UpdateCommand extends BaseCommand
 			.resolve("Updated Objects");
 		fixedObjectFolderPath.toFile().mkdirs();
 
-		ForgeWorldGenRegion world = ObjectUtils.getWorldGenRegion(preset, source.getLevel());
+		ForgeWorldGenRegion worldGenRegion = ObjectUtils.getWorldGenRegion(preset, source.getLevel());
 
 		BlockPos pos = source.getEntity().blockPosition();
 
@@ -113,19 +113,19 @@ public class UpdateCommand extends BaseCommand
 
 			ObjectType type = inputObject.getType();
 
-			RegionCommand.Region region = ObjectUtils.getRegionFromObject(pos, inputObject, world.getWorldMinY(), world.getWorldMaxY());
+			RegionCommand.Region region = ObjectUtils.getRegionFromObject(pos, inputObject);
 			Corner center = region.getCenter();
 
 			// cleanArea
-			ObjectUtils.cleanArea(world, region.getMin(), region.getMax(), true);
+			ObjectUtils.cleanArea(worldGenRegion, region.getMin(), region.getMax(), true);
 
 			// Spawn and fix object
 
-			ArrayList<BlockFunction<?>> extraBlocks = EditCommand.spawnAndFixObject(center.x, center.y, center.z, inputObject, world, true,
+			ArrayList<BlockFunction<?>> extraBlocks = EditCommand.spawnAndFixObject(center.x, center.y, center.z, inputObject, worldGenRegion, true,
 				presetFolderName, OTG.getEngine().getOTGRootFolder(), OTG.getEngine().getLogger(), OTG.getEngine().getCustomObjectManager(),
 				OTG.getEngine().getPresetLoader().getMaterialReader(presetFolderName), OTG.getEngine().getCustomObjectResourcesManager(), OTG.getEngine().getModLoadedChecker());
 
-			Thread t = new Thread(ObjectUtils.getExportRunnable(type, region, center, inputObject, fixedObjectFolderPath.resolve(ObjectUtils.getFoldersFromObject(inputObject)), extraBlocks, presetFolderName, false, leaveIllegalLeaves, source, world
+			Thread t = new Thread(ObjectUtils.getExportRunnable(type, region, center, inputObject, fixedObjectFolderPath.resolve(ObjectUtils.getFoldersFromObject(inputObject)), extraBlocks, presetFolderName, false, leaveIllegalLeaves, source, worldGenRegion
 			));
 			t.start();
 

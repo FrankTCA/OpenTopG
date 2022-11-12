@@ -39,7 +39,7 @@ public class CoralTreeResource extends FrequencyResourceBase
 		for (int i = 0; i < height; i++)
 		{
 			// Return if we don't have enough space to place the rest of the tree
-			if (y + i < world.getWorldMinY() || y + i > world.getWorldMaxY() || !CoralHelper.placeCoralBlock(world, random, x, y + i, z, coral))
+			if (y + i < Constants.WORLD_DEPTH || y + i > Constants.WORLD_HEIGHT -1 || !CoralHelper.placeCoralBlock(world, random, x, y + i, z, coral))
 			{
 				return;
 			}
@@ -69,7 +69,7 @@ public class CoralTreeResource extends FrequencyResourceBase
 			count = random.nextInt(5) + 2;
 			placedIndex = 0;
 
-			for (int i = 0; i < count && dy >= world.getWorldMinY() && dy <= world.getWorldMaxY() && CoralHelper.placeCoralBlock(world, random, dx, dy, dz, coral); i++)
+			for (int i = 0; i < count && dy >= Constants.WORLD_DEPTH && dy <= Constants.WORLD_HEIGHT -1 && CoralHelper.placeCoralBlock(world, random, dx, dy, dz, coral); i++)
 			{
 				placedIndex++;
 				dy++;

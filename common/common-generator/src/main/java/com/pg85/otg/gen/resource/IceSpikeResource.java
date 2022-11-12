@@ -48,8 +48,8 @@ public class IceSpikeResource extends FrequencyResourceBase
 
 		this.frequency = readInt(args.get(2), 1, 30);
 		this.rarity = readRarity(args.get(3));
-		this.minAltitude = readInt(args.get(4), Constants.MIN_POSSIBLE_Y, Constants.MAX_POSSIBLE_Y);
-		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.MAX_POSSIBLE_Y);
+		this.minAltitude = readInt(args.get(4), Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
+		this.maxAltitude = readInt(args.get(5), this.minAltitude, Constants.WORLD_HEIGHT - 1);
 
 		this.sourceBlocks = readMaterials(args, 6, materialReader);
 	}
@@ -57,21 +57,28 @@ public class IceSpikeResource extends FrequencyResourceBase
 	@Override
 	public void spawn(IWorldGenRegion worldGenregion, Random random, int x, int z)
 	{
-		switch (this.type) {
-			case Basement -> spawnBasement(worldGenregion, random, x, z);
-			case HugeSpike -> spawnSpike(worldGenregion, random, x, z, true);
-			case SmallSpike -> spawnSpike(worldGenregion, random, x, z, false);
+		switch(this.type)
+		{
+			case Basement:
+				spawnBasement(worldGenregion, random, x, z);
+				break;
+			case HugeSpike:
+				spawnSpike(worldGenregion, random, x, z, true);
+				break;
+			case SmallSpike:
+				spawnSpike(worldGenregion, random, x, z, false);
+				break;
 		}
 	}
 
-	private void spawnBasement(IWorldGenRegion world, Random random,int x, int z)
+	private void spawnBasement(IWorldGenRegion worldGenRegion, Random random,int x, int z)
 	{
-		int y = getValidYInRange(random, this.minAltitude, this.maxAltitude, world);
+		int y = RandomHelper.numberInRange(random, this.minAltitude, this.maxAltitude);
 
 		LocalMaterialData worldMaterial;
 		while (
 			y > 2 && 
-			(worldMaterial = world.getMaterial(x, y, z)) != null &&
+			(worldMaterial = worldGenRegion.getMaterial(x, y, z)) != null && 
 			worldMaterial.isAir()
 		)
 		{
@@ -79,7 +86,7 @@ public class IceSpikeResource extends FrequencyResourceBase
 		}
 		
 		if (
-			(worldMaterial = world.getMaterial(x, y, z)) == null ||
+			(worldMaterial = worldGenRegion.getMaterial(x, y, z)) == null || 
 			!this.sourceBlocks.contains(worldMaterial)
 		)
 		{
@@ -95,17 +102,17 @@ public class IceSpikeResource extends FrequencyResourceBase
 		{
 			for (int actualZ = z - radius; actualZ <= z + radius; actualZ++)
 			{
-				biomeConfig = world.getBiomeConfigForDecoration(actualX, actualZ);
+				biomeConfig = worldGenRegion.getBiomeConfigForDecoration(actualX, actualZ);
 				deltaX = actualX - x;
 				deltaZ = actualZ - z;
 				if (deltaX * deltaX + deltaZ * deltaZ <= radius * radius)
 				{
 					for (int deltaY = y - one; deltaY <= y + one; deltaY++)
 					{
-						worldMaterial = world.getMaterial(actualX, deltaY, actualZ);
+						worldMaterial = worldGenRegion.getMaterial(actualX, deltaY, actualZ);
 						if (worldMaterial != null && this.sourceBlocks.contains(worldMaterial))
 						{
-							world.setBlock(actualX, deltaY, actualZ, this.material, biomeConfig.getReplaceBlocks());
+							worldGenRegion.setBlock(actualX, deltaY, actualZ, this.material, biomeConfig.getReplaceBlocks());
 						}
 					}
 				}

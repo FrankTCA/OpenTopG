@@ -93,8 +93,6 @@ public class BiomeConfig extends BiomeConfigBase
 		RESOURCE_QUEUE_RESOURCES.put("GlowLichen", GlowLichenResource.class);
 	}
 
-	private final IWorldConfig worldConfig;
-
 	// Private fields, only used when reading/writing
 
 	// Settings container, used so we can copy a biomeconfig while 
@@ -122,17 +120,15 @@ public class BiomeConfig extends BiomeConfigBase
 	public BiomeConfig(String biomeName)
 	{
 		super(biomeName);
-		worldConfig = null;
 	}
 
 	public BiomeConfig(
 		String biomeName, BiomeConfigStub biomeConfigStub, Path presetFolder, SettingsMap settings, 
 		IWorldConfig worldConfig, String presetShortName, int presetMajorVersion, 
-		IConfigFunctionProvider biomeResourcesManager, ILogger logger, IMaterialReader materialReader,
-		IWorldConfig config)
+		IConfigFunctionProvider biomeResourcesManager, ILogger logger, IMaterialReader materialReader
+	)
 	{
 		super(biomeName);
-		this.worldConfig = config;
 		this.setRegistryKey(new OTGBiomeResourceLocation(presetFolder, presetShortName, presetMajorVersion, biomeName));
 
 		// Mob inheritance
@@ -343,7 +339,7 @@ public class BiomeConfig extends BiomeConfigBase
 		this.settings.packedIceBlock = reader.getSetting(BiomeStandardValues.PACKED_ICE_BLOCK, logger, materialReader);
 		this.settings.snowBlock = reader.getSetting(BiomeStandardValues.SNOW_BLOCK, logger, materialReader);
 		this.privateSettings.configCooledLavaBlock = reader.getSetting(BiomeStandardValues.COOLED_LAVA_BLOCK, logger, materialReader);
-		this.settings.replacedBlocks = reader.getSetting(BiomeStandardValues.REPLACED_BLOCKS, logger, materialReader, worldConfig);
+		this.settings.replacedBlocks = reader.getSetting(BiomeStandardValues.REPLACED_BLOCKS, logger, materialReader);
 		this.settings.sandStoneBlock = LocalMaterials.SANDSTONE;
 		this.settings.redSandStoneBlock = LocalMaterials.RED_SANDSTONE;
 		this.settings.surfaceAndGroundControl = reader.getSetting(SurfaceGeneratorSetting.SURFACE_AND_GROUND_CONTROL, new SimpleSurfaceGenerator(), logger, materialReader);

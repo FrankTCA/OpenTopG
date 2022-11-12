@@ -16,8 +16,8 @@ public class BO3Enums
 	public static enum ExtrudeMode
 	{
 		None(-1, -1),
-		BottomDown(Constants.WORLD_DEFAULT_MAX_Y, Constants.WORLD_DEFAULT_MIN_Y),
-		TopUp(Constants.WORLD_DEFAULT_MIN_Y, Constants.WORLD_DEFAULT_MAX_Y);
+		BottomDown(Constants.WORLD_HEIGHT - 1, Constants.WORLD_DEPTH),
+		TopUp(Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
 
 		/**
 		 * Defines where calculation should begin

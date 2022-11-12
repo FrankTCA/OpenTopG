@@ -13,9 +13,9 @@ import com.pg85.otg.util.helpers.RandomHelper;
 
 public class CaveCarver extends Carver
 {
-	public CaveCarver(int minHeight, int maxHeight, IWorldConfig worldConfig)
+	public CaveCarver(int heightLimit, IWorldConfig worldConfig)
 	{
-		super(minHeight, maxHeight, worldConfig);
+		super(heightLimit, worldConfig);
 	}
 
 	@Override
