@@ -1,6 +1,8 @@
 package com.pg85.otg.paper.gen;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.google.common.collect.ImmutableCollection;
 import com.pg85.otg.paper.biome.PaperBiome;
@@ -223,7 +225,7 @@ public class ShadowChunkGenerator
 		if (serverWorld.getServer().getWorldData().worldGenSettings().generateStructures())
 		{
 			List<ChunkCoordinate> chunksToHandle = new ArrayList<>();
-			Map<ChunkCoordinate,Integer> chunksHandled = new HashMap<>();
+			ConcurrentMap<ChunkCoordinate,Integer> chunksHandled = new ConcurrentHashMap<>();
 			if(noiseAffectingStructuresOnly)
 			{
 				synchronized(this.hasVanillaNoiseStructureChunkCache)

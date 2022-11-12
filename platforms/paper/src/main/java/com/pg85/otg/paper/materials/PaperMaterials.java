@@ -16,6 +16,8 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public class PaperMaterials extends LocalMaterials
@@ -26,7 +28,7 @@ public class PaperMaterials extends LocalMaterials
 	private static final Block[] WALL_CORALS_TAG = { Blocks.TUBE_CORAL_WALL_FAN, Blocks.BRAIN_CORAL_WALL_FAN, Blocks.BUBBLE_CORAL_WALL_FAN, Blocks.FIRE_CORAL_WALL_FAN, Blocks.HORN_CORAL_WALL_FAN };
 	private static final Block[] CORALS_TAG = { Blocks.TUBE_CORAL, Blocks.BRAIN_CORAL, Blocks.BUBBLE_CORAL, Blocks.FIRE_CORAL, Blocks.HORN_CORAL, Blocks.TUBE_CORAL_FAN, Blocks.BRAIN_CORAL_FAN, Blocks.BUBBLE_CORAL_FAN, Blocks.FIRE_CORAL_FAN, Blocks.HORN_CORAL_FAN };
 
-	public static final Map<String, Block[]> OTG_BLOCK_TAGS = new HashMap<>(); 
+	public static final ConcurrentMap<String, Block[]> OTG_BLOCK_TAGS = new ConcurrentHashMap<>();
 
 	public static void init()
 	{

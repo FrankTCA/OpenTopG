@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo4.BO4;
@@ -30,8 +32,8 @@ public class SmoothingAreaGenerator
 { 
 	// A smoothing area is drawn around all outer blocks (or blocks neighbouring air) on the lowest layer of blocks in each BO3 of this branching structure that has a SmoothRadius set greater than 0.
 	// Holds all unspawned smoothing area lines per chunk.
-	public Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new HashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();	
-	private Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawnPerLineDestination = new HashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+	public ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+	private ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawnPerLineDestination = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
 		
 	public ArrayList<ChunkCoordinate> getSmoothingAreaChunkCoords()
 	{
@@ -54,8 +56,8 @@ public class SmoothingAreaGenerator
 		// TODO: Don't check neighbouring BO4's with SmoothRadius -1
 
 		// Get all solid blocks on the lowest layer of this BO4 that border an air block or have no neighbouring blocks
-		// This may include blocks on the border of this BO4 that are supposed to seamlessly border another BO4, remove those later since they shouldnt be smoothed
-		Map<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>> smoothToBlocksPerChunk = new HashMap<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>>();
+		// This may include blocks on the border of this BO4 that are supposed to seamlessly border another BO4, remove those later since they shouldn't be smoothed
+		ConcurrentMap<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>> smoothToBlocksPerChunk = new ConcurrentHashMap<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>>();
 
 		ArrayList<BlockCoordsAndNeighbours> smoothToBlocks;
 		ChunkCoordinate chunkCoord;
@@ -445,7 +447,7 @@ public class SmoothingAreaGenerator
 	// For each line-segment store the beginning and endpoints within the chunk as well as the origin and final destination coordinate.
 	private void calculateBeginAndEndPointsPerChunk(Map<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>> smoothToBlocksPerChunk, int smoothRadius)
 	{
-		Map<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new HashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
+		ConcurrentMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>> smoothingAreasToSpawn = new ConcurrentHashMap<ChunkCoordinate, ArrayList<SmoothingAreaLine>>();
 		
 		// Loop through smooth-line starting blocks
 		for(Entry<ChunkCoordinate, ArrayList<BlockCoordsAndNeighbours>> chunkCoordSet : smoothToBlocksPerChunk.entrySet())

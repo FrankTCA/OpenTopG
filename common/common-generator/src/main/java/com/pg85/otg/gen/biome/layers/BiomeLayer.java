@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.pg85.otg.gen.biome.BiomeData;
 import com.pg85.otg.gen.biome.layers.util.LayerRandomnessSource;
@@ -15,7 +17,7 @@ import com.pg85.otg.interfaces.ILayerSampler;
  */
 class BiomeLayer extends BiomeLayerBase
 {
-	protected final Map<NewBiomeGroup, Map<Integer, BiomeData>> groupBiomes = new HashMap<>();
+	protected final ConcurrentMap<NewBiomeGroup, Map<Integer, BiomeData>> groupBiomes = new ConcurrentHashMap<>();
 
 	BiomeLayer(BiomeLayerData data, int depth)
 	{

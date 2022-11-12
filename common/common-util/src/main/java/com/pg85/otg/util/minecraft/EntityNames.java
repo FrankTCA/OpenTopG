@@ -2,6 +2,8 @@ package com.pg85.otg.util.minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Contains a lot of alternative mob names. The implementation should support
@@ -108,7 +110,7 @@ public enum EntityNames
 	WITHER_SKULL("wither_skull", "witherskull");
 	
 	// Contains all aliases (alias, internalName)
-	private static Map<String, String> MobAliases = new HashMap<String, String>();
+	private static ConcurrentMap<String, String> MobAliases = new ConcurrentHashMap<String, String>();
 
 	// Auto-register all aliases in the enum
 	static

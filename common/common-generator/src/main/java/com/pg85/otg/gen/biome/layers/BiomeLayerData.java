@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.google.common.collect.ImmutableList;
 import com.pg85.otg.constants.SettingsEnums.BiomeMode;
@@ -33,16 +35,16 @@ public class BiomeLayerData
 	public final double frozenOceanTemperature;
 	public final int biomeRarityScale;
 	public final BiomeData oceanBiomeData;
-	public final Map<Integer, List<NewBiomeGroup>> groups = new HashMap<>();
+	public final ConcurrentMap<Integer, List<NewBiomeGroup>> groups = new ConcurrentHashMap<>();
 	private final int[] cumulativeGroupRarities;
 	public final int[] groupMaxRarityPerDepth;
 	public final int[] oldMaxRarities;
 	public final boolean oldGroupRarity;
 	public final boolean oldLandRarity;
 	public final List<Integer> biomeDepths = new ArrayList<>(); // Depths with biomes
-	public final Map<Integer, NewBiomeGroup> groupRegistry = new HashMap<>();
-	public final Map<Integer, List<BiomeData>> isleBiomesAtDepth = new HashMap<>();
-	public final Map<Integer, List<BiomeData>> borderBiomesAtDepth = new HashMap<>();
+	public final ConcurrentMap<Integer, NewBiomeGroup> groupRegistry = new ConcurrentHashMap<>();
+	public final ConcurrentMap<Integer, List<BiomeData>> isleBiomesAtDepth = new ConcurrentHashMap<>();
+	public final ConcurrentMap<Integer, List<BiomeData>> borderBiomesAtDepth = new ConcurrentHashMap<>();
 	public int[] riverBiomes;
 	public final boolean riversEnabled;
 	public final boolean randomRivers;

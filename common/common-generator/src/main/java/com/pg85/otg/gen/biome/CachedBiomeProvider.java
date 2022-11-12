@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiomeConfig;
@@ -264,7 +266,7 @@ public class CachedBiomeProvider implements ICachedBiomeProvider
 				}
 			}
 		}
-		Map<ChunkCoordinate, IBiomeConfig[]> regionsHandled = new HashMap<ChunkCoordinate, IBiomeConfig[]>();
+		ConcurrentMap<ChunkCoordinate, IBiomeConfig[]> regionsHandled = new ConcurrentHashMap<ChunkCoordinate, IBiomeConfig[]>();
 		for(ChunkCoordinate regionTohandle : regionsToHandle)
 		{
 			region = new IBiomeConfig[regionSize * regionSize];

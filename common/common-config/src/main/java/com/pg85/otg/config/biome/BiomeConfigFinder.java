@@ -15,6 +15,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * This class searches for the appropriate file for each biome.
@@ -40,7 +42,7 @@ public final class BiomeConfigFinder
 	 */
 	public Map<String, BiomeConfigStub> findBiomes(List<String> worldBiomes, int worldHeightScale, Collection<Path> directories, ILogger logger, IMaterialReader materialReader)
 	{
-		Map<String, BiomeConfigStub> biomeConfigsStore = new HashMap<String, BiomeConfigStub>();
+		ConcurrentMap<String, BiomeConfigStub> biomeConfigsStore = new ConcurrentHashMap<String, BiomeConfigStub>();
 
 		// Search all directories
 		for (Path directoryPath  : directories)
@@ -181,9 +183,9 @@ public final class BiomeConfigFinder
 		
 		public boolean inheritMobsBiomeNameProcessed = false;		
 
-		private final Map<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new HashMap<>();
+		private final ConcurrentMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroups = new ConcurrentHashMap<>();
 
-		private final Map<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new HashMap<>();
+		private final ConcurrentMap<EntityCategory, List<WeightedMobSpawnGroup>> spawnGroupsMerged = new ConcurrentHashMap<>();
 						
 		private BiomeConfigStub(SettingsMap settings, Path file, String biomeName, ILogger logger, IMaterialReader materialReader)
 		{

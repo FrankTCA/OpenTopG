@@ -2,12 +2,14 @@ package com.pg85.otg.paper.networking;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class OTGClientSyncManager
 {
-	private static final Map<String, BiomeSettingSyncWrapper> syncedData = new HashMap<>();
+	private static final ConcurrentMap<String, BiomeSettingSyncWrapper> syncedData = new ConcurrentHashMap<>();
 
-	public static Map<String, BiomeSettingSyncWrapper> getSyncedData()
+	public static ConcurrentMap<String, BiomeSettingSyncWrapper> getSyncedData()
 	{
 		return syncedData;
 	}
