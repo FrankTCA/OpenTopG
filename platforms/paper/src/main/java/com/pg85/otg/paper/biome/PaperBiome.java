@@ -45,219 +45,199 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PaperBiome implements IBiome
-{
-	private final Biome biomeBase;
-	private final IBiomeConfig biomeConfig;
+public class PaperBiome implements IBiome {
+    private final Biome biomeBase;
+    private final IBiomeConfig biomeConfig;
 
-	public PaperBiome(Biome biomeBase, IBiomeConfig biomeConfig)
-	{
-		this.biomeBase = biomeBase;
-		this.biomeConfig = biomeConfig;
-	}
+    public PaperBiome(Biome biomeBase, IBiomeConfig biomeConfig) {
+        this.biomeBase = biomeBase;
+        this.biomeConfig = biomeConfig;
+    }
 
-	public Biome getBiome()
-	{
-		return this.biomeBase;
-	}
+    public Biome getBiome() {
+        return this.biomeBase;
+    }
 
-	@Override
-	public IBiomeConfig getBiomeConfig()
-	{
-		return this.biomeConfig;
-	}
+    @Override
+    public IBiomeConfig getBiomeConfig() {
+        return this.biomeConfig;
+    }
 
-	public static Biome createOTGBiome (boolean isOceanBiome, IWorldConfig worldConfig, IBiomeConfig biomeConfig, RegistryAccess registryAccess)
-	{
-		BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder = new BiomeGenerationSettings.Builder();
+    public static Biome createOTGBiome(boolean isOceanBiome, IWorldConfig worldConfig, IBiomeConfig biomeConfig, RegistryAccess registryAccess) {
+        BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder = new BiomeGenerationSettings.Builder();
 
-		MobSpawnSettings.Builder mobSpawnInfoBuilder = createMobSpawnInfo(biomeConfig);
+        MobSpawnSettings.Builder mobSpawnInfoBuilder = createMobSpawnInfo(biomeConfig);
 
-		// Surface/ground/stone blocks / sagc are done during base terrain gen.
-		// Spawn point detection checks for surfacebuilder blocks, so using ConfiguredSurfaceBuilders.GRASS.
-		// TODO: What if there's no grass around spawn?
-		// Commenting out for the time being - Frank
-		//biomeGenerationSettingsBuilder.surfaceBuilder(SurfaceBuilders.GRASS);
+        // Surface/ground/stone blocks / sagc are done during base terrain gen.
+        // Spawn point detection checks for surfacebuilder blocks, so using ConfiguredSurfaceBuilders.GRASS.
+        // TODO: What if there's no grass around spawn?
+        // Commenting out for the time being - Frank
+        //biomeGenerationSettingsBuilder.surfaceBuilder(SurfaceBuilders.GRASS);
 
-		// * Carvers are handled by OTG
+        // * Carvers are handled by OTG
 
-		// Register any Registry() resources to the biome, to be handled by MC.
+        // Register any Registry() resources to the biome, to be handled by MC.
 
-		// This is a dummy pickle feature to check what happens with features we add to our biomes
-		// biomeGenerationSettingsBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, OTGTestFeature.PLACED);
+        // This is a dummy pickle feature to check what happens with features we add to our biomes
+        // biomeGenerationSettingsBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, OTGTestFeature.PLACED);
 
-		for (ConfigFunction<IBiomeConfig> res : ((BiomeConfig)biomeConfig).getResourceQueue())
-		{
-			if (res instanceof RegistryResource registryResource)
-			{
-				GenerationStep.Decoration stage = GenerationStep.Decoration.valueOf(registryResource.getDecorationStage());
-				PlacedFeature registry = BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(registryResource.getFeatureKey()));
-				if (registry == null)
-				{
-					String newResourceLocation = LegacyRegistry.convertLegacyResourceLocation(registryResource.getFeatureKey());
-					if (newResourceLocation != null) {
-						registry = BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(newResourceLocation));
-						if (registry == null) {
-							OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Somehow you broke the universe! Feature: "+newResourceLocation+" is not in the registry");
-						} else {
-							biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
-						}
-					} else {
-						OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Could not find feature " + registryResource.getFeatureKey() + " in the registry, please check spelling");
-					}
-				} else {
-					biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
-				}
-			}
-			if (res instanceof GlowLichenResource glow)
-			{
-				List<BlockState> list = new ArrayList<>();
-				for (LocalMaterialBase base : glow.canBePlacedOn)
-				{
-					if (base instanceof PaperMaterialTag tag)
-					{
-						if (tag.getTag() == null)
-						{
-							list.addAll(Arrays.stream(tag.getOtgBlockTag()).map(Block::defaultBlockState).collect(Collectors.toList()));
-						} else {
-							// Cannot find an easy way of getting a list of blocks from a tag :/
-							OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Vanilla tags are currently unsuported for GlowLichen");
-							//list.addAll(tag.getTag().getValues().stream().map(Block::defaultBlockState).collect(Collectors.toList()));
-						}
-					}
-					else if (base instanceof PaperMaterialData data)
-					{
-						list.add(data.internalBlock());
-					}
-				}
-				// Requires replacing the Glow Lichen feature, as configred() doesn't exist any more
+        for (ConfigFunction<IBiomeConfig> res : ((BiomeConfig) biomeConfig).getResourceQueue()) {
+            if (res instanceof RegistryResource registryResource) {
+                GenerationStep.Decoration stage = GenerationStep.Decoration.valueOf(registryResource.getDecorationStage());
+                PlacedFeature registry = BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(registryResource.getFeatureKey()));
+                if (registry == null) {
+                    String newResourceLocation = LegacyRegistry.convertLegacyResourceLocation(registryResource.getFeatureKey());
+                    if (newResourceLocation != null) {
+                        registry = BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(newResourceLocation));
+                        if (registry == null) {
+                            OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Somehow you broke the universe! Feature: " + newResourceLocation + " is not in the registry");
+                        } else {
+                            biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
+                        }
+                    } else {
+                        OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.BIOME_REGISTRY, "Could not find feature " + registryResource.getFeatureKey() + " in the registry, please check spelling");
+                    }
+                } else {
+                    biomeGenerationSettingsBuilder.addFeature(stage, Holder.direct(registry));
+                }
+            }
+            if (res instanceof GlowLichenResource glow) {
+                List<BlockState> list = new ArrayList<>();
+                for (LocalMaterialBase base : glow.canBePlacedOn) {
+                    if (base instanceof PaperMaterialTag tag) {
+                        if (tag.getTag() == null) {
+                            list.addAll(Arrays.stream(tag.getOtgBlockTag()).map(Block::defaultBlockState).collect(Collectors.toList()));
+                        } else {
+                            // Cannot find an easy way of getting a list of blocks from a tag :/
+                            OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Vanilla tags are currently unsuported for GlowLichen");
+                            //list.addAll(tag.getTag().getValues().stream().map(Block::defaultBlockState).collect(Collectors.toList()));
+                        }
+                    } else if (base instanceof PaperMaterialData data) {
+                        list.add(data.internalBlock());
+                    }
+                }
+                // Requires replacing the Glow Lichen feature, as configred() doesn't exist any more
 				/*GlowLichenConfiguration config = new GlowLichenConfiguration(glow.nearbyAttempts, glow.canPlaceOnFloor, glow.canPlaceOnCeiling, glow.canPlaceOnWall, glow.chanceOfSpreading, list);
 				biomeGenerationSettingsBuilder
 					.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Feature.GLOW_LICHEN.configured(config).squared()
 					.rangeUniform(VerticalAnchor.aboveBottom(glow.minX), VerticalAnchor.absolute(glow.maxX))
 					.count(UniformInt.of(glow.countMin, glow.countMax)));*/
-			}
-		}
+            }
+        }
 
-		// Default structures
-		addVanillaStructures(biomeGenerationSettingsBuilder, worldConfig, biomeConfig);
+        // Default structures
+        addVanillaStructures(biomeGenerationSettingsBuilder, worldConfig, biomeConfig);
 
-		float safeTemperature = biomeConfig.getBiomeTemperature();
-		if (safeTemperature >= 0.1 && safeTemperature <= 0.2)
-		{
-			// Avoid temperatures between 0.1 and 0.2, Minecraft restriction
-			safeTemperature = safeTemperature >= 1.5 ? 0.2f : 0.1f;
-		}
+        float safeTemperature = biomeConfig.getBiomeTemperature();
+        if (safeTemperature >= 0.1 && safeTemperature <= 0.2) {
+            // Avoid temperatures between 0.1 and 0.2, Minecraft restriction
+            safeTemperature = safeTemperature >= 1.5 ? 0.2f : 0.1f;
+        }
 
-		// BiomeFog == BiomeAmbient in forge
-		BiomeSpecialEffects.Builder biomeAmbienceBuilder =
-				new BiomeSpecialEffects.Builder()
-						.fogColor(biomeConfig.getFogColor() != BiomeStandardValues.FOG_COLOR.getDefaultValue(null) ? biomeConfig.getFogColor() : worldConfig.getFogColor())
-						.waterColor(biomeConfig.getWaterColor() != BiomeStandardValues.WATER_COLOR.getDefaultValue() ? biomeConfig.getWaterColor() : 4159204)
-						.waterFogColor(biomeConfig.getWaterFogColor() != BiomeStandardValues.WATER_FOG_COLOR.getDefaultValue() ? biomeConfig.getWaterFogColor() : 329011)
-						.skyColor(biomeConfig.getSkyColor() != BiomeStandardValues.SKY_COLOR.getDefaultValue() ? biomeConfig.getSkyColor() : getSkyColorForTemp(safeTemperature))
-				//.e() // TODO: Sky color is normally based on temp, make a setting for that?
-				;
+        // BiomeFog == BiomeAmbient in forge
+        BiomeSpecialEffects.Builder biomeAmbienceBuilder =
+                new BiomeSpecialEffects.Builder()
+                        .fogColor(biomeConfig.getFogColor() != BiomeStandardValues.FOG_COLOR.getDefaultValue(null) ? biomeConfig.getFogColor() : worldConfig.getFogColor())
+                        .waterColor(biomeConfig.getWaterColor() != BiomeStandardValues.WATER_COLOR.getDefaultValue() ? biomeConfig.getWaterColor() : 4159204)
+                        .waterFogColor(biomeConfig.getWaterFogColor() != BiomeStandardValues.WATER_FOG_COLOR.getDefaultValue() ? biomeConfig.getWaterFogColor() : 329011)
+                        .skyColor(biomeConfig.getSkyColor() != BiomeStandardValues.SKY_COLOR.getDefaultValue() ? biomeConfig.getSkyColor() : getSkyColorForTemp(safeTemperature))
+                //.e() // TODO: Sky color is normally based on temp, make a setting for that?
+                ;
 
 
-		Optional<ParticleType<?>> particleType = Registry.PARTICLE_TYPE.getOptional(new ResourceLocation(biomeConfig.getParticleType()));
-		if (particleType.isPresent() && particleType.get() instanceof ParticleOptions)
-		{
-			biomeAmbienceBuilder.ambientParticle(new AmbientParticleSettings((ParticleOptions) particleType.get(), biomeConfig.getParticleProbability()));
-		}
+        Optional<ParticleType<?>> particleType = Registry.PARTICLE_TYPE.getOptional(new ResourceLocation(biomeConfig.getParticleType()));
+        if (particleType.isPresent() && particleType.get() instanceof ParticleOptions) {
+            biomeAmbienceBuilder.ambientParticle(new AmbientParticleSettings((ParticleOptions) particleType.get(), biomeConfig.getParticleProbability()));
+        }
 
-		Optional<SoundEvent> music = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getMusic()));
-		music.ifPresent(soundEffect ->
-				biomeAmbienceBuilder.backgroundMusic(
-						new Music(
-								soundEffect,
-								biomeConfig.getMusicMinDelay(),
-								biomeConfig.getMusicMaxDelay(),
-								biomeConfig.isReplaceCurrentMusic()
-						)
-				)
-		);
+        Optional<SoundEvent> music = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getMusic()));
+        music.ifPresent(soundEffect ->
+                biomeAmbienceBuilder.backgroundMusic(
+                        new Music(
+                                soundEffect,
+                                biomeConfig.getMusicMinDelay(),
+                                biomeConfig.getMusicMaxDelay(),
+                                biomeConfig.isReplaceCurrentMusic()
+                        )
+                )
+        );
 
-		Optional<SoundEvent> ambientSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getAmbientSound()));
-		ambientSound.ifPresent(soundEffect -> biomeAmbienceBuilder.ambientLoopSound(ambientSound.get()));
+        Optional<SoundEvent> ambientSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getAmbientSound()));
+        ambientSound.ifPresent(soundEffect -> biomeAmbienceBuilder.ambientLoopSound(ambientSound.get()));
 
-		Optional<SoundEvent> moodSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getMoodSound()));
-		moodSound.ifPresent(soundEffect ->
-				biomeAmbienceBuilder.ambientMoodSound(
-						new AmbientMoodSettings(
-								moodSound.get(),
-								biomeConfig.getMoodSoundDelay(),
-								biomeConfig.getMoodSearchRange(),
-								biomeConfig.getMoodOffset()
-						)
-				)
-		);
+        Optional<SoundEvent> moodSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getMoodSound()));
+        moodSound.ifPresent(soundEffect ->
+                biomeAmbienceBuilder.ambientMoodSound(
+                        new AmbientMoodSettings(
+                                moodSound.get(),
+                                biomeConfig.getMoodSoundDelay(),
+                                biomeConfig.getMoodSearchRange(),
+                                biomeConfig.getMoodOffset()
+                        )
+                )
+        );
 
-		Optional<SoundEvent> additionsSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getAdditionsSound()));
-		additionsSound.ifPresent(soundEffect -> biomeAmbienceBuilder.ambientAdditionsSound(new AmbientAdditionsSettings(additionsSound.get(), biomeConfig.getAdditionsTickChance())));
+        Optional<SoundEvent> additionsSound = Registry.SOUND_EVENT.getOptional(new ResourceLocation(biomeConfig.getAdditionsSound()));
+        additionsSound.ifPresent(soundEffect -> biomeAmbienceBuilder.ambientAdditionsSound(new AmbientAdditionsSettings(additionsSound.get(), biomeConfig.getAdditionsTickChance())));
 
-		if (biomeConfig.getFoliageColor() != 0xffffff)
-		{
-			biomeAmbienceBuilder.foliageColorOverride(biomeConfig.getFoliageColor());
-		}
+        if (biomeConfig.getFoliageColor() != 0xffffff) {
+            biomeAmbienceBuilder.foliageColorOverride(biomeConfig.getFoliageColor());
+        }
 
-		if (biomeConfig.getGrassColor() != 0xffffff)
-		{
-			biomeAmbienceBuilder.grassColorOverride(biomeConfig.getGrassColor());
-		}
+        if (biomeConfig.getGrassColor() != 0xffffff) {
+            biomeAmbienceBuilder.grassColorOverride(biomeConfig.getGrassColor());
+        }
 
-		switch (biomeConfig.getGrassColorModifier())
-		{
-			case Swamp -> biomeAmbienceBuilder.grassColorModifier(BiomeSpecialEffects.GrassColorModifier.SWAMP);
-			case DarkForest -> biomeAmbienceBuilder.grassColorModifier(BiomeSpecialEffects.GrassColorModifier.DARK_FOREST);
-			case None -> {}
-		}
+        switch (biomeConfig.getGrassColorModifier()) {
+            case Swamp -> biomeAmbienceBuilder.grassColorModifier(BiomeSpecialEffects.GrassColorModifier.SWAMP);
+            case DarkForest ->
+                    biomeAmbienceBuilder.grassColorModifier(BiomeSpecialEffects.GrassColorModifier.DARK_FOREST);
+            case None -> {
+            }
+        }
 
-		Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
-				.precipitation(biomeConfig.getBiomeWetness() <= 0.0001 ? Biome.Precipitation.NONE :
-						biomeConfig.getBiomeTemperature() > Constants.SNOW_AND_ICE_TEMP ? Biome.Precipitation.RAIN :
-								Biome.Precipitation.SNOW)
-				//.depth(biomeConfig.getBiomeHeight())
-				//.scale(biomeConfig.getBiomeVolatility())
-				.temperature(safeTemperature)
-				.downfall(biomeConfig.getBiomeWetness())
-				.specialEffects(biomeAmbienceBuilder.build())
-				.mobSpawnSettings(mobSpawnInfoBuilder.build())
-				// All other biome settings...
-				.generationSettings(biomeGenerationSettingsBuilder.build());
+        Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
+                .precipitation(biomeConfig.getBiomeWetness() <= 0.0001 ? Biome.Precipitation.NONE :
+                        biomeConfig.getBiomeTemperature() > Constants.SNOW_AND_ICE_TEMP ? Biome.Precipitation.RAIN :
+                                Biome.Precipitation.SNOW)
+                //.depth(biomeConfig.getBiomeHeight())
+                //.scale(biomeConfig.getBiomeVolatility())
+                .temperature(safeTemperature)
+                .downfall(biomeConfig.getBiomeWetness())
+                .specialEffects(biomeAmbienceBuilder.build())
+                .mobSpawnSettings(mobSpawnInfoBuilder.build())
+                // All other biome settings...
+                .generationSettings(biomeGenerationSettingsBuilder.build());
 
-		if(biomeConfig.useFrozenOceanTemperature())
-		{
-			builder.temperatureAdjustment(TemperatureModifier.FROZEN);
-		}
+        if (biomeConfig.useFrozenOceanTemperature()) {
+            builder.temperatureAdjustment(TemperatureModifier.FROZEN);
+        }
 
-		// TODO: Replace this!
-		//builder.biomeCategory(Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory()));
+        // TODO: Replace this!
+        //builder.biomeCategory(Biome.BiomeCategory.byName(biomeConfig.getBiomeCategory()));
 
-		return builder.build();
-	}
+        return builder.build();
+    }
 
-	private static int getSkyColorForTemp (float safeTemperature)
-	{
-		float lvt_1_1_ = safeTemperature / 3.0F;
-		lvt_1_1_ = Mth.clamp(lvt_1_1_, -1.0F, 1.0F);
-		return Mth.hsvToRgb(0.62222224F - lvt_1_1_ * 0.05F, 0.5F + lvt_1_1_ * 0.1F, 1.0F);
-	}
+    private static int getSkyColorForTemp(float safeTemperature) {
+        float lvt_1_1_ = safeTemperature / 3.0F;
+        lvt_1_1_ = Mth.clamp(lvt_1_1_, -1.0F, 1.0F);
+        return Mth.hsvToRgb(0.62222224F - lvt_1_1_ * 0.05F, 0.5F + lvt_1_1_ * 0.1F, 1.0F);
+    }
 
-	private static void addVanillaStructures (BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder, IWorldConfig worldConfig, IBiomeConfig biomeConfig)
-	{
-		// TODO: Currently we can only enable/disable structures per biome and use any configuration options exposed by the vanilla structure
-		// classes (size for villages fe). If we want to be able to customise more, we'll need to implement our own structure classes.
-		// TODO: Allow users to create their own jigsaw patterns (for villages, end cities, pillager outposts etc)?
-		// TODO: Fossils?
-		// TODO: Amethyst Geodes (1.17?)
-		// TODO: Misc structures: These structures generate even when the "Generate structures" world option is disabled, and also cannot be located with the /locate command.
-		// - Dungeons
-		// - Desert Wells
+    private static void addVanillaStructures(BiomeGenerationSettings.Builder biomeGenerationSettingsBuilder, IWorldConfig worldConfig, IBiomeConfig biomeConfig) {
+        // TODO: Currently we can only enable/disable structures per biome and use any configuration options exposed by the vanilla structure
+        // classes (size for villages fe). If we want to be able to customise more, we'll need to implement our own structure classes.
+        // TODO: Allow users to create their own jigsaw patterns (for villages, end cities, pillager outposts etc)?
+        // TODO: Fossils?
+        // TODO: Amethyst Geodes (1.17?)
+        // TODO: Misc structures: These structures generate even when the "Generate structures" world option is disabled, and also cannot be located with the /locate command.
+        // - Dungeons
+        // - Desert Wells
 
-		// Villages
-		// TODO: Allow spawning multiple types in a single biome?
-		// Cutting this out for the time being - Frank
+        // Villages
+        // TODO: Allow spawning multiple types in a single biome?
+        // Cutting this out for the time being - Frank
 		/*if (worldConfig.getVillagesEnabled() && biomeConfig.getVillageType() != SettingsEnums.VillageType.disabled)
 		{
 			int villageSize = biomeConfig.getVillageSize();
@@ -473,50 +453,43 @@ public class PaperBiome implements IBiome
 					break;
 			}
 		}*/
-	}
+    }
 
-	// StructureFeatures.register()
-	private static Structure register (String name, Structure structure)
-	{
-		return Registry.register(BuiltinRegistries.STRUCTURES, name, structure);
-	}
+    // StructureFeatures.register()
+    private static Structure register(String name, Structure structure) {
+        return Registry.register(BuiltinRegistries.STRUCTURES, name, structure);
+    }
 
-	private static MobSpawnSettings.Builder createMobSpawnInfo (IBiomeConfig biomeConfig)
-	{
-		MobSpawnSettings.Builder mobSpawnInfoBuilder = new MobSpawnSettings.Builder();
-		addMobGroup(MobCategory.MONSTER, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.MONSTER), biomeConfig.getName());
-		addMobGroup(MobCategory.CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.CREATURE), biomeConfig.getName());
-		addMobGroup(MobCategory.AMBIENT, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.AMBIENT), biomeConfig.getName());
-		addMobGroup(MobCategory.UNDERGROUND_WATER_CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.UNDERGROUND_WATER_CREATURE), biomeConfig.getName());
-		addMobGroup(MobCategory.WATER_CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.WATER_CREATURE), biomeConfig.getName());
-		addMobGroup(MobCategory.WATER_AMBIENT, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.WATER_AMBIENT), biomeConfig.getName());
-		addMobGroup(MobCategory.MISC, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.MISC), biomeConfig.getName());
+    private static MobSpawnSettings.Builder createMobSpawnInfo(IBiomeConfig biomeConfig) {
+        MobSpawnSettings.Builder mobSpawnInfoBuilder = new MobSpawnSettings.Builder();
+        addMobGroup(MobCategory.MONSTER, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.MONSTER), biomeConfig.getName());
+        addMobGroup(MobCategory.CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.CREATURE), biomeConfig.getName());
+        addMobGroup(MobCategory.AMBIENT, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.AMBIENT), biomeConfig.getName());
+        addMobGroup(MobCategory.UNDERGROUND_WATER_CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.UNDERGROUND_WATER_CREATURE), biomeConfig.getName());
+        addMobGroup(MobCategory.WATER_CREATURE, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.WATER_CREATURE), biomeConfig.getName());
+        addMobGroup(MobCategory.WATER_AMBIENT, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.WATER_AMBIENT), biomeConfig.getName());
+        addMobGroup(MobCategory.MISC, mobSpawnInfoBuilder, biomeConfig.getSpawnList(EntityCategory.MISC), biomeConfig.getName());
 
-		// This functionality must've been removed? - Frank
-		//mobSpawnInfoBuilder.setPlayerCanSpawn();
-		return mobSpawnInfoBuilder;
-	}
+        // This functionality must've been removed? - Frank
+        //mobSpawnInfoBuilder.setPlayerCanSpawn();
+        return mobSpawnInfoBuilder;
+    }
 
-	private static void addMobGroup(MobCategory creatureType, MobSpawnSettings.Builder mobSpawnInfoBuilder, List<WeightedMobSpawnGroup> mobSpawnGroupList, String biomeName)
-	{
-		for (WeightedMobSpawnGroup mobSpawnGroup : mobSpawnGroupList)
-		{
-			Optional<EntityType<?>> entityType = EntityType.byString(mobSpawnGroup.getInternalName());
-			if (entityType.isPresent())
-			{
-				mobSpawnInfoBuilder.addSpawn(creatureType, new MobSpawnSettings.SpawnerData(entityType.get(), mobSpawnGroup.getWeight(), mobSpawnGroup.getMin(), mobSpawnGroup.getMax()));
-			} else {
-				if(OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.MOBS))
-				{
-					OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MOBS, "Could not find entity for mob: " + mobSpawnGroup.getMob() + " in BiomeConfig " + biomeName);
-				}
-			}
-		}
-	}
+    private static void addMobGroup(MobCategory creatureType, MobSpawnSettings.Builder mobSpawnInfoBuilder, List<WeightedMobSpawnGroup> mobSpawnGroupList, String biomeName) {
+        for (WeightedMobSpawnGroup mobSpawnGroup : mobSpawnGroupList) {
+            Optional<EntityType<?>> entityType = EntityType.byString(mobSpawnGroup.getInternalName());
+            if (entityType.isPresent()) {
+                mobSpawnInfoBuilder.addSpawn(creatureType, new MobSpawnSettings.SpawnerData(entityType.get(), mobSpawnGroup.getWeight(), mobSpawnGroup.getMin(), mobSpawnGroup.getMax()));
+            } else {
+                if (OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.MOBS)) {
+                    OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.MOBS, "Could not find entity for mob: " + mobSpawnGroup.getMob() + " in BiomeConfig " + biomeName);
+                }
+            }
+        }
+    }
 
-	@Override
-	public float getTemperatureAt (int x, int y, int z)
-	{
-		return this.biomeBase.getTemperature(new BlockPos(x, y, z));
-	}
+    @Override
+    public float getTemperatureAt(int x, int y, int z) {
+        return this.biomeBase.getTemperature(new BlockPos(x, y, z));
+    }
 }

@@ -16,13 +16,11 @@ import java.util.Random;
 // setting implement their own processForChunkDecoration/spawnForChunkDecoration logic.
 // * Note: Resources that use custom objects like CustomObject/CustomStructure/Tree/Sapling are in
 // the common-customobject project.
-public interface IBasicResource
-{
-	default void processForChunkDecoration(IWorldGenRegion worldGenregion, Random random, ILogger logger, IMaterialReader materialReader)
-	{
-		// TODO: Fire Forge resource decoration events, when they're available.
-		spawnForChunkDecoration(worldGenregion, random, logger, materialReader);
-	}
+public interface IBasicResource {
+    default void processForChunkDecoration(IWorldGenRegion worldGenregion, Random random, ILogger logger, IMaterialReader materialReader) {
+        // TODO: Fire Forge resource decoration events, when they're available.
+        spawnForChunkDecoration(worldGenregion, random, logger, materialReader);
+    }
 
-	void spawnForChunkDecoration(IWorldGenRegion worldGenRegion, Random random, ILogger logger, IMaterialReader materialReader);
+    void spawnForChunkDecoration(IWorldGenRegion worldGenRegion, Random random, ILogger logger, IMaterialReader materialReader);
 }

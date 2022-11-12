@@ -6,8 +6,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 // Only used for Modpack world creation menu atm
 @EventBusSubscriber(modid = Constants.MOD_ID_SHORT, value = Dist.CLIENT)
-public class GuiHandler
-{
+public class GuiHandler {
 	/*
 	@SubscribeEvent
 	public static void onGuiOpen(GuiOpenEvent event)

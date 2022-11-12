@@ -79,7 +79,8 @@ public class BerryBush {
                     worldGenregion.setBlock(x, y, z, LocalMaterials.BERRY_BUSH.withProperty(MaterialProperties.AGE_0_3, random.nextInt(4)));
                 } else {
                     plant.spawn(worldGenregion, x, y, z);
-                }            }
+                }
+            }
         }
 
     }

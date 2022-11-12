@@ -2,13 +2,13 @@ package com.pg85.otg.util.minecraft;
 
 public class LegacyRegistry {
     /*
-    * I've created this class to bridge 1.16 Registry() keywords
-    * In 1.18, they renamed many of the Registry() resource locations
-    * This class is not intended as a perfect conversion,
-    * but we can do our best.
-    * If something looks completely off and there is a better way to
-    * do this, please DM me on Discord.
-    * - Frank
+     * I've created this class to bridge 1.16 Registry() keywords
+     * In 1.18, they renamed many of the Registry() resource locations
+     * This class is not intended as a perfect conversion,
+     * but we can do our best.
+     * If something looks completely off and there is a better way to
+     * do this, please DM me on Discord.
+     * - Frank
      */
     public static String convertLegacyResourceLocation(String old) {
         old = old.replace("minecraft:", "");

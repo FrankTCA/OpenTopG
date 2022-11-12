@@ -10,43 +10,38 @@ import java.util.Random;
 /**
  * Represents a block in a BO3.
  */
-public class BO3BlockFunction extends BlockFunction<BO3Config>
-{
-	public BO3BlockFunction() { }
-	
-	public BO3BlockFunction(BO3Config holder)
-	{
-		this.holder = holder;
-	}
-	
-	public BO3BlockFunction rotate()
-	{
-		BO3BlockFunction rotatedBlock = new BO3BlockFunction();
-		rotatedBlock.x = z;
-		rotatedBlock.y = y;
-		rotatedBlock.z = -x;
-		rotatedBlock.material = material.rotate();
-		rotatedBlock.nbt = nbt;
-		rotatedBlock.nbtName = nbtName;
+public class BO3BlockFunction extends BlockFunction<BO3Config> {
+    public BO3BlockFunction() {
+    }
 
-		return rotatedBlock;
-	}
+    public BO3BlockFunction(BO3Config holder) {
+        this.holder = holder;
+    }
 
-	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z)
-	{
-		worldGenRegion.setBlock(x, y, z, this.material, this.nbt);			
-	}	
-	
-	@Override
-	public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks)
-	{
-		worldGenRegion.setBlock(x, y, z, this.material, this.nbt, replaceBlocks);
-	}
+    public BO3BlockFunction rotate() {
+        BO3BlockFunction rotatedBlock = new BO3BlockFunction();
+        rotatedBlock.x = z;
+        rotatedBlock.y = y;
+        rotatedBlock.z = -x;
+        rotatedBlock.material = material.rotate();
+        rotatedBlock.nbt = nbt;
+        rotatedBlock.nbtName = nbtName;
 
-	@Override
-	public Class<BO3Config> getHolderType()
-	{
-		return BO3Config.class;
-	}
+        return rotatedBlock;
+    }
+
+    @Override
+    public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z) {
+        worldGenRegion.setBlock(x, y, z, this.material, this.nbt);
+    }
+
+    @Override
+    public void spawn(IWorldGenRegion worldGenRegion, Random random, int x, int y, int z, ReplaceBlockMatrix replaceBlocks) {
+        worldGenRegion.setBlock(x, y, z, this.material, this.nbt, replaceBlocks);
+    }
+
+    @Override
+    public Class<BO3Config> getHolderType() {
+        return BO3Config.class;
+    }
 }

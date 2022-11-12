@@ -11,60 +11,50 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 
-public class PaperChunkBuffer extends ChunkBuffer
-{
-	private final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-	private ChunkCoordinate chunkCoord = null;
-	private ChunkGenerator.ChunkData chunkData = null;
-	private ChunkAccess chunk = null;
+public class PaperChunkBuffer extends ChunkBuffer {
+    private final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+    private ChunkCoordinate chunkCoord = null;
+    private ChunkGenerator.ChunkData chunkData = null;
+    private ChunkAccess chunk = null;
 
-	public PaperChunkBuffer(ChunkAccess chunk)
-	{
-		this.chunk = chunk;
-	}
+    public PaperChunkBuffer(ChunkAccess chunk) {
+        this.chunk = chunk;
+    }
 
-	public PaperChunkBuffer(ChunkGenerator.ChunkData chunkData, ChunkCoordinate chunkCoord)
-	{
-		this.chunkCoord = chunkCoord;
-		this.chunkData = chunkData;
-	}
+    public PaperChunkBuffer(ChunkGenerator.ChunkData chunkData, ChunkCoordinate chunkCoord) {
+        this.chunkCoord = chunkCoord;
+        this.chunkData = chunkData;
+    }
 
-	@Override
-	public ChunkCoordinate getChunkCoordinate ()
-	{
-		if (chunkData != null)
-		{
-			return chunkCoord;
-		}
-		ChunkPos pos = this.chunk.getPos();
-		return ChunkCoordinate.fromChunkCoords(pos.x, pos.z);
-	}
+    @Override
+    public ChunkCoordinate getChunkCoordinate() {
+        if (chunkData != null) {
+            return chunkCoord;
+        }
+        ChunkPos pos = this.chunk.getPos();
+        return ChunkCoordinate.fromChunkCoords(pos.x, pos.z);
+    }
 
-	@Override
-	public void setBlock (int blockX, int blockY, int blockZ, LocalMaterialData material)
-	{
-		if (chunkData != null)
-		{
-			this.chunkData.setBlock(blockX, blockY, blockZ, ((PaperMaterialData) material).toSpigotBlockData());
-		} else {
-			this.chunk.setBlockState(this.mutable.set(blockX, blockY, blockZ), ((PaperMaterialData) material).internalBlock(), false);
-		}
-	}
+    @Override
+    public void setBlock(int blockX, int blockY, int blockZ, LocalMaterialData material) {
+        if (chunkData != null) {
+            this.chunkData.setBlock(blockX, blockY, blockZ, ((PaperMaterialData) material).toSpigotBlockData());
+        } else {
+            this.chunk.setBlockState(this.mutable.set(blockX, blockY, blockZ), ((PaperMaterialData) material).internalBlock(), false);
+        }
+    }
 
-	@Override
-	public LocalMaterialData getBlock (int blockX, int blockY, int blockZ)
-	{
-		if (chunkData != null)
-		{
-			Material material = this.chunkData.getType(blockX, blockY, blockZ);
-			return PaperMaterialData.ofSpigotMaterial(material);
-		}
-		BlockState blockData = this.chunk.getBlockState(this.mutable.set(blockX, blockY, blockZ));
-		return PaperMaterialData.ofBlockData(blockData);
-	}
+    @Override
+    public LocalMaterialData getBlock(int blockX, int blockY, int blockZ) {
+        if (chunkData != null) {
+            Material material = this.chunkData.getType(blockX, blockY, blockZ);
+            return PaperMaterialData.ofSpigotMaterial(material);
+        }
+        BlockState blockData = this.chunk.getBlockState(this.mutable.set(blockX, blockY, blockZ));
+        return PaperMaterialData.ofBlockData(blockData);
+    }
 
-	public ChunkAccess getChunk()
-	{
-		return this.chunk;
-	}
+    public ChunkAccess getChunk() {
+        return this.chunk;
+    }
 }

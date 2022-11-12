@@ -28,187 +28,162 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 
-public class MCWorldGenRegion extends ForgeWorldGenRegion
-{
-	/** 
-	 * Creates a LocalWorldGenRegion to be used for non-OTG worlds, used for /otg spawn/edit/export.
-	 * Cannot use any functionality requiring OTGNoiseChhunkGenerator or OTGBiomeProvider 
-	 * */
-	public MCWorldGenRegion(String presetFolderName, IWorldConfig worldConfig, WorldGenLevel worldGenRegion)
-	{
-		super(presetFolderName, worldConfig, worldGenRegion);
-	}
+public class MCWorldGenRegion extends ForgeWorldGenRegion {
+    /**
+     * Creates a LocalWorldGenRegion to be used for non-OTG worlds, used for /otg spawn/edit/export.
+     * Cannot use any functionality requiring OTGNoiseChhunkGenerator or OTGBiomeProvider
+     */
+    public MCWorldGenRegion(String presetFolderName, IWorldConfig worldConfig, WorldGenLevel worldGenRegion) {
+        super(presetFolderName, worldConfig, worldGenRegion);
+    }
 
-	@Override
-	public IBiome getBiomeForDecoration(int worldX, int worldZ)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}
-	
-	@Override
-	public IBiomeConfig getBiomeConfigForDecoration(int worldX, int worldZ)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}
+    @Override
+    public IBiome getBiomeForDecoration(int worldX, int worldZ) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
 
-	@Override
-	public double getBiomeBlocksNoiseValue(int blockX, int blockZ)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}
+    @Override
+    public IBiomeConfig getBiomeConfigForDecoration(int worldX, int worldZ) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
 
-	@Override
-	public LocalMaterialData getMaterial(int x, int y, int z)
-	{
-		if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH)
-		{
-			return null;
-		}
+    @Override
+    public double getBiomeBlocksNoiseValue(int blockX, int blockZ) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
 
-		ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
+    @Override
+    public LocalMaterialData getMaterial(int x, int y, int z) {
+        if (y >= Constants.WORLD_HEIGHT || y < Constants.WORLD_DEPTH) {
+            return null;
+        }
 
-		ChunkAccess chunk = this.worldGenRegion.hasChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) ? this.worldGenRegion.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) : null;
-		
-		// Tried to query an unloaded chunk outside the area being decorated
-		if(chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS))
-		{
-			return null;
-		}
+        ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
 
-		// Get internal coordinates for block in chunk
-		int internalX = x & 0xF;
-		int internalZ = z & 0xF;
-		return ForgeMaterialData.ofBlockState(chunk.getBlockState(new BlockPos(internalX, y, internalZ)));
-	}
-	
-	@Override
-	public int getHighestBlockYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
-	{
-		ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
-		
-		// If the chunk exists or is inside the area being decorated, fetch it normally.
-		ChunkAccess chunk = this.worldGenRegion.hasChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) ? this.worldGenRegion.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) : null;
-		
-		// Tried to query an unloaded chunk outside the area being decorated
-		if(chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS))
-		{
-			return -1;
-		}
+        ChunkAccess chunk = this.worldGenRegion.hasChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) ? this.worldGenRegion.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) : null;
 
-		// Get internal coordinates for block in chunk
-		int internalX = x & 0xF;
-		int internalZ = z & 0xF;	
-		int heightMapy = chunk.getHeight(Types.WORLD_SURFACE, internalX, internalZ);
-		
-		return getHighestBlockYAt(chunk, internalX, heightMapy, internalZ, findSolid, findLiquid, ignoreLiquid, ignoreSnow, ignoreLeaves);
-	}
-	
-	@Override
-	public void setBlock(int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix)
-	{
-		if(y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT)
-		{
-			return;
-		}
+        // Tried to query an unloaded chunk outside the area being decorated
+        if (chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)) {
+            return null;
+        }
 
-		if(material.isEmpty())
-		{
-			// Happens when configs contain blocks that don't exist.
-			// TODO: Catch this earlier up the chain, avoid doing work?
-			return;
-		}
+        // Get internal coordinates for block in chunk
+        int internalX = x & 0xF;
+        int internalZ = z & 0xF;
+        return ForgeMaterialData.ofBlockState(chunk.getBlockState(new BlockPos(internalX, y, internalZ)));
+    }
 
-		BlockPos pos = new BlockPos(x, y, z);
-		this.worldGenRegion.setBlock(pos, ((ForgeMaterialData)material).internalBlock(), 2 | 16);
+    @Override
+    public int getHighestBlockYAt(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves) {
+        ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
 
-		if (material.isLiquid())
-		{
-			this.worldGenRegion.scheduleTick(pos, ((ForgeMaterialData)material).internalBlock().getFluidState().getType(), 0);
-		}
+        // If the chunk exists or is inside the area being decorated, fetch it normally.
+        ChunkAccess chunk = this.worldGenRegion.hasChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) ? this.worldGenRegion.getChunk(chunkCoord.getChunkX(), chunkCoord.getChunkZ()) : null;
 
-		if (nbt != null)
-		{
-			this.attachNBT(x, y, z, nbt);
-		}
-	}
+        // Tried to query an unloaded chunk outside the area being decorated
+        if (chunk == null || !chunk.getStatus().isOrAfter(ChunkStatus.LIQUID_CARVERS)) {
+            return -1;
+        }
 
-	private void attachNBT(int x, int y, int z, NamedBinaryTag nbt)
-	{
-		CompoundTag nms = ForgeNBTHelper.getNMSFromNBTTagCompound(nbt);
-		nms.put("x", IntTag.valueOf(x));
-		nms.put("y", IntTag.valueOf(y));
-		nms.put("z", IntTag.valueOf(z));
+        // Get internal coordinates for block in chunk
+        int internalX = x & 0xF;
+        int internalZ = z & 0xF;
+        int heightMapy = chunk.getHeight(Types.WORLD_SURFACE, internalX, internalZ);
 
-		BlockEntity tileEntity = this.worldGenRegion.getBlockEntity(new BlockPos(x, y, z));
-		if (tileEntity != null)
-		{
-			try {
-				tileEntity.deserializeNBT(nms);
-			} catch (JsonSyntaxException e) {
-				if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
-				{
-					this.logger.log(
-						LogLevel.ERROR,
-						LogCategory.CUSTOM_OBJECTS,
-						MessageFormat.format(
-							"Badly formatted json for tile entity with id '{0}' at {1},{2},{3}", 
-							nms.getString("id"), 
-							x, y, z
-						)
-					);
-				}
-			}
-		} else {
-			if(this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS))
-			{
-				this.logger.log(
-					LogLevel.ERROR,
-					LogCategory.CUSTOM_OBJECTS,
-					MessageFormat.format(
-						"Skipping tile entity with id {0}, cannot be placed at {1},{2},{3}", 
-						nms.getString("id"), 
-						x, y, z
-					)
-				);
-			}
-		}
-	}
-	
-	@Override
-	public boolean placeTree(TreeType type, Random rand, int x, int y, int z)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}
-	
-	@Override
-	public void placeDungeon(Random random, int x, int y, int z)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");		
-	}
+        return getHighestBlockYAt(chunk, internalX, heightMapy, internalZ, findSolid, findLiquid, ignoreLiquid, ignoreSnow, ignoreLeaves);
+    }
 
-	@Override
-	public void placeFossil(Random random, int x, int y, int z)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");		
-	}
-	
-	// Shadowgen
-	
-	@Override
-	public LocalMaterialData getMaterialWithoutLoading(int x, int y, int z)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}	
-	
-	@Override
-	public int getHighestBlockYAtWithoutLoading(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}	
-	
-	@Override
-	public boolean chunkHasDefaultStructure(Random worldRandom, ChunkCoordinate chunkCoordinate)
-	{
-		throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
-	}
+    @Override
+    public void setBlock(int x, int y, int z, LocalMaterialData material, NamedBinaryTag nbt, ReplaceBlockMatrix replaceBlocksMatrix) {
+        if (y < Constants.WORLD_DEPTH || y >= Constants.WORLD_HEIGHT) {
+            return;
+        }
+
+        if (material.isEmpty()) {
+            // Happens when configs contain blocks that don't exist.
+            // TODO: Catch this earlier up the chain, avoid doing work?
+            return;
+        }
+
+        BlockPos pos = new BlockPos(x, y, z);
+        this.worldGenRegion.setBlock(pos, ((ForgeMaterialData) material).internalBlock(), 2 | 16);
+
+        if (material.isLiquid()) {
+            this.worldGenRegion.scheduleTick(pos, ((ForgeMaterialData) material).internalBlock().getFluidState().getType(), 0);
+        }
+
+        if (nbt != null) {
+            this.attachNBT(x, y, z, nbt);
+        }
+    }
+
+    private void attachNBT(int x, int y, int z, NamedBinaryTag nbt) {
+        CompoundTag nms = ForgeNBTHelper.getNMSFromNBTTagCompound(nbt);
+        nms.put("x", IntTag.valueOf(x));
+        nms.put("y", IntTag.valueOf(y));
+        nms.put("z", IntTag.valueOf(z));
+
+        BlockEntity tileEntity = this.worldGenRegion.getBlockEntity(new BlockPos(x, y, z));
+        if (tileEntity != null) {
+            try {
+                tileEntity.deserializeNBT(nms);
+            } catch (JsonSyntaxException e) {
+                if (this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS)) {
+                    this.logger.log(
+                            LogLevel.ERROR,
+                            LogCategory.CUSTOM_OBJECTS,
+                            MessageFormat.format(
+                                    "Badly formatted json for tile entity with id '{0}' at {1},{2},{3}",
+                                    nms.getString("id"),
+                                    x, y, z
+                            )
+                    );
+                }
+            }
+        } else {
+            if (this.logger.getLogCategoryEnabled(LogCategory.CUSTOM_OBJECTS)) {
+                this.logger.log(
+                        LogLevel.ERROR,
+                        LogCategory.CUSTOM_OBJECTS,
+                        MessageFormat.format(
+                                "Skipping tile entity with id {0}, cannot be placed at {1},{2},{3}",
+                                nms.getString("id"),
+                                x, y, z
+                        )
+                );
+            }
+        }
+    }
+
+    @Override
+    public boolean placeTree(TreeType type, Random rand, int x, int y, int z) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
+
+    @Override
+    public void placeDungeon(Random random, int x, int y, int z) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
+
+    @Override
+    public void placeFossil(Random random, int x, int y, int z) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
+
+    // Shadowgen
+
+    @Override
+    public LocalMaterialData getMaterialWithoutLoading(int x, int y, int z) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
+
+    @Override
+    public int getHighestBlockYAtWithoutLoading(int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, boolean ignoreLeaves) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
+
+    @Override
+    public boolean chunkHasDefaultStructure(Random worldRandom, ChunkCoordinate chunkCoordinate) {
+        throw new NotImplementedException("This method is not available for non-OTG worlds, you're trying to use an unsupported feature.");
+    }
 }

@@ -10,11 +10,11 @@ import com.pg85.otg.util.bo3.Rotation;
 /**
  * Represents CustomObjects that can have other objects attached
  * to it making a structure.
- *
  */
-public interface StructuredCustomObject extends CustomObject, IStructuredCustomObject
-{
-	ObjectType getType();
-	CustomObjectConfigFile getConfig();
-	BoundingBox getBoundingBox(Rotation north);
+public interface StructuredCustomObject extends CustomObject, IStructuredCustomObject {
+    ObjectType getType();
+
+    CustomObjectConfigFile getConfig();
+
+    BoundingBox getBoundingBox(Rotation north);
 }

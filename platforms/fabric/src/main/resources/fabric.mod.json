@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "otg",
   "version": "${version}",
-
   "name": "Example Mod",
   "description": "OTG: Generate anything!",
   "authors": [
@@ -12,10 +11,8 @@
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-
   "license": "MIT",
   "icon": "OTGlogo.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -25,7 +22,6 @@
   "mixins": [
     "otg-fabric.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric": "*",

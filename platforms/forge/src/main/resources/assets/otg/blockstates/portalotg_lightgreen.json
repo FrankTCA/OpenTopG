@@ -1,6 +1,10 @@
 {
-	"variants": {
-        "axis=z": { "model": "otg:block/portalotg_lightgreen_ew" },
-        "axis=x": { "model": "otg:block/portalotg_lightgreen_ns" }
+  "variants": {
+    "axis=z": {
+      "model": "otg:block/portalotg_lightgreen_ew"
+    },
+    "axis=x": {
+      "model": "otg:block/portalotg_lightgreen_ns"
     }
+  }
 }

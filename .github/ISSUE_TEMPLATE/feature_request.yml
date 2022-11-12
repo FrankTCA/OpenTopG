@@ -1,8 +1,7 @@
-
 name: Feature Request
 description: Suggest an improvement or request a feature.
 title: "[Feature Request]: "
-labels: ["Feature", "Needs validation"]
+labels: [ "Feature", "Needs validation" ]
 assignees:
   - SXRWahrheit
 
@@ -23,8 +22,8 @@ body:
       label: Is there an existing issue for this?
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
-      - label: I have searched the existing issues
-        required: true
+        - label: I have searched the existing issues
+          required: true
 
   - type: textarea
     attributes:

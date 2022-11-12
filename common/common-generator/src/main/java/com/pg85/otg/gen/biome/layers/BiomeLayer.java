@@ -14,84 +14,70 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Places the biomes at a specific depth, given the biome groups.
  */
-class BiomeLayer extends BiomeLayerBase
-{
-	protected final ConcurrentMap<NewBiomeGroup, Map<Integer, BiomeData>> groupBiomes = new ConcurrentHashMap<>();
+class BiomeLayer extends BiomeLayerBase {
+    protected final ConcurrentMap<NewBiomeGroup, Map<Integer, BiomeData>> groupBiomes = new ConcurrentHashMap<>();
 
-	BiomeLayer(BiomeLayerData data, int depth)
-	{
-		super(data, depth);
+    BiomeLayer(BiomeLayerData data, int depth) {
+        super(data, depth);
 
-		// Iterate through all of the groups
-		for (Map.Entry<Integer, List<NewBiomeGroup>> entry : data.groups.entrySet())
-		{
-			for (NewBiomeGroup group : entry.getValue())
-			{
-				int cumulativeRarity = 0;
+        // Iterate through all of the groups
+        for (Map.Entry<Integer, List<NewBiomeGroup>> entry : data.groups.entrySet()) {
+            for (NewBiomeGroup group : entry.getValue()) {
+                int cumulativeRarity = 0;
 
-				Map<Integer, BiomeData> biomes = new TreeMap<>();
+                Map<Integer, BiomeData> biomes = new TreeMap<>();
 
-				for (BiomeData biome : group.biomes)
-				{
-					if (depth == biome.biomeSize)
-					{
-						cumulativeRarity += biome.rarity;
-						biomes.put(cumulativeRarity, biome);
-					}
-				}
+                for (BiomeData biome : group.biomes) {
+                    if (depth == biome.biomeSize) {
+                        cumulativeRarity += biome.rarity;
+                        biomes.put(cumulativeRarity, biome);
+                    }
+                }
 
-				if (cumulativeRarity > 0)
-				{
-					this.groupBiomes.put(group, biomes);
-				}
-			}
-		}
-	}
+                if (cumulativeRarity > 0) {
+                    this.groupBiomes.put(group, biomes);
+                }
+            }
+        }
+    }
 
-	@Override
-	public int sample(LayerSampleContext<?> context, ILayerSampler parent, int x, int z)
-	{
-		int sample = parent.sample(x, z);
+    @Override
+    public int sample(LayerSampleContext<?> context, ILayerSampler parent, int x, int z) {
+        int sample = parent.sample(x, z);
 
-		if (
-			// If biome bits have not yet been set (this column has not been cached), do so now.
-			(sample & BiomeLayers.GROUP_BITS) != 0 &&
-			(sample & BiomeLayers.BIOME_BITS) == 0
-		)
-		{
-			int biomeGroupId = BiomeLayers.getGroupId(sample);
-			if (biomeGroupId > 0)
-			{
-				NewBiomeGroup group = this.data.groupRegistry.get(biomeGroupId);
-				if (group.maxRarityPerDepth[depth] != 0 && this.groupBiomes.containsKey(group))
-				{
-					BiomeData biomeData = getBiomeFromGroup(context, group.maxRarityPerDepth[depth], this.groupBiomes.get(group));
-					return sample | biomeData.id |
-						// Set IceBit based on Biome Temperature
-						(biomeData.biomeTemperature <= this.data.frozenOceanTemperature ? BiomeLayers.ICE_BIT : 0)
-					;
-				}
-			}
-		}
+        if (
+            // If biome bits have not yet been set (this column has not been cached), do so now.
+                (sample & BiomeLayers.GROUP_BITS) != 0 &&
+                        (sample & BiomeLayers.BIOME_BITS) == 0
+        ) {
+            int biomeGroupId = BiomeLayers.getGroupId(sample);
+            if (biomeGroupId > 0) {
+                NewBiomeGroup group = this.data.groupRegistry.get(biomeGroupId);
+                if (group.maxRarityPerDepth[depth] != 0 && this.groupBiomes.containsKey(group)) {
+                    BiomeData biomeData = getBiomeFromGroup(context, group.maxRarityPerDepth[depth], this.groupBiomes.get(group));
+                    return sample | biomeData.id |
+                            // Set IceBit based on Biome Temperature
+                            (biomeData.biomeTemperature <= this.data.frozenOceanTemperature ? BiomeLayers.ICE_BIT : 0)
+                            ;
+                }
+            }
+        }
 
-		return sample;
-	}
+        return sample;
+    }
 
-	private BiomeData getBiomeFromGroup(LayerRandomnessSource random, int maxRarity, Map<Integer, BiomeData> rarityMap)
-	{
-		// Get a random rarity number from our max rarity
-		int chosenRarity = random.nextInt(maxRarity);
+    private BiomeData getBiomeFromGroup(LayerRandomnessSource random, int maxRarity, Map<Integer, BiomeData> rarityMap) {
+        // Get a random rarity number from our max rarity
+        int chosenRarity = random.nextInt(maxRarity);
 
-		// Iterate through the rarity map and see if the chosen rarity is less than the rarity for each group, if it is then return.
-		for (Map.Entry<Integer, BiomeData> entry : rarityMap.entrySet())
-		{
-			if (chosenRarity < entry.getKey())
-			{
-				return entry.getValue();
-			}
-		}
+        // Iterate through the rarity map and see if the chosen rarity is less than the rarity for each group, if it is then return.
+        for (Map.Entry<Integer, BiomeData> entry : rarityMap.entrySet()) {
+            if (chosenRarity < entry.getKey()) {
+                return entry.getValue();
+            }
+        }
 
-		// Fallback
-		return this.data.oceanBiomeData;
-	}
+        // Fallback
+        return this.data.oceanBiomeData;
+    }
 }

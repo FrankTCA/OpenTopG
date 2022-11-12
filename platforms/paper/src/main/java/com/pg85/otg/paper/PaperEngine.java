@@ -11,50 +11,44 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class PaperEngine extends OTGEngine
-{
-	private final OTGPlugin plugin;
+public class PaperEngine extends OTGEngine {
+    private final OTGPlugin plugin;
 
-	protected PaperEngine(OTGPlugin plugin)
-	{
-		super(
-			new PaperLogger(),
-			plugin.getDataFolder().toPath(),
-			new PaperPluginLoadedChecker(),
-			new PaperPresetLoader(plugin.getDataFolder())
-		);
-		this.plugin = plugin;
-	}
+    protected PaperEngine(OTGPlugin plugin) {
+        super(
+                new PaperLogger(),
+                plugin.getDataFolder().toPath(),
+                new PaperPluginLoadedChecker(),
+                new PaperPresetLoader(plugin.getDataFolder())
+        );
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void onStart()
-	{
-		PaperMaterials.init();
-		super.onStart();
-	}
+    @Override
+    public void onStart() {
+        PaperMaterials.init();
+        super.onStart();
+    }
 
-	public OTGPlugin getPlugin()
-	{
-		return this.plugin;
-	}
+    public OTGPlugin getPlugin() {
+        return this.plugin;
+    }
 
-	@Override
-	public File getJarFile()
-	{
-		String fileName = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-		// URLEncoded string, decode.
-		try {
-			fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException e) { }
-		
-		if(fileName != null)
-		{
-			File modFile = new File(fileName);
-			if(modFile.isFile())
-			{
-				return modFile;
-			}
-		}
-		return null;
-	}
+    @Override
+    public File getJarFile() {
+        String fileName = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
+        // URLEncoded string, decode.
+        try {
+            fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+        }
+
+        if (fileName != null) {
+            File modFile = new File(fileName);
+            if (modFile.isFile()) {
+                return modFile;
+            }
+        }
+        return null;
+    }
 }
