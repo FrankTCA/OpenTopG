@@ -167,15 +167,15 @@ public class WeightedMobSpawnGroup
 	 */
 	private void toJson(StringBuilder json)
 	{
-		json.append("{\"mob\": \"");			 
-		json.append(getInternalName());
-		json.append("\", \"weight\": ");
-		json.append(getWeight());
-		json.append(", \"min\": ");
-		json.append(getMin());
-		json.append(", \"max\": ");
-		json.append(getMax());
-		json.append('}');
+		json.append("{\"mob\": \"")
+			.append(getInternalName())
+			.append("\", \"weight\": ")
+			.append(getWeight())
+			.append(", \"min\": ")
+			.append(getMin())
+			.append(", \"max\": ")
+			.append(getMax())
+			.append('}');
 	}
 
 	@Override

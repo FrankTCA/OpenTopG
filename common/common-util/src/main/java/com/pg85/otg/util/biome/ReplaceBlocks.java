@@ -127,11 +127,11 @@ public final class ReplaceBlocks
 	 */
 	private void toJson(StringBuilder json)
 	{
-		json.append("{\"");
-		json.append(sourceBlock);
-		json.append("\":\"");
-		json.append(targetBlock);
-		json.append("\"}");
+		json.append("{\"")
+			.append(sourceBlock)
+			.append("\":\"")
+			.append(targetBlock)
+			.append("\"}");
 	}
 
 	@Override
