@@ -1,15 +1,5 @@
 package com.pg85.otg.customobject.structures.bo4.smoothing;
 
-import java.awt.geom.Point2D;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo4.BO4;
 import com.pg85.otg.customobject.bo4.BO4Config;
@@ -27,6 +17,16 @@ import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.materials.LocalMaterialData;
+
+import java.awt.geom.Point2D;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class SmoothingAreaGenerator
 { 

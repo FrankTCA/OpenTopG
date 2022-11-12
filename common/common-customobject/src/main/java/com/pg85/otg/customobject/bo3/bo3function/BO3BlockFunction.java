@@ -1,11 +1,11 @@
 package com.pg85.otg.customobject.bo3.bo3function;
 
-import java.util.Random;
-
 import com.pg85.otg.customobject.bo3.BO3Config;
 import com.pg85.otg.customobject.bofunctions.BlockFunction;
 import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
+
+import java.util.Random;
 
 /**
  * Represents a block in a BO3.

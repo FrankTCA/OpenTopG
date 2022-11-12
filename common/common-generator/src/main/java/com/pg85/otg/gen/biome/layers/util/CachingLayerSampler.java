@@ -1,11 +1,10 @@
 package com.pg85.otg.gen.biome.layers.util;
 
-import java.util.Arrays;
-
 import com.pg85.otg.interfaces.ILayerSampler;
 import com.pg85.otg.util.helpers.MathHelper;
-
 import it.unimi.dsi.fastutil.HashCommon;
+
+import java.util.Arrays;
 
 public final class CachingLayerSampler implements ILayerSampler
 {

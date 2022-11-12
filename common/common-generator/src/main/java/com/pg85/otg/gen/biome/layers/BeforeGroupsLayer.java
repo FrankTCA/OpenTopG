@@ -1,12 +1,12 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.pg85.otg.gen.biome.BiomeData;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
 import com.pg85.otg.interfaces.ILayerSampler;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Places the biomes at a specific depth, given the biome groups.

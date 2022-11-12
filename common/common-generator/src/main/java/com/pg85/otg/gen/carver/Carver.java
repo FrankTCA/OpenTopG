@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.carver;
 
-import java.util.BitSet;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ICachedBiomeProvider;
@@ -14,6 +11,9 @@ import com.pg85.otg.util.gen.DecorationArea;
 import com.pg85.otg.util.helpers.MathHelper;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.BitSet;
+import java.util.Random;
 
 public abstract class Carver
 {

@@ -1,14 +1,13 @@
 package com.pg85.otg.paper.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pg85.otg.util.biome.WeightedMobSpawnGroup;
-
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MobSpawnGroupHelper
 {

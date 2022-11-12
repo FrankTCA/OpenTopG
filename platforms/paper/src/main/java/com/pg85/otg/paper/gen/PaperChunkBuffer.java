@@ -4,12 +4,10 @@ import com.pg85.otg.paper.materials.PaperMaterialData;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.gen.ChunkBuffer;
 import com.pg85.otg.util.materials.LocalMaterialData;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 

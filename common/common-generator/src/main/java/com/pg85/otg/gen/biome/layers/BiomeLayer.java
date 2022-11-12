@@ -1,16 +1,15 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.util.HashMap;
+import com.pg85.otg.gen.biome.BiomeData;
+import com.pg85.otg.gen.biome.layers.util.LayerRandomnessSource;
+import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
+import com.pg85.otg.interfaces.ILayerSampler;
+
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import com.pg85.otg.gen.biome.BiomeData;
-import com.pg85.otg.gen.biome.layers.util.LayerRandomnessSource;
-import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
-import com.pg85.otg.interfaces.ILayerSampler;
 
 /**
  * Places the biomes at a specific depth, given the biome groups.

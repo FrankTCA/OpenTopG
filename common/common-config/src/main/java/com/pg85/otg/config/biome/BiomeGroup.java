@@ -12,7 +12,9 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.BiomeRegistryNames;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Biomes are spawned in groups so that biomes of the same type are near each

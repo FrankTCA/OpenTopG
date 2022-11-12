@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.surface;
 
-import java.util.Arrays;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.gen.noise.legacy.NoiseGeneratorPerlinMesaBlocks;
 import com.pg85.otg.interfaces.IBiome;
@@ -13,6 +10,9 @@ import com.pg85.otg.util.gen.ChunkBuffer;
 import com.pg85.otg.util.gen.GeneratingChunk;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.Arrays;
+import java.util.Random;
 
 @SuppressWarnings("deprecation")
 final class MesaSurfaceGenerator implements SurfaceGenerator

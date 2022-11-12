@@ -1,12 +1,12 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-
 import com.pg85.otg.config.biome.BiomeResourceBase;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
+
+import java.util.List;
 
 public class RegistryResource  extends BiomeResourceBase
 {

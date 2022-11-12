@@ -1,8 +1,8 @@
 package com.pg85.otg.gen.resource.util;
 
-import java.util.Random;
-
 import com.google.common.collect.AbstractIterator;
+
+import java.util.Random;
 
 public class PositionHelper
 {

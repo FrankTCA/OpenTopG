@@ -8,7 +8,6 @@ import com.pg85.otg.util.logging.LogLevel;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 

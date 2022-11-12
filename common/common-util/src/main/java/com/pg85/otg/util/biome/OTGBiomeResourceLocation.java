@@ -1,9 +1,9 @@
 package com.pg85.otg.util.biome;
 
-import java.nio.file.Path;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiomeResourceLocation;
+
+import java.nio.file.Path;
 
 public class OTGBiomeResourceLocation implements IBiomeResourceLocation
 {

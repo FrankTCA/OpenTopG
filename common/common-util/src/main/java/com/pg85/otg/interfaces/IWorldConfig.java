@@ -1,16 +1,12 @@
 package com.pg85.otg.interfaces;
 
+import com.pg85.otg.constants.SettingsEnums.*;
+import com.pg85.otg.util.biome.ReplaceBlockMatrix;
+import com.pg85.otg.util.materials.LocalMaterialData;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
-
-import com.pg85.otg.constants.SettingsEnums.BiomeMode;
-import com.pg85.otg.constants.SettingsEnums.ConfigMode;
-import com.pg85.otg.constants.SettingsEnums.CustomStructureType;
-import com.pg85.otg.constants.SettingsEnums.ImageMode;
-import com.pg85.otg.constants.SettingsEnums.ImageOrientation;
-import com.pg85.otg.util.biome.ReplaceBlockMatrix;
-import com.pg85.otg.util.materials.LocalMaterialData;
 
 /**
  * WorldConfig.ini classes

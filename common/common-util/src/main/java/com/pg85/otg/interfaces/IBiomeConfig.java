@@ -1,13 +1,6 @@
 package com.pg85.otg.interfaces;
 
-import java.util.List;
-
-import com.pg85.otg.constants.SettingsEnums.GrassColorModifier;
-import com.pg85.otg.constants.SettingsEnums.MineshaftType;
-import com.pg85.otg.constants.SettingsEnums.OceanRuinsType;
-import com.pg85.otg.constants.SettingsEnums.RareBuildingType;
-import com.pg85.otg.constants.SettingsEnums.RuinedPortalType;
-import com.pg85.otg.constants.SettingsEnums.VillageType;
+import com.pg85.otg.constants.SettingsEnums.*;
 import com.pg85.otg.util.biome.ColorSet;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
 import com.pg85.otg.util.biome.WeightedMobSpawnGroup;
@@ -16,6 +9,8 @@ import com.pg85.otg.util.gen.GeneratingChunk;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.minecraft.EntityCategory;
 import com.pg85.otg.util.minecraft.SaplingType;
+
+import java.util.List;
 
 /**
  * BiomeConfig (*.bc) classes

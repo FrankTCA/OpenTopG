@@ -1,13 +1,13 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.pg85.otg.gen.biome.layers.type.ParentedLayer;
 import com.pg85.otg.gen.biome.layers.util.LayerRandomnessSource;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
 import com.pg85.otg.interfaces.ILayerSampler;
+
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Places a biome group at a certain depth.

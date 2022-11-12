@@ -1,14 +1,14 @@
 package com.pg85.otg.customobject.resource;
 
-import java.nio.file.Path;
-import java.util.Random;
-
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.interfaces.IWorldGenRegion;
+
+import java.nio.file.Path;
+import java.util.Random;
 
 public interface ICustomObjectResource
 {

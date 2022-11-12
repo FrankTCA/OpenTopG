@@ -2,8 +2,8 @@ package com.pg85.otg.util.gen;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.ICachedBiomeProvider;
 import com.pg85.otg.interfaces.IBiomeConfig;
+import com.pg85.otg.interfaces.ICachedBiomeProvider;
 import com.pg85.otg.util.ChunkCoordinate;
 
 public class DecorationBiomeCache

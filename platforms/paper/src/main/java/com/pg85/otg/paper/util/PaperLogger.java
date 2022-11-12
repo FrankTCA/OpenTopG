@@ -4,7 +4,6 @@ import com.pg85.otg.constants.Constants;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.logging.Logger;
-
 import org.apache.logging.log4j.LogManager;
 
 public class PaperLogger extends Logger

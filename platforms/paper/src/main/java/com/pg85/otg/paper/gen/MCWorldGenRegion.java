@@ -1,12 +1,5 @@
 package com.pg85.otg.paper.gen;
 
-import java.util.Random;
-
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.ticks.ScheduledTick;
-import org.apache.commons.lang.NotImplementedException;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiome;
 import com.pg85.otg.interfaces.IBiomeConfig;
@@ -17,11 +10,16 @@ import com.pg85.otg.util.biome.ReplaceBlockMatrix;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.minecraft.TreeType;
 import com.pg85.otg.util.nbt.NamedBinaryTag;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.ticks.ScheduledTick;
+import org.apache.commons.lang.NotImplementedException;
+
+import java.util.Random;
 
 public class MCWorldGenRegion extends PaperWorldGenRegion
 {

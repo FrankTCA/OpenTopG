@@ -1,10 +1,10 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.Random;
-
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
+
+import java.util.Random;
 
 // Biome resources are spawned during decoration, for each chunk being decorated, resources can
 // spawn blocks with a 2x2 chunk area (TODO: Will need to move to 3x3 for 1.16). For each resource,

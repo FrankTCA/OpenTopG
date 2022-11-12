@@ -14,7 +14,10 @@ import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.util.bo3.Rotation;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.TreeSet;
 
 /**
  * Represents the Branch(..) function in the BO3 files.

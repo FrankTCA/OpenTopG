@@ -1,19 +1,19 @@
 package com.pg85.otg.customobject.bofunctions;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.customobject.config.CustomObjectConfigFile;
 import com.pg85.otg.customobject.config.CustomObjectConfigFunction;
-import com.pg85.otg.util.nbt.NBTHelper;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
-import com.pg85.otg.util.nbt.NamedBinaryTag;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.minecraft.BlockNames;
+import com.pg85.otg.util.nbt.NBTHelper;
+import com.pg85.otg.util.nbt.NamedBinaryTag;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Represents a block in a BO3.

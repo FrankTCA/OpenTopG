@@ -1,10 +1,10 @@
 package com.pg85.otg.gen.biome.layers;
 
-import static com.pg85.otg.gen.biome.layers.BiomeLayers.LAND_BIT;
-
 import com.pg85.otg.gen.biome.layers.type.ParentedLayer;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
 import com.pg85.otg.interfaces.ILayerSampler;
+
+import static com.pg85.otg.gen.biome.layers.BiomeLayers.LAND_BIT;
 
 /**
  * Sets land based on the provided rarity.

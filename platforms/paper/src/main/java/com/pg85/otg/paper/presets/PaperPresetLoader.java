@@ -1,26 +1,5 @@
 package com.pg85.otg.paper.presets;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.OptionalInt;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import com.pg85.otg.paper.util.ObfuscationHelper;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.server.dedicated.DedicatedServer;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
 import com.mojang.serialization.Lifecycle;
 import com.pg85.otg.config.biome.BiomeConfigFinder;
 import com.pg85.otg.config.biome.BiomeGroup;
@@ -33,27 +12,36 @@ import com.pg85.otg.core.presets.Preset;
 import com.pg85.otg.gen.biome.BiomeData;
 import com.pg85.otg.gen.biome.layers.BiomeLayerData;
 import com.pg85.otg.gen.biome.layers.NewBiomeGroup;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.IBiomeResourceLocation;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IWorldConfig;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.paper.biome.PaperBiome;
 import com.pg85.otg.paper.materials.PaperMaterialReader;
 import com.pg85.otg.paper.networking.BiomeSettingSyncWrapper;
 import com.pg85.otg.paper.networking.OTGClientSyncManager;
 import com.pg85.otg.paper.util.MobSpawnGroupHelper;
+import com.pg85.otg.paper.util.ObfuscationHelper;
 import com.pg85.otg.util.biome.OTGBiomeResourceLocation;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.EntityCategory;
-
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class PaperPresetLoader extends LocalPresetLoader
 {

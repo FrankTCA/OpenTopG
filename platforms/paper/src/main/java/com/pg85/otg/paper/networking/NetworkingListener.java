@@ -1,14 +1,5 @@
 package com.pg85.otg.paper.networking;
 
-import net.minecraft.network.FriendlyByteBuf;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.presets.Preset;
@@ -17,9 +8,16 @@ import com.pg85.otg.paper.OTGPlugin;
 import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
-
 import io.netty.buffer.Unpooled;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class NetworkingListener implements Listener
 {

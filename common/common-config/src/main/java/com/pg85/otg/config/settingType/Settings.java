@@ -1,13 +1,13 @@
 package com.pg85.otg.config.settingType;
 
-import java.util.List;
-
 import com.pg85.otg.util.biome.ColorSet;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
 import com.pg85.otg.util.biome.ReplaceBlocks;
 import com.pg85.otg.util.biome.WeightedMobSpawnGroup;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.materials.MaterialSet;
+
+import java.util.List;
 
 /**
  * Acts as a factory for creating settings. Classes holding settings must

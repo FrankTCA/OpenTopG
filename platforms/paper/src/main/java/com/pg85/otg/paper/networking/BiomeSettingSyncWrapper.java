@@ -1,14 +1,13 @@
 package com.pg85.otg.paper.networking;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.util.biome.ColorSet;
 import com.pg85.otg.util.biome.ColorThreshold;
 import com.pg85.otg.util.biome.SimpleColorSet;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BiomeSettingSyncWrapper
 {

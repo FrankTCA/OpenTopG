@@ -1,10 +1,5 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
 import com.pg85.otg.constants.SettingsEnums.ImageMode;
 import com.pg85.otg.gen.biome.layers.type.ParentedLayer;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
@@ -12,6 +7,11 @@ import com.pg85.otg.interfaces.ILayerSampler;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class FromImageLayer implements ParentedLayer
 {

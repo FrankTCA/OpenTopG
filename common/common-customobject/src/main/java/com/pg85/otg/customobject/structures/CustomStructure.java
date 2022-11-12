@@ -1,7 +1,10 @@
 package com.pg85.otg.customobject.structures;
 
 import com.pg85.otg.util.ChunkCoordinate;
-import java.util.*;
+
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Represents a collection of all {@link CustomObject}s in a structure. It is

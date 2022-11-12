@@ -1,13 +1,13 @@
 package com.pg85.otg.config.biome;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Represents a BiomeConfig ResourceQueue resource. */
 public abstract class BiomeResourceBase extends ConfigFunction<IBiomeConfig>

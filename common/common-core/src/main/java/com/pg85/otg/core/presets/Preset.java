@@ -1,13 +1,13 @@
 package com.pg85.otg.core.presets;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.pg85.otg.core.config.biome.BiomeConfig;
 import com.pg85.otg.core.config.world.WorldConfig;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.IWorldConfig;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Represents an OTG preset, with all its world and biome configs, stored in /config/OpenTerrainGenerator/Presets/\<PresetName\>/.

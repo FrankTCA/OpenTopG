@@ -5,11 +5,7 @@ import com.pg85.otg.config.settingType.MaterialSetting;
 import com.pg85.otg.config.settingType.Setting;
 import com.pg85.otg.config.settingType.Settings;
 import com.pg85.otg.constants.Constants;
-import com.pg85.otg.constants.SettingsEnums.BiomeMode;
-import com.pg85.otg.constants.SettingsEnums.ConfigMode;
-import com.pg85.otg.constants.SettingsEnums.CustomStructureType;
-import com.pg85.otg.constants.SettingsEnums.ImageMode;
-import com.pg85.otg.constants.SettingsEnums.ImageOrientation;
+import com.pg85.otg.constants.SettingsEnums.*;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 

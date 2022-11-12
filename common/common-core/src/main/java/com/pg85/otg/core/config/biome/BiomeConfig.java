@@ -1,9 +1,5 @@
 package com.pg85.otg.core.config.biome;
 
-import java.nio.file.Path;
-import java.text.MessageFormat;
-import java.util.*;
-
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.config.biome.BiomeConfigFinder.BiomeConfigStub;
 import com.pg85.otg.config.io.IConfigFunctionProvider;
@@ -39,6 +35,10 @@ import com.pg85.otg.util.materials.LocalMaterials;
 import com.pg85.otg.util.minecraft.EntityCategory;
 import com.pg85.otg.util.minecraft.PlantType;
 import com.pg85.otg.util.minecraft.SaplingType;
+
+import java.nio.file.Path;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * BiomeConfig (*.bc) classes

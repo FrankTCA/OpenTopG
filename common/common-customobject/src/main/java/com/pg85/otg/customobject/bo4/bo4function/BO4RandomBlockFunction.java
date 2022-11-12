@@ -1,23 +1,23 @@
 package com.pg85.otg.customobject.bo4.bo4function;
 
+import com.pg85.otg.customobject.bo4.BO4Config;
+import com.pg85.otg.customobject.structures.bo4.BO4CustomStructureCoordinate;
+import com.pg85.otg.exceptions.InvalidConfigException;
+import com.pg85.otg.interfaces.ILogger;
+import com.pg85.otg.interfaces.IMaterialReader;
+import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.util.biome.ReplaceBlockMatrix;
+import com.pg85.otg.util.bo3.Rotation;
+import com.pg85.otg.util.materials.LocalMaterialData;
+import com.pg85.otg.util.nbt.NBTHelper;
+import com.pg85.otg.util.nbt.NamedBinaryTag;
+
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Random;
-
-import com.pg85.otg.customobject.bo4.BO4Config;
-import com.pg85.otg.customobject.structures.bo4.BO4CustomStructureCoordinate;
-import com.pg85.otg.util.nbt.NBTHelper;
-import com.pg85.otg.exceptions.InvalidConfigException;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IWorldGenRegion;
-import com.pg85.otg.util.biome.ReplaceBlockMatrix;
-import com.pg85.otg.util.nbt.NamedBinaryTag;
-import com.pg85.otg.util.bo3.Rotation;
-import com.pg85.otg.util.materials.LocalMaterialData;
 
 public class BO4RandomBlockFunction extends BO4BlockFunction
 {

@@ -1,20 +1,10 @@
 package com.pg85.otg.customobject.bo3;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import com.pg85.otg.config.standard.WorldStandardValues;
 import com.pg85.otg.constants.SettingsEnums.ConfigMode;
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo2.BO2;
-import com.pg85.otg.customobject.bo3.bo3function.BO3BlockFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3BranchFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3EntityFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3RandomBlockFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3WeightedBranchFunction;
+import com.pg85.otg.customobject.bo3.bo3function.*;
 import com.pg85.otg.customobject.bo3.checks.BO3Check;
 import com.pg85.otg.customobject.bo3.checks.BlockCheck;
 import com.pg85.otg.customobject.bo3.checks.ModCheck;
@@ -26,19 +16,26 @@ import com.pg85.otg.customobject.config.CustomObjectConfigFunction;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.config.io.SettingsReaderBO4;
 import com.pg85.otg.customobject.config.io.SettingsWriterBO4;
-import com.pg85.otg.customobject.util.BoundingBox;
 import com.pg85.otg.customobject.util.BO3Enums.ExtrudeMode;
 import com.pg85.otg.customobject.util.BO3Enums.OutsideSourceBlock;
 import com.pg85.otg.customobject.util.BO3Enums.SpawnHeightEnum;
+import com.pg85.otg.customobject.util.BoundingBox;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.ICustomObjectManager;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.util.nbt.NamedBinaryTag;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.MaterialSet;
 import com.pg85.otg.util.minecraft.DefaultStructurePart;
+import com.pg85.otg.util.nbt.NamedBinaryTag;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BO3Config extends CustomObjectConfigFile
 {

@@ -1,13 +1,5 @@
 package com.pg85.otg.customobject.bo2;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -19,22 +11,25 @@ import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.config.io.FileSettingsReaderBO4;
 import com.pg85.otg.customobject.config.io.SettingsReaderBO4;
 import com.pg85.otg.customobject.config.io.SettingsWriterBO4;
-import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
 import com.pg85.otg.customobject.util.BoundingBox;
+import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.exceptions.InvalidConfigException;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.ICustomObjectManager;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 import com.pg85.otg.util.materials.MaterialSet;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Random;
 
 /**
  * The good old BO2.

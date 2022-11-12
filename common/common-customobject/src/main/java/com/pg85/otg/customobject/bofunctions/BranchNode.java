@@ -1,7 +1,5 @@
 package com.pg85.otg.customobject.bofunctions;
 
-import java.nio.file.Path;
-
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
@@ -10,6 +8,8 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.util.bo3.Rotation;
+
+import java.nio.file.Path;
 
 /**
  * Simple class to hold the spawn chance and rotation of a BO3 in the Branch or

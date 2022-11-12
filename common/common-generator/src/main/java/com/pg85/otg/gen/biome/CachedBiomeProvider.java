@@ -1,21 +1,15 @@
 package com.pg85.otg.gen.biome;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.pg85.otg.constants.Constants;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.ICachedBiomeProvider;
-import com.pg85.otg.interfaces.ILayerSource;
-import com.pg85.otg.interfaces.ILogger;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.FifoMap;
 import com.pg85.otg.util.helpers.MathHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A cache used throughout an entire session, so that base

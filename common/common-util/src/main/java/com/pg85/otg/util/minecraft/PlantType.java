@@ -1,14 +1,14 @@
 package com.pg85.otg.util.minecraft;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Holds all small plants (1 or 2 blocks) of Minecraft so that users don't

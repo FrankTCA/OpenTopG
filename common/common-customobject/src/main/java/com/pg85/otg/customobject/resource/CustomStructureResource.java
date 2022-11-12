@@ -6,14 +6,7 @@ import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.structures.StructuredCustomObject;
 import com.pg85.otg.exceptions.InvalidConfigException;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.ICustomObjectManager;
-import com.pg85.otg.interfaces.ICustomObjectResourcesManager;
-import com.pg85.otg.interfaces.ICustomStructureGen;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IStructuredCustomObject;
+import com.pg85.otg.interfaces.*;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.config.biome.BiomeResourceBase;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IBiomeConfig;
@@ -13,6 +10,9 @@ import com.pg85.otg.util.helpers.MathHelper;
 import com.pg85.otg.util.helpers.StringHelper;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.List;
+import java.util.Random;
 
 public class IcebergResource extends BiomeResourceBase implements IBasicResource
 {

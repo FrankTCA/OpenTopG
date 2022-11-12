@@ -1,18 +1,17 @@
 package com.pg85.otg.gen.noise;
 
-import java.util.List;
-import java.util.Random;
-import java.util.stream.IntStream;
-
 import com.google.common.collect.ImmutableList;
 import com.pg85.otg.util.Pair;
 import com.pg85.otg.util.helpers.MathHelper;
-
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntBidirectionalIterator;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 
 // Derived from net.minecraft.world.gen.OctavesNoiseGenerator

@@ -1,10 +1,5 @@
 package com.pg85.otg.customobject.bo4;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.constants.SettingsEnums.ConfigMode;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -13,25 +8,26 @@ import com.pg85.otg.customobject.bo4.bo4function.BO4RandomBlockFunction;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.config.io.FileSettingsReaderBO4;
 import com.pg85.otg.customobject.config.io.FileSettingsWriterBO4;
-import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.customobject.structures.Branch;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
 import com.pg85.otg.customobject.structures.StructuredCustomObject;
 import com.pg85.otg.customobject.util.BoundingBox;
+import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.exceptions.InvalidConfigException;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
-import com.pg85.otg.util.nbt.NamedBinaryTag;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+import com.pg85.otg.util.nbt.NamedBinaryTag;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Random;
 
 // TODO: Refactor type hierarchy for customobject/structure
 public class BO4 implements StructuredCustomObject

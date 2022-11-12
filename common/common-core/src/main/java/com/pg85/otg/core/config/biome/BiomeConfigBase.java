@@ -1,33 +1,14 @@
 package com.pg85.otg.core.config.biome;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.pg85.otg.config.ConfigFile;
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.constants.SettingsEnums;
-import com.pg85.otg.constants.SettingsEnums.GrassColorModifier;
-import com.pg85.otg.constants.SettingsEnums.MineshaftType;
-import com.pg85.otg.constants.SettingsEnums.OceanRuinsType;
-import com.pg85.otg.constants.SettingsEnums.RareBuildingType;
-import com.pg85.otg.constants.SettingsEnums.RuinedPortalType;
-import com.pg85.otg.constants.SettingsEnums.VillageType;
+import com.pg85.otg.constants.SettingsEnums.*;
 import com.pg85.otg.customobject.resource.CustomStructureResource;
 import com.pg85.otg.customobject.resource.SaplingResource;
 import com.pg85.otg.gen.surface.SurfaceGenerator;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.IBiomeResourceLocation;
-import com.pg85.otg.interfaces.ICustomStructureGen;
-import com.pg85.otg.interfaces.ISaplingSpawner;
-import com.pg85.otg.interfaces.ISurfaceGeneratorNoiseProvider;
-import com.pg85.otg.interfaces.IWorldConfig;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.biome.ColorSet;
 import com.pg85.otg.util.biome.ReplaceBlockMatrix;
 import com.pg85.otg.util.biome.WeightedMobSpawnGroup;
@@ -36,6 +17,13 @@ import com.pg85.otg.util.gen.GeneratingChunk;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.minecraft.EntityCategory;
 import com.pg85.otg.util.minecraft.SaplingType;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * BiomeConfig (*.bc) classes
