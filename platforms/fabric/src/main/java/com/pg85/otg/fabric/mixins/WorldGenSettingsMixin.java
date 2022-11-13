@@ -60,8 +60,13 @@ public abstract class WorldGenSettingsMixin {
             else {
                 seed = parsedInputtedSeed.getAsLong(); //otherwise use the inputted seed
             }
-
-            cir.setReturnValue(OTGDimensionTypeHelper.createOTGSettings(ra, seed, true, false, "Default"));
+            try {
+                wgp.generatorSettings().get("Preset").getAsString();
+                cir.setReturnValue(OTGDimensionTypeHelper.createOTGSettings(ra, seed, true, false, wgp.generatorSettings().get("Preset").getAsString()));
+            } catch (ClassCastException | IllegalStateException ex) {
+                OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.MAIN, "[OTG] >> If you are on a server, please use {\"Preset\": \"PresetFolderName\"} in your `generator-settings` in server.properties.");
+                OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.MAIN, "[OTG] >> Defaulting to Default preset.");
+            }
 
         }
     }
