@@ -93,8 +93,8 @@ public final class PlantType {
 
     private final String name;
     private final String[] aliases;
-    private LocalMaterialData topBlock;
-    private LocalMaterialData bottomBlock;
+    private final LocalMaterialData topBlock;
+    private final LocalMaterialData bottomBlock;
 
     /**
      * Creates a single-block plant with the given name.

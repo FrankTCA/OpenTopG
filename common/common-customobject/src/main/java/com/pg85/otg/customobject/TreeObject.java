@@ -22,9 +22,9 @@ import java.util.Random;
  * all the extra methods are no longer needed.
  */
 class TreeObject implements CustomObject {
-    private TreeType type;
-    private int minHeight = Constants.WORLD_DEPTH;
-    private int maxHeight = Constants.WORLD_HEIGHT - 1;
+    private final TreeType type;
+    private final int minHeight = Constants.WORLD_DEPTH;
+    private final int maxHeight = Constants.WORLD_HEIGHT - 1;
 
     TreeObject(TreeType type) {
         this.type = type;

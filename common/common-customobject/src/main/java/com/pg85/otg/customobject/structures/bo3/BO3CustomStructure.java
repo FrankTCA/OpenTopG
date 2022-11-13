@@ -53,8 +53,8 @@ public class BO3CustomStructure extends CustomStructure {
         // Calculate all branches and add them to a list
         this.objectsToSpawn = new LinkedHashMap<ChunkCoordinate, Set<CustomStructureCoordinate>>();
 
-        addToSpawnList((BO3CustomStructureCoordinate) start, object, otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker); // Add the object itself
-        addBranches((BO3CustomStructureCoordinate) start, 1, worldGenRegion, otgRootFolder, customObjectManager, materialReader, manager, modLoadedChecker);
+        addToSpawnList(start, object, otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker); // Add the object itself
+        addBranches(start, 1, worldGenRegion, otgRootFolder, customObjectManager, materialReader, manager, modLoadedChecker);
     }
 
     private void addBranches(BO3CustomStructureCoordinate coordObject, int depth, IWorldGenRegion worldGenRegion, Path otgRootFolder, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker) {
@@ -112,7 +112,7 @@ public class BO3CustomStructure extends CustomStructure {
         Set<CustomStructureCoordinate> objectsInChunk = this.objectsToSpawn.get(worldGenRegion.getDecorationArea().getChunkBeingDecorated());
         if (objectsInChunk != null) {
             for (CustomStructureCoordinate coordObject : objectsInChunk) {
-                BO3 bo3 = ((BO3) ((BO3CustomStructureCoordinate) coordObject).getObject(otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker));
+                BO3 bo3 = ((BO3) coordObject.getObject(otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker));
                 bo3.trySpawnAt(this, structureCache, worldGenRegion, this.random, coordObject.rotation, coordObject.x, getCorrectY(worldGenRegion, coordObject.x, coordObject.y, coordObject.z), coordObject.z, bo3.getConfig().minHeight, bo3.getConfig().maxHeight, coordObject.y);
             }
         }

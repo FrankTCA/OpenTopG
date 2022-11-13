@@ -101,7 +101,7 @@ public class BiomeCommand extends BaseCommand {
             HolderSet<PlacedFeature> innerList = featureList.get(i);
             source.sendSuccess(new TextComponent(" " + GenerationStep.Decoration.values()[i].toString().toLowerCase(Locale.ROOT) + ":").withStyle(ChatFormatting.GOLD), false);
             for (Holder<PlacedFeature> holder : innerList) {
-                source.sendSuccess(new TextComponent(" - " + holder.value().toString()).withStyle(ChatFormatting.GREEN), false);
+                source.sendSuccess(new TextComponent(" - " + holder.value()).withStyle(ChatFormatting.GREEN), false);
             }
         }
     }

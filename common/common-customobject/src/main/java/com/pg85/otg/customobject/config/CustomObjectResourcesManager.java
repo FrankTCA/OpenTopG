@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomObjectResourcesManager implements ICustomObjectResourcesManager {
-    private Map<String, ArrayList<Class<? extends CustomObjectConfigFunction<?>>>> configFunctions;
+    private final Map<String, ArrayList<Class<? extends CustomObjectConfigFunction<?>>>> configFunctions;
 
     public CustomObjectResourcesManager() {
         // Also store in this class

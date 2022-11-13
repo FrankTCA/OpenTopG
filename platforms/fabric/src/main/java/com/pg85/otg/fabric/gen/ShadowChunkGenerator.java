@@ -104,11 +104,7 @@ public class ShadowChunkGenerator {
 
     public ChunkAccess getChunkFromCache(ChunkCoordinate chunkCoord) {
         ChunkAccess cachedChunk = this.unloadedChunksCache.get(chunkCoord);
-        if (cachedChunk != null) {
-            return cachedChunk;
-        } else {
-            return null;
-        }
+        return cachedChunk;
     }
 
     // Is this used?
@@ -185,29 +181,23 @@ public class ShadowChunkGenerator {
             @SuppressWarnings("unchecked")
             ArrayList<StructureFeature<?>>[] structuresPerDistance = new ArrayList[radiusInChunks];
             structuresPerDistance[4] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-                    new StructureFeature<?>[]{
-                            StructureFeature.VILLAGE,
-                            StructureFeature.END_CITY,
-                            StructureFeature.BASTION_REMNANT,
-                            StructureFeature.OCEAN_MONUMENT,
-                            StructureFeature.WOODLAND_MANSION
-                    }
-            ));
-            structuresPerDistance[3] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
-            structuresPerDistance[2] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
+                    StructureFeature.VILLAGE,
+                    StructureFeature.END_CITY,
+                    StructureFeature.BASTION_REMNANT,
+                    StructureFeature.OCEAN_MONUMENT,
+                    StructureFeature.WOODLAND_MANSION));
+            structuresPerDistance[3] = new ArrayList<StructureFeature<?>>(List.of());
+            structuresPerDistance[2] = new ArrayList<StructureFeature<?>>(List.of());
             structuresPerDistance[1] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-                    new StructureFeature<?>[]{
-                            StructureFeature.JUNGLE_TEMPLE,
-                            StructureFeature.DESERT_PYRAMID,
-                            StructureFeature.RUINED_PORTAL,
-                            StructureFeature.SWAMP_HUT,
-                            StructureFeature.IGLOO,
-                            StructureFeature.SHIPWRECK,
-                            StructureFeature.PILLAGER_OUTPOST,
-                            StructureFeature.OCEAN_RUIN
-                    }
-            ));
-            structuresPerDistance[0] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
+                    StructureFeature.JUNGLE_TEMPLE,
+                    StructureFeature.DESERT_PYRAMID,
+                    StructureFeature.RUINED_PORTAL,
+                    StructureFeature.SWAMP_HUT,
+                    StructureFeature.IGLOO,
+                    StructureFeature.SHIPWRECK,
+                    StructureFeature.PILLAGER_OUTPOST,
+                    StructureFeature.OCEAN_RUIN));
+            structuresPerDistance[0] = new ArrayList<StructureFeature<?>>(List.of());
             Set<Biome> biomesInArea = new HashSet<>();
 
             for (ChunkCoordinate chunkToHandle : chunksToHandle) {

@@ -165,8 +165,7 @@ public class BO3Config extends CustomObjectConfigFile {
 
         for (CustomObjectConfigFunction<BO3Config> res : this.reader.getConfigFunctions(this, true, logger, materialReader, manager)) {
             if (res.isValid()) {
-                if (res instanceof BO3BlockFunction) {
-                    BO3BlockFunction block = (BO3BlockFunction) res;
+                if (res instanceof BO3BlockFunction block) {
                     box.expandToFit(block.x, block.y, block.z);
                     tempBlocksList.add(block);
                 } else {
@@ -214,7 +213,7 @@ public class BO3Config extends CustomObjectConfigFile {
             // We can probably just break if null?
             if (block != null) {
                 this.blocksX[0][i] = (byte) block.x;
-                this.blocksY[0][i] = (short) block.y;
+                this.blocksY[0][i] = block.y;
                 this.blocksZ[0][i] = (byte) block.z;
                 this.blocksMaterial[0][i] = block.material;
                 this.blocksMetaDataName[i] = block.nbtName;
@@ -495,7 +494,7 @@ public class BO3Config extends CustomObjectConfigFile {
         writer.comment("  BlockCheckNot(0,-1,0,WOOL:0)	Require that there is no white wool below the object");
         writer.comment("  LightCheck(0,0,0,0,1)		  Require almost complete darkness just below the object");
 
-        for (BO3Check func : Arrays.asList(this.bo3Checks[0])) {
+        for (BO3Check func : this.bo3Checks[0]) {
             writer.function(func);
         }
 
@@ -546,7 +545,7 @@ public class BO3Config extends CustomObjectConfigFile {
         writer.comment(
                 "MaxChanceOutOf - The chance all branches have to spawn out of, assumed to be 100 when left blank");
 
-        for (BO3BranchFunction func : Arrays.asList(this.branches[0])) {
+        for (BO3BranchFunction func : this.branches[0]) {
             writer.function(func);
         }
 
@@ -569,7 +568,7 @@ public class BO3Config extends CustomObjectConfigFile {
         writer.comment("curly braces to a .txt file, for instance for: \"/summon Skeleton x y z {DATA}\"");
         writer.comment("*Note: Unlike Block(), for Entity() .nbt files don't work, only .txt files work.");
 
-        for (BO3EntityFunction func : Arrays.asList(this.entityFunctions[0])) {
+        for (BO3EntityFunction func : this.entityFunctions[0]) {
             writer.function(func);
         }
     }
@@ -606,7 +605,7 @@ public class BO3Config extends CustomObjectConfigFile {
             for (int h = 0; h < blocks.length; h++) {
                 BO3BlockFunction block = blocks[h];
                 this.blocksX[i][h] = (byte) block.x;
-                this.blocksY[i][h] = (short) block.y;
+                this.blocksY[i][h] = block.y;
                 this.blocksZ[i][h] = (byte) block.z;
                 this.blocksMaterial[i][h] = block.material;
 

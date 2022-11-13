@@ -86,10 +86,10 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider {
     private final Carver ravines;
     // Biome blocks noise
     // TODO: Use new noise?
-    private ThreadLocal<double[]> biomeBlocksNoise = ThreadLocal.withInitial(() -> new double[Constants.CHUNK_SIZE * Constants.CHUNK_SIZE]);
-    private ThreadLocal<Integer> lastX = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
-    private ThreadLocal<Integer> lastZ = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
-    private ThreadLocal<Double> lastNoise = ThreadLocal.withInitial(() -> 0d);
+    private final ThreadLocal<double[]> biomeBlocksNoise = ThreadLocal.withInitial(() -> new double[Constants.CHUNK_SIZE * Constants.CHUNK_SIZE]);
+    private final ThreadLocal<Integer> lastX = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
+    private final ThreadLocal<Integer> lastZ = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
+    private final ThreadLocal<Double> lastNoise = ThreadLocal.withInitial(() -> 0d);
     private final OreVeinGenerator oreVeinGenerator;
 
     public OTGChunkGenerator(Preset preset, long seed, ILayerSource biomeProvider, IBiome[] biomesById, ILogger logger) {
@@ -272,7 +272,7 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider {
 
         int radius = Math.max(center.getSmoothRadius(), center.getCHCSmoothRadius());
         int areaSize = radius * 2 + 1;
-        IBiomeConfig biomes[] = this.cachedBiomeProvider.getNoiseBiomeConfigsForRegion(noiseX - radius, noiseZ - radius, areaSize);
+        IBiomeConfig[] biomes = this.cachedBiomeProvider.getNoiseBiomeConfigsForRegion(noiseX - radius, noiseZ - radius, areaSize);
         IBiomeConfig biome;
         float heightAt;
         float weightAt;

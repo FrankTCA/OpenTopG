@@ -21,19 +21,19 @@ class ObjectExtrusionHelper {
     /**
      * The style to use for extruding; Currently either BottomDown or TopUp
      */
-    private ExtrudeMode extrudeMode;
+    private final ExtrudeMode extrudeMode;
 
     /**
      * These materials are the set of materials that are allow to be extruded through; That is, as soon as we find a
      * block in the world that is not in this list, we will stop extruding the BO3
      */
-    private MaterialSet extrudeThroughBlocks;
+    private final MaterialSet extrudeThroughBlocks;
 
     /**
      * These blocks are the blocks that are found to be at the location dictated by the extrudeMode, and will be
      * extruded until hitting a material not listed in extrudeThroughBlocks
      */
-    private ArrayList<BO3BlockFunction> blocksToExtrude = new ArrayList<BO3BlockFunction>();
+    private final ArrayList<BO3BlockFunction> blocksToExtrude = new ArrayList<BO3BlockFunction>();
 
     /**
      * Constructor

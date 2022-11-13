@@ -164,8 +164,8 @@ public class OTGDimensionTypeHelper
         ParameterList<Supplier<Biome>> paramList = new ParameterList<Supplier<Biome>>(
                 ImmutableList.of(
                         Pair.of(
-                                (ParameterPoint)Climate.parameters(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F),
-                                (Supplier<Biome>)() -> { return biomesRegistry.getOrThrow(Biomes.PLAINS); }
+                                Climate.parameters(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F),
+                                () -> { return biomesRegistry.getOrThrow(Biomes.PLAINS); }
                         )
                 )
         );
@@ -190,7 +190,7 @@ public class OTGDimensionTypeHelper
         }
         if(dimConfig.Nether != null && dimConfig.Nether.PresetFolderName != null)
         {
-            long dimSeed = dimConfig.Nether.Seed != -1l ? dimConfig.Nether.Seed : new Random().nextLong();
+            long dimSeed = dimConfig.Nether.Seed != -1L ? dimConfig.Nether.Seed : new Random().nextLong();
             ChunkGenerator chunkGenerator = new OTGNoiseChunkGenerator(
                     dimConfig.Nether.PresetFolderName,
                     new OTGBiomeProvider(
@@ -209,7 +209,7 @@ public class OTGDimensionTypeHelper
         }
         if(dimConfig.End != null && dimConfig.End.PresetFolderName != null)
         {
-            long dimSeed = dimConfig.End.Seed != -1l ? dimConfig.End.Seed : new Random().nextLong();
+            long dimSeed = dimConfig.End.Seed != -1L ? dimConfig.End.Seed : new Random().nextLong();
             ChunkGenerator chunkGenerator = new OTGNoiseChunkGenerator(
                     dimConfig.End.PresetFolderName,
                     new OTGBiomeProvider(
@@ -232,7 +232,7 @@ public class OTGDimensionTypeHelper
             {
                 if(otgDim.PresetFolderName != null)
                 {
-                    long dimSeed = otgDim.Seed != -1l ? otgDim.Seed : new Random().nextLong();
+                    long dimSeed = otgDim.Seed != -1L ? otgDim.Seed : new Random().nextLong();
                     ChunkGenerator chunkGenerator = new OTGNoiseChunkGenerator(
                             otgDim.PresetFolderName,
                             new OTGBiomeProvider(

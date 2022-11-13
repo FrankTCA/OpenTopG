@@ -1,7 +1,7 @@
 package com.pg85.otg.util.helpers;
 
 public final class MathHelper {
-    private static float[] A = new float[65536];
+    private static final float[] A = new float[65536];
 
     private MathHelper() {
     }

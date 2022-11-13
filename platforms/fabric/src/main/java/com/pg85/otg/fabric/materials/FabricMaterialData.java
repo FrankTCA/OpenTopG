@@ -329,11 +329,10 @@ public class FabricMaterialData extends LocalMaterialData
         {
             return true;
         }
-        if (!(obj instanceof FabricMaterialData))
+        if (!(obj instanceof FabricMaterialData other))
         {
             return false;
         }
-        FabricMaterialData other = (FabricMaterialData) obj;
         return
                 (this.isBlank && other.isBlank) ||
                         (

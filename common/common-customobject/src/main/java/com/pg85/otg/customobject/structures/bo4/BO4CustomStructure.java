@@ -28,14 +28,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BO4CustomStructure extends CustomStructure {
     private Random worldRandom;
-    private SmoothingAreaGenerator smoothingAreaManager = new SmoothingAreaGenerator();
+    private final SmoothingAreaGenerator smoothingAreaManager = new SmoothingAreaGenerator();
     private boolean isStructureAtSpawn = false;
     private int branchesTried = 0;
-    private Stack<BranchDataItem> AllBranchesBranchData = new Stack<BranchDataItem>();
-    private HashMap<ChunkCoordinate, ArrayList<BranchDataItem>> AllBranchesBranchDataByChunk = new HashMap<ChunkCoordinate, ArrayList<BranchDataItem>>();
-    private HashMap<String, ArrayList<ChunkCoordinate>> AllBranchesBranchDataByName = new HashMap<String, ArrayList<ChunkCoordinate>>(); // Used to find distance between branches and branch groups
-    private HashMap<String, HashMap<ChunkCoordinate, ArrayList<Integer>>> AllBranchesBranchDataByGroup = new HashMap<String, HashMap<ChunkCoordinate, ArrayList<Integer>>>(); // Used to find distance between branches and branch groups
-    private HashSet<Integer> AllBranchesBranchDataHash = new HashSet<Integer>();
+    private final Stack<BranchDataItem> AllBranchesBranchData = new Stack<BranchDataItem>();
+    private final HashMap<ChunkCoordinate, ArrayList<BranchDataItem>> AllBranchesBranchDataByChunk = new HashMap<ChunkCoordinate, ArrayList<BranchDataItem>>();
+    private final HashMap<String, ArrayList<ChunkCoordinate>> AllBranchesBranchDataByName = new HashMap<String, ArrayList<ChunkCoordinate>>(); // Used to find distance between branches and branch groups
+    private final HashMap<String, HashMap<ChunkCoordinate, ArrayList<Integer>>> AllBranchesBranchDataByGroup = new HashMap<String, HashMap<ChunkCoordinate, ArrayList<Integer>>>(); // Used to find distance between branches and branch groups
+    private final HashSet<Integer> AllBranchesBranchDataHash = new HashSet<Integer>();
     private boolean SpawningCanOverrideBranches = false;
     private int Cycle = 0;
     private BranchDataItem currentSpawningRequiredChildrenForOptionalBranch;
@@ -49,7 +49,7 @@ public class BO4CustomStructure extends CustomStructure {
     // Stores all the branches of this branching structure that should spawn along with the chunkcoordinates they should spawn in
     private ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> objectsToSpawn = new ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>>();
     // TODO: Make sure this never becomes an issue for memory usage.
-    private ConcurrentHashMap<ChunkCoordinate, String> objectsToSpawnInfo = new ConcurrentHashMap<ChunkCoordinate, String>();
+    private final ConcurrentHashMap<ChunkCoordinate, String> objectsToSpawnInfo = new ConcurrentHashMap<ChunkCoordinate, String>();
 
     public ConcurrentHashMap<ChunkCoordinate, Stack<BO4CustomStructureCoordinate>> getObjectsToSpawn() {
         return objectsToSpawn;
@@ -229,7 +229,7 @@ public class BO4CustomStructure extends CustomStructure {
                     if (objectConfig.replacesBO3Branches.size() > 0) {
                         for (String BO3ToReplace : objectConfig.replacesBO3Branches) {
                             for (BO4CustomStructureCoordinate coordObjectToReplace : chunkCoordSet.getValue()) {
-                                if (((BO4) coordObjectToReplace.getObject(otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker)).getName().equalsIgnoreCase(BO3ToReplace)) {
+                                if (coordObjectToReplace.getObject(otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker).getName().equalsIgnoreCase(BO3ToReplace)) {
                                     if (checkCollision(coordObject, coordObjectToReplace, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker)) {
                                         coordObjectToReplace.isSpawned = true;
                                     }
@@ -474,7 +474,7 @@ public class BO4CustomStructure extends CustomStructure {
 
         if (logger.getLogCategoryEnabled(LogCategory.STRUCTURE_PLOTTING)) {
             logger.log(LogLevel.INFO, LogCategory.STRUCTURE_PLOTTING, "");
-            logger.log(LogLevel.INFO, LogCategory.STRUCTURE_PLOTTING, bo4.getName() + " minimum size: Width " + ((Integer) returnValue[1] + (Integer) returnValue[3] + 1) + " Length " + ((Integer) returnValue[0] + (Integer) returnValue[2] + 1) + " top " + (Integer) returnValue[0] + " right " + (Integer) returnValue[1] + " bottom " + (Integer) returnValue[2] + " left " + (Integer) returnValue[3]);
+            logger.log(LogLevel.INFO, LogCategory.STRUCTURE_PLOTTING, bo4.getName() + " minimum size: Width " + ((Integer) returnValue[1] + (Integer) returnValue[3] + 1) + " Length " + ((Integer) returnValue[0] + (Integer) returnValue[2] + 1) + " top " + returnValue[0] + " right " + returnValue[1] + " bottom " + returnValue[2] + " left " + returnValue[3]);
         }
 
         this.objectsToSpawn.clear();
@@ -1440,22 +1440,16 @@ public class BO4CustomStructure extends CustomStructure {
                     // Rollbacks only happen when:
 
                     if (!spawningRequiredChildrenForOptionalBranch) {
-                        if (spawningRequiredBranchesOnly) {
-                            // 1. The branch being rolled back has spawned all its required-only branch groups but not yet its optional branches and one of the required child branches
-                            // (that spawn in the same cycle) failed to spawn one of its required children and is rolled back.
-                            // AddBranches should be called for the parent of the branch being rolled back and its parent if a branch group failed to spawn (and so on).
-
-                            // Since we're using SpawningRequiredBranchesOnly AddBranches can traverse all child branches without problems.
-                            addBranches(startBO4Config, branchData.parent, minimumSize, false, spawningRequiredBranchesOnly, structureCache, worldGenRegion, targetBiomes, chunkBeingDecorated, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
-                        } else {
-                            // 2. During the second phase of a cycle branch groups with optional branches are spawned, the optional branches get a chance to spawn first, after that the
-                            // required branches try to spawn, if that fails the branch is rolled back.
-                            // 3. A branch was rolled back that was a requirement for another branch (mustbeinside/mustbebelowother), causing the other branch to be rolled back as well.
-
-                            // Since we're not using SpawningRequiredBranchesOnly AddBranches should only traverse child branches for any branches that it spawns from the branch group its re-trying.
-                            // Otherwise some branches may have the same children traversed multiple times in a single phase.
-                            addBranches(startBO4Config, branchData.parent, minimumSize, true, spawningRequiredBranchesOnly, structureCache, worldGenRegion, targetBiomes, chunkBeingDecorated, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
-                        }
+                        // 1. The branch being rolled back has spawned all its required-only branch groups but not yet its optional branches and one of the required child branches
+                        // (that spawn in the same cycle) failed to spawn one of its required children and is rolled back.
+                        // AddBranches should be called for the parent of the branch being rolled back and its parent if a branch group failed to spawn (and so on).
+                        // Since we're using SpawningRequiredBranchesOnly AddBranches can traverse all child branches without problems.
+                        // 2. During the second phase of a cycle branch groups with optional branches are spawned, the optional branches get a chance to spawn first, after that the
+                        // required branches try to spawn, if that fails the branch is rolled back.
+                        // 3. A branch was rolled back that was a requirement for another branch (mustbeinside/mustbebelowother), causing the other branch to be rolled back as well.
+                        // Since we're not using SpawningRequiredBranchesOnly AddBranches should only traverse child branches for any branches that it spawns from the branch group its re-trying.
+                        // Otherwise some branches may have the same children traversed multiple times in a single phase.
+                        addBranches(startBO4Config, branchData.parent, minimumSize, !spawningRequiredBranchesOnly, spawningRequiredBranchesOnly, structureCache, worldGenRegion, targetBiomes, chunkBeingDecorated, otgRootFolder, logger, customObjectManager, materialReader, manager, modLoadedChecker);
                     } else {
 
                         // 4. While spawning required children for an optional branch (SpawningRequiredChildrenForOptionalBranch == true).
@@ -1816,19 +1810,13 @@ public class BO4CustomStructure extends CustomStructure {
         int cachedBranchStartZ = branchData2Branch.getZ() + Math.min(branchData2BranchMinRotated.getZ(), branchData2BranchMaxRotated.getZ());
         int cachedBranchEndZ = branchData2Branch.getZ() + Math.max(branchData2BranchMinRotated.getZ(), branchData2BranchMaxRotated.getZ());
 
-        if (
-                cachedBranchEndX >= startX &&
-                        cachedBranchStartX <= endX &&
-                        cachedBranchEndY >= startY &&
-                        cachedBranchStartY <= endY &&
-                        cachedBranchEndZ >= startZ &&
-                        cachedBranchStartZ <= endZ
-        ) {
-            // Structures' bounding boxes are overlapping
-            return true;
-        }
-
-        return false;
+        // Structures' bounding boxes are overlapping
+        return cachedBranchEndX >= startX &&
+                cachedBranchStartX <= endX &&
+                cachedBranchEndY >= startY &&
+                cachedBranchStartY <= endY &&
+                cachedBranchEndZ >= startZ &&
+                cachedBranchStartZ <= endZ;
     }
 
     /**

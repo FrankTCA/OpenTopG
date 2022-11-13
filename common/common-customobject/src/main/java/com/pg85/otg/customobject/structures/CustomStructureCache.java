@@ -34,12 +34,12 @@ public class CustomStructureCache {
     private final long worldSeed;
 
     // BO3
-    private FifoMap<ChunkCoordinate, BO3CustomStructure> bo3StructureCache;
+    private final FifoMap<ChunkCoordinate, BO3CustomStructure> bo3StructureCache;
 
     // BO4
 
     // Contains bo4StructureCache of plotted but not yet decorated branches
-    private CustomStructurePlotter plotter;
+    private final CustomStructurePlotter plotter;
 
     // Common
 

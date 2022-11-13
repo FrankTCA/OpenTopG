@@ -154,7 +154,7 @@ public class GeodeResource extends FrequencyResourceBase {
         }
     }
 
-    private static record Sphere(Vec3i pos, int value) {
+    private record Sphere(Vec3i pos, int value) {
     }
 
     @Override

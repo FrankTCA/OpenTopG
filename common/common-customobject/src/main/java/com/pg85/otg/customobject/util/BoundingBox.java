@@ -215,10 +215,9 @@ public final class BoundingBox implements Cloneable {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof BoundingBox)) {
+        if (!(obj instanceof BoundingBox other)) {
             return false;
         }
-        BoundingBox other = (BoundingBox) obj;
         if (maxX != other.maxX) {
             return false;
         }
@@ -234,9 +233,6 @@ public final class BoundingBox implements Cloneable {
         if (minY != other.minY) {
             return false;
         }
-        if (minZ != other.minZ) {
-            return false;
-        }
-        return true;
+        return minZ == other.minZ;
     }
 }

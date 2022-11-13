@@ -46,7 +46,7 @@ final class RawSettingValue {
         if (settingValue == null || valueType == null) {
             throw new NullPointerException();
         }
-        return new RawSettingValue(settingValue, valueType, -1, Collections.<String>emptyList());
+        return new RawSettingValue(settingValue, valueType, -1, Collections.emptyList());
     }
 
     /**

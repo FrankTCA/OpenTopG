@@ -71,7 +71,7 @@ public final class OreVeinGenerator {
         int j = y - veinType.minY;
         if (j >= 0 && i >= 0) {
             int k = Math.min(i, j);
-            double d = MathHelper.clampedMap((double) k, 0.0D, 20.0D, -0.2D, 0.0D);
+            double d = MathHelper.clampedMap(k, 0.0D, 20.0D, -0.2D, 0.0D);
             return Math.abs(oreFrequencyNoise) + d < 0.5D ? null : veinType;
         } else {
             return null;
@@ -79,8 +79,8 @@ public final class OreVeinGenerator {
     }
 
     private boolean isVein(double firstOrePlacementNoise, double secondOrePlacementNoise) {
-        double d = Math.abs(1.0D * firstOrePlacementNoise) - (double) 0.08F;
-        double e = Math.abs(1.0D * secondOrePlacementNoise) - (double) 0.08F;
+        double d = Math.abs(firstOrePlacementNoise) - (double) 0.08F;
+        double e = Math.abs(secondOrePlacementNoise) - (double) 0.08F;
         return Math.max(d, e) < 0.0D;
     }
 
@@ -93,8 +93,8 @@ public final class OreVeinGenerator {
         } else if (random.nextFloat() > 0.7F) {
             return blockState;
         } else if (this.isVein(veinA, veinB)) {
-            double d = MathHelper.clampedMap(Math.abs(veininess), 0.5D, (double) 0.6F, (double) 0.1F, (double) 0.3F);
-            if ((double) random.nextFloat() < d && this.gapNoise.sample((double) x, (double) y, (double) z) > (double) -0.3F) {
+            double d = MathHelper.clampedMap(Math.abs(veininess), 0.5D, 0.6F, 0.1F, 0.3F);
+            if ((double) random.nextFloat() < d && this.gapNoise.sample(x, y, z) > (double) -0.3F) {
                 return random.nextFloat() < 0.02F ? veinType.rawOreBlock : veinType.ore;
             } else {
                 return veinType.filler;

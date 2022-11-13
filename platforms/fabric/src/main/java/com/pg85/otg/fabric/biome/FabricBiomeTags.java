@@ -25,7 +25,6 @@ public class FabricBiomeTags extends FabricTagProvider<Biome> {
 
     @Override
     protected void generateTags() {
-        return;
     }
 
     public void addBiomeTag(Biome b) {

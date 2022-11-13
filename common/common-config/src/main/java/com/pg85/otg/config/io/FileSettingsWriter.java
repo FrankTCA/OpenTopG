@@ -32,7 +32,7 @@ public final class FileSettingsWriter {
      * @param configMode The configuration mode. If this is set to
      *                   WriteDisable, this method does nothing.
      */
-    public static final void writeToFile(SettingsMap config, File file, ConfigMode configMode, ILogger logger) {
+    public static void writeToFile(SettingsMap config, File file, ConfigMode configMode, ILogger logger) {
         if (configMode == ConfigMode.WriteDisable) {
             return;
         }
@@ -120,7 +120,7 @@ public final class FileSettingsWriter {
                 builder.append(' ');
             flag = !flag;
         }
-        writer.write("# |" + builder.toString() + "| #");
+        writer.write("# |" + builder + "| #");
         writer.newLine();
         writer.write("# +-----------------------------------------------------------------+ #");
         writer.newLine();
@@ -144,7 +144,7 @@ public final class FileSettingsWriter {
                 builder.append(' ');
             flag = !flag;
         }
-        writer.write("# |" + builder.toString() + "| #");
+        writer.write("# |" + builder + "| #");
         writer.newLine();
         writer.write("#######################################################################");
         writer.newLine();

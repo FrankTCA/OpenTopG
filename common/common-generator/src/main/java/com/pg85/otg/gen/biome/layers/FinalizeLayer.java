@@ -9,7 +9,7 @@ import com.pg85.otg.interfaces.ILayerSampler;
  */
 class FinalizeLayer implements ParentedLayer {
     private final boolean riversEnabled;
-    private int[] riverBiomes;
+    private final int[] riverBiomes;
 
     public FinalizeLayer(boolean riversEnabled, int[] riverBiomes) {
         this.riversEnabled = riversEnabled;

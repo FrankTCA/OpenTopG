@@ -48,9 +48,9 @@ public abstract class CustomStructure {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.start.bo3Name == null) ? 0 : this.start.bo3Name.hashCode());
-        result = prime * result + (int) (this.start.getX() ^ (this.start.getX() >>> 32));
-        result = prime * result + (int) (this.start.getY() ^ (this.start.getY() >>> 32));
-        result = prime * result + (int) (this.start.getZ() ^ (this.start.getZ() >>> 32));
+        result = prime * result + (this.start.getX() ^ (this.start.getX() >>> 32));
+        result = prime * result + (this.start.getY() ^ (this.start.getY() >>> 32));
+        result = prime * result + (this.start.getZ() ^ (this.start.getZ() >>> 32));
         return result;
     }
 }

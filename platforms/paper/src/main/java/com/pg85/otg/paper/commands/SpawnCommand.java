@@ -140,7 +140,7 @@ public class SpawnCommand extends BaseCommand {
 
             // Matches any bo4/bo4data file ending with C[0-9]R[0-9], assuming it's not a start
             // bo4 for a structure, but rather a branch that should be spawned individually.
-            if (((BO4) objectToSpawn).getName().matches(".*C[0-9]([0-9]*)R[0-9]([0-9]*)$")) {
+            if (objectToSpawn.getName().matches(".*C[0-9]([0-9]*)R[0-9]([0-9]*)$")) {
                 int x = playerChunk.getBlockX() + ((BO4) objectToSpawn).getConfig().getminX();
                 int z = playerChunk.getBlockZ() + ((BO4) objectToSpawn).getConfig().getminZ();
                 ((BO4) objectToSpawn).trySpawnAt(

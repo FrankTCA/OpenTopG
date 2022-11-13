@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class FromImageLayer implements ParentedLayer {
     private final BiomeLayerData data;
-    private int[] biomeMap;
+    private final int[] biomeMap;
     private int mapHeight;
     private int mapWidth;
 

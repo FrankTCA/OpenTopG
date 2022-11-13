@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BiomeSettingSyncWrapper {
-    private float fogDensity;
-    private ColorSet grassColorControl;
-    private ColorSet foliageColorControl;
-    private ColorSet waterColorControl;
+    private final float fogDensity;
+    private final ColorSet grassColorControl;
+    private final ColorSet foliageColorControl;
+    private final ColorSet waterColorControl;
 
     public BiomeSettingSyncWrapper(IBiomeConfig config) {
         this.fogDensity = config.getFogDensity();

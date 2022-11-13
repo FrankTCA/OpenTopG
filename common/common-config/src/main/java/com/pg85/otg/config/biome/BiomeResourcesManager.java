@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class BiomeResourcesManager implements IConfigFunctionProvider {
-    private Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
+    private final Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
 
     public BiomeResourcesManager(Map<String, Class<? extends ConfigFunction<?>>> configFunctions) {
         // Also store in this class

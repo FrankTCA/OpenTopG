@@ -4,10 +4,10 @@ import java.util.Random;
 
 @Deprecated
 class NoiseGeneratorPerlin {
-    private int permutations[];
-    private double xCoord;
-    private double yCoord;
-    private double zCoord;
+    private final int[] permutations;
+    private final double xCoord;
+    private final double yCoord;
+    private final double zCoord;
 
     NoiseGeneratorPerlin(Random random) {
         permutations = new int[512];
@@ -45,7 +45,7 @@ class NoiseGeneratorPerlin {
         return ((j & 1) != 0 ? -d3 : d3) + ((j & 2) != 0 ? -d4 : d4);
     }
 
-    void populateNoiseArray3D(double NoiseArray[], double xOffset, double yOffset, double zOffset, int xSize, int ySize, int zSize, double xScale, double yScale, double zScale, double noiseScale) {
+    void populateNoiseArray3D(double[] NoiseArray, double xOffset, double yOffset, double zOffset, int xSize, int ySize, int zSize, double xScale, double yScale, double zScale, double noiseScale) {
         int i1 = 0;
         double d7 = 1.0D / noiseScale;
         int i2 = -1;
@@ -102,7 +102,7 @@ class NoiseGeneratorPerlin {
         }
     }
 
-    void populateNoiseArray2D(double NoiseArray[], double xOffset, double zOffset, int xSize, int zSize, double xScale, double zScale, double noiseScale) {
+    void populateNoiseArray2D(double[] NoiseArray, double xOffset, double zOffset, int xSize, int zSize, double xScale, double zScale, double noiseScale) {
         int j3 = 0;
         double d12 = 1.0D / noiseScale;
         for (int i4 = 0; i4 < xSize; i4++) {

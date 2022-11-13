@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class FifoMap<T, U> extends LinkedHashMap<T, U> {
-    private int max;
+    private final int max;
 
     /**
      *

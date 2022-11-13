@@ -57,14 +57,12 @@ public class OTGPlugin implements ModInitializer {
         ServerWorldEvents.LOAD.register((server, world) -> {
 
 
-            return;
         });
 
         //On world unload
         ServerWorldEvents.UNLOAD.register((server, world) -> {
 
 
-            return;
         });
 
         System.out.println("OpenTerrainGenerator-Fabric reporting in... it's dark in here.");

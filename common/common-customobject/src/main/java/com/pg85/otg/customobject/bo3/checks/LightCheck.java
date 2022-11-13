@@ -21,11 +21,8 @@ public class LightCheck extends BO3Check {
     @Override
     public boolean preventsSpawn(IWorldGenRegion worldGenRegion, int x, int y, int z) {
         int lightLevel = worldGenRegion.getLightLevel(x, y, z);
-        if (lightLevel < minLightLevel || lightLevel > maxLightLevel) {
-            // Out of bounds
-            return true;
-        }
-        return false;
+        // Out of bounds
+        return lightLevel < minLightLevel || lightLevel > maxLightLevel;
     }
 
     @Override

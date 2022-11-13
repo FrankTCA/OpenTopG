@@ -98,8 +98,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator {
     // Used to specify which chunk to regen biomes and structures for
     // Necessary because Spigot calls those methods before we have the chance to inject
     private ChunkCoordinate fixBiomesForChunk = null;
-    private Climate.Sampler sampler;
-    private Registry<NormalNoise.NoiseParameters> noises;
+    private final Climate.Sampler sampler;
+    private final Registry<NormalNoise.NoiseParameters> noises;
 
     public OTGNoiseChunkGenerator(BiomeSource biomeSource, long seed, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, Holder<NoiseGeneratorSettings> generatorSettings) {
         this("default", biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);

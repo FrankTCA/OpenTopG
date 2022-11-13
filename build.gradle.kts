@@ -35,7 +35,7 @@ listOf(
 ).forEach { proj ->
     proj.afterEvaluate {
         // Show more errors in intellij
-        proj.tasks.withType<JavaCompile>() {
+        proj.tasks.withType<JavaCompile> {
             options.compilerArgs.add("-Xmaxerrs")
             options.compilerArgs.add("5000")
         }

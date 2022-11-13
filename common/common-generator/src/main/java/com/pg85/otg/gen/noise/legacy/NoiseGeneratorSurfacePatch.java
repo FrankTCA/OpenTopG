@@ -5,13 +5,12 @@ import java.util.Random;
 @Deprecated
 class NoiseGeneratorSurfacePatch {
     private static final double Square3 = Math.sqrt(3.0D);
-    private static int[][] Grad3 = {{1, 1, 0}, {-1, 1, 0}, {1, -1, 0}, {-1, -1, 0}, {1, 0, 1}, {-1, 0, 1}, {1, 0, -1}, {-1, 0, -1}, {0, 1, 1}, {0, -1, 1}, {0, 1, -1}, {0, -1, -1}};
+    private static final int[][] Grad3 = {{1, 1, 0}, {-1, 1, 0}, {1, -1, 0}, {-1, -1, 0}, {1, 0, 1}, {-1, 0, 1}, {1, 0, -1}, {-1, 0, -1}, {0, 1, 1}, {0, -1, 1}, {0, 1, -1}, {0, -1, -1}};
 
-    private int[] permutationTable = new int[512];
+    private final int[] permutationTable = new int[512];
 
     NoiseGeneratorSurfacePatch(Random random) {
         for (int i = 0; i < 256; this.permutationTable[i] = i++) {
-            ;
         }
 
         for (int i = 0; i < 256; ++i) {

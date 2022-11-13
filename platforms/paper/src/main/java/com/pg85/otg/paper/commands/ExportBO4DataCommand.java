@@ -50,11 +50,10 @@ public class ExportBO4DataCommand extends BaseCommand {
     }
 
     private int exportBO4Data(CommandSourceStack sender) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendSuccess(new TextComponent("\u00a7cOnly players can execute this command!"), false);
             return 0;
         }
-        Player player = (Player) sender;
 
         if (!(sender.getLevel().getChunkSource().getGenerator() instanceof OTGNoiseChunkGenerator)) {
             sender.sendSuccess(new TextComponent("\u00a7cOTG is not enabled in this world!"), false);
@@ -94,8 +93,8 @@ public class ExportBO4DataCommand extends BaseCommand {
                                                     ((BO4) structure).isInvalidConfig = true;
                                                 }
 
-                                                OTG.getEngine().getLogger().log(LogLevel.INFO, LogCategory.MAIN, "Exporting .BO4Data for structure start " + ((BO4) structure).getName());
-                                                boName = ((BO4) structure).getName();
+                                                OTG.getEngine().getLogger().log(LogLevel.INFO, LogCategory.MAIN, "Exporting .BO4Data for structure start " + structure.getName());
+                                                boName = structure.getName();
                                                 BO4Data.generateBO4Data(((BO4) structure).getConfig(), preset.getFolderName(), OTG.getEngine().getOTGRootFolder(), OTG.getEngine().getLogger(), OTG.getEngine().getCustomObjectManager(), OTG.getEngine().getPresetLoader().getMaterialReader(preset.getFolderName()), OTG.getEngine().getCustomObjectResourcesManager(), OTG.getEngine().getModLoadedChecker());
                                                 OTG.getEngine().getCustomObjectManager().getGlobalObjects().unloadCustomObjectFiles();
                                             }
