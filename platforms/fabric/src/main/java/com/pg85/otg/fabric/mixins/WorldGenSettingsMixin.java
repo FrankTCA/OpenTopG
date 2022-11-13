@@ -43,6 +43,7 @@ public abstract class WorldGenSettingsMixin {
             } catch (ClassCastException | IllegalStateException ex) {
                 OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.MAIN, "[OTG] >> If you are on a server, please use {\"Preset\": \"PresetFolderName\"} in your `generator-settings` in server.properties.");
                 OTG.getEngine().getLogger().log(LogLevel.WARN, LogCategory.MAIN, "[OTG] >> Defaulting to Default preset.");
+                cir.setReturnValue(OTGDimensionTypeHelper.createOTGSettings(ra, seed, true, false, "Default"));
             }
 
         }
