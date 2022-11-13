@@ -1,7 +1,5 @@
 package com.pg85.otg.paper.commands;
 
-import java.nio.file.Path;
-
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -15,11 +13,12 @@ import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.util.ChunkCoordinate;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.storage.LevelResource;
+
+import java.nio.file.Path;
 
 public class StructureCommand extends BaseCommand {
     public StructureCommand() {

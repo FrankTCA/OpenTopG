@@ -100,12 +100,12 @@ public class SettingsEnums {
     public enum IceSpikeType {
         Basement,
         HugeSpike,
-        SmallSpike;
+        SmallSpike
     }
 
     public enum TemplateBiomeType {
         Overworld,
         Nether,
-        End;
+        End
     }
 }

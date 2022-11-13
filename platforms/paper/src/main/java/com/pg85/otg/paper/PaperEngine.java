@@ -38,10 +38,7 @@ public class PaperEngine extends OTGEngine {
     public File getJarFile() {
         String fileName = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         // URLEncoded string, decode.
-        try {
-            fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-        }
+        fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
 
         if (fileName != null) {
             File modFile = new File(fileName);

@@ -1,7 +1,5 @@
 package com.pg85.otg.util.minecraft;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -28,7 +26,7 @@ public enum SaplingType {
     // Custom represents any non-vanilla tree species, used in Forge.
 
     // Case insensitive index
-    private static ConcurrentHashMap<String, SaplingType> BY_NAME = new ConcurrentHashMap<String, SaplingType>();
+    private static final ConcurrentHashMap<String, SaplingType> BY_NAME = new ConcurrentHashMap<String, SaplingType>();
 
     static {
         for (SaplingType type : values()) {

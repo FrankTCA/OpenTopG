@@ -5,9 +5,7 @@ import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterialTag;
 import com.pg85.otg.util.materials.MaterialProperties;
 import com.pg85.otg.util.materials.MaterialProperty;
-
 import net.minecraft.core.Direction;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +13,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
-
 import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.v1_18_R2.block.data.CraftBlockData;
 
@@ -301,10 +298,9 @@ public final class PaperMaterialData extends LocalMaterialData {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof PaperMaterialData)) {
+        if (!(obj instanceof PaperMaterialData other)) {
             return false;
         }
-        PaperMaterialData other = (PaperMaterialData) obj;
         return
                 (this.isBlank && other.isBlank) ||
                         (

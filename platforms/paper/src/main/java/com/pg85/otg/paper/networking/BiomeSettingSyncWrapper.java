@@ -1,20 +1,19 @@
 package com.pg85.otg.paper.networking;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.util.biome.ColorSet;
 import com.pg85.otg.util.biome.ColorThreshold;
 import com.pg85.otg.util.biome.SimpleColorSet;
-
 import io.netty.buffer.ByteBuf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BiomeSettingSyncWrapper {
-    private float fogDensity;
-    private ColorSet grassColorControl;
-    private ColorSet foliageColorControl;
-    private ColorSet waterColorControl;
+    private final float fogDensity;
+    private final ColorSet grassColorControl;
+    private final ColorSet foliageColorControl;
+    private final ColorSet waterColorControl;
 
     public BiomeSettingSyncWrapper(IBiomeConfig config) {
         this.fogDensity = config.getFogDensity();

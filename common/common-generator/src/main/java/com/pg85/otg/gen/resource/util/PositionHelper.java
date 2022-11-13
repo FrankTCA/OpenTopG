@@ -1,8 +1,8 @@
 package com.pg85.otg.gen.resource.util;
 
-import java.util.Random;
-
 import com.google.common.collect.AbstractIterator;
+
+import java.util.Random;
 
 public class PositionHelper {
     public static Iterable<int[]> randomBetweenClosed(Random random, int limit, int x1, int y1, int z1, int x2, int y2,

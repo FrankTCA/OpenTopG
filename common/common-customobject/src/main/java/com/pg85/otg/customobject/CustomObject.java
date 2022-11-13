@@ -2,11 +2,7 @@ package com.pg85.otg.customobject;
 
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
-import com.pg85.otg.interfaces.ICustomObject;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.bo3.Rotation;
 
 import java.nio.file.Path;
@@ -28,14 +24,14 @@ public interface CustomObject extends SpawnableObject, ICustomObject {
      * @param otherObjectsInDirectory A map of all other objects in the
      *                                directory. Keys are lowercase.
      */
-    public boolean onEnable(String presetFolderName, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker);
+    boolean onEnable(String presetFolderName, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker);
 
     /**
      * Returns the name of this object.
      *
      * @return The name, without the extension.
      */
-    public String getName();
+    String getName();
 
     /**
      * Returns whether this object can spawn as a tree. UseWorld and UseBiome
@@ -43,7 +39,7 @@ public interface CustomObject extends SpawnableObject, ICustomObject {
      *
      * @return Whether this object can spawn as a tree.
      */
-    public boolean canSpawnAsTree();
+    boolean canSpawnAsTree();
 
     /**
      * Returns whether this object can be placed with a random rotation. If
@@ -51,7 +47,7 @@ public interface CustomObject extends SpawnableObject, ICustomObject {
      *
      * @return Whether this object can be placed with a random rotation.
      */
-    public boolean canRotateRandomly();
+    boolean canRotateRandomly();
 
     /**
      * Spawns the object at the given position. It should search a suitable y
@@ -63,7 +59,7 @@ public interface CustomObject extends SpawnableObject, ICustomObject {
      * @param z
      * @return Whether the attempt was successful.
      */
-    public boolean spawnAsTree(CustomStructureCache structureCache, IWorldGenRegion worldGenRegion, Random random, int x, int z, int minY, int maxY);
+    boolean spawnAsTree(CustomStructureCache structureCache, IWorldGenRegion worldGenRegion, Random random, int x, int z, int minY, int maxY);
 
     /**
      * Spawns the object one or more times in a chunk. The object can search a good y position by
@@ -74,11 +70,11 @@ public interface CustomObject extends SpawnableObject, ICustomObject {
      * @param chunkCoord The chunk to spawn the objects in.
      * @return Whether at least one object spawned successfully.
      */
-    public boolean process(CustomStructureCache structureCache, IWorldGenRegion worldGenRegion, Random random);
+    boolean process(CustomStructureCache structureCache, IWorldGenRegion worldGenRegion, Random random);
 
     boolean spawnFromSapling(IWorldGenRegion worldGenRegion, Random random, Rotation rotation, int x, int y, int z);
 
-    public boolean loadChecks(IModLoadedChecker modLoadedChecker);
+    boolean loadChecks(IModLoadedChecker modLoadedChecker);
 
     // Disables biomeconfig replaceBlocks to save performance.
     boolean doReplaceBlocks();

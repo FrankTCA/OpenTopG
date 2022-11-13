@@ -182,17 +182,13 @@ public class WeightedMobSpawnGroup {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof WeightedMobSpawnGroup)) {
+        if (!(obj instanceof WeightedMobSpawnGroup other)) {
             return false;
         }
-        WeightedMobSpawnGroup other = (WeightedMobSpawnGroup) obj;
         if (max != other.max || min != other.min || weight != other.weight) {
             return false;
         }
-        if (!getMob().equals(other.getMob())) {
-            return false;
-        }
-        return true;
+        return getMob().equals(other.getMob());
     }
 
     private static String removeFirstAndLastChar(String string) {

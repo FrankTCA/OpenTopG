@@ -12,10 +12,12 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.BiomeRegistryNames;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public final class TemplateBiome extends ConfigFunction<IWorldConfig> {
-    private String name;
+    private final String name;
     private double minTemp;
     private double maxTemp;
     private final List<String> tags = new ArrayList<String>();

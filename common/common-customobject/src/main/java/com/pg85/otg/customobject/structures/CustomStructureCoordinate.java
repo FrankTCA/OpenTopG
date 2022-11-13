@@ -1,12 +1,5 @@
 package com.pg85.otg.customobject.structures;
 
-import com.pg85.otg.util.bo3.Rotation;
-import com.pg85.otg.util.helpers.MathHelper;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-
-import java.nio.file.Path;
-
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
@@ -14,6 +7,12 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.interfaces.IStructuredCustomObject;
+import com.pg85.otg.util.bo3.Rotation;
+import com.pg85.otg.util.helpers.MathHelper;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
+
+import java.nio.file.Path;
 
 /**
  * Represents an object along with its location in the world.
@@ -48,11 +47,11 @@ public abstract class CustomStructureCoordinate {
     }
 
     public final int getChunkX() {
-        return (int) MathHelper.floor(x / (double) 16);
+        return MathHelper.floor(x / (double) 16);
     }
 
     public final int getChunkZ() {
-        return (int) MathHelper.floor(z / (double) 16);
+        return MathHelper.floor(z / (double) 16);
     }
 
     /**
@@ -89,10 +88,9 @@ public abstract class CustomStructureCoordinate {
         if (otherObject == null) {
             return false;
         }
-        if (!(otherObject instanceof CustomStructureCoordinate)) {
+        if (!(otherObject instanceof CustomStructureCoordinate otherCoord)) {
             return false;
         }
-        CustomStructureCoordinate otherCoord = (CustomStructureCoordinate) otherObject;
         if (otherCoord.x != x) {
             return false;
         }
@@ -105,9 +103,6 @@ public abstract class CustomStructureCoordinate {
         if (!otherCoord.rotation.equals(rotation)) {
             return false;
         }
-        if (!otherCoord.object.getName().equals(object.getName())) {
-            return false;
-        }
-        return true;
+        return otherCoord.object.getName().equals(object.getName());
     }
 }

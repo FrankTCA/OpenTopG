@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GrassResource extends BiomeResourceBase implements IBasicResource {
-    private static enum GroupOption {
+    private enum GroupOption {
         Grouped,
         NotGrouped
     }

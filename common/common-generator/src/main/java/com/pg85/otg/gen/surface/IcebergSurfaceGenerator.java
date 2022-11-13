@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.surface;
 
-import java.util.Random;
-import java.util.stream.IntStream;
-
 import com.google.common.collect.ImmutableList;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.exceptions.InvalidConfigException;
@@ -15,6 +12,9 @@ import com.pg85.otg.util.gen.GeneratingChunk;
 import com.pg85.otg.util.helpers.StringHelper;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.Random;
+import java.util.stream.IntStream;
 
 public class IcebergSurfaceGenerator extends MultipleLayersSurfaceGenerator {
     private OctaveSimplexNoiseSampler icebergNoise;
@@ -280,7 +280,7 @@ public class IcebergSurfaceGenerator extends MultipleLayersSurfaceGenerator {
             // Delete last ", "
             stringBuilder.deleteCharAt(stringBuilder.length() - 2);
         }
-        return "Iceberg " + stringBuilder.toString();
+        return "Iceberg " + stringBuilder;
     }
 
     public static IcebergSurfaceGenerator getFor(String settingValue, IMaterialReader materialReader) throws InvalidConfigException {

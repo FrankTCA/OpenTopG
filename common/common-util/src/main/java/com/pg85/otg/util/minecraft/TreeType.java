@@ -35,7 +35,7 @@ public enum TreeType {
     /**
      * Creates a new tree type.
      */
-    private TreeType() {
+    TreeType() {
         this.name = name();
     }
 
@@ -46,7 +46,7 @@ public enum TreeType {
      *
      * @param name The name used for writing.
      */
-    private TreeType(String name) {
+    TreeType(String name) {
         this.name = name;
     }
 

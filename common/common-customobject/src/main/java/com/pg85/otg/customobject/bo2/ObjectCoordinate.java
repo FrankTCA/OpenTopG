@@ -8,7 +8,7 @@ final class ObjectCoordinate {
     int x;
     int y;
     int z;
-    private int hash;
+    private final int hash;
     LocalMaterialData material;
     private int branchDirection;
     private int branchOdds;
@@ -24,8 +24,7 @@ final class ObjectCoordinate {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ObjectCoordinate) {
-            ObjectCoordinate object = (ObjectCoordinate) obj;
+        if (obj instanceof ObjectCoordinate object) {
             return object.x == this.x && object.y == this.y && object.z == this.z;
         }
         return false;
@@ -68,9 +67,9 @@ final class ObjectCoordinate {
             // TODO: What is this for, where do we ever use # or @?
             String workingDataString = value;
             if (workingDataString.contains("#")) {
-                String stringSet[] = workingDataString.split("#");
+                String[] stringSet = workingDataString.split("#");
                 workingDataString = stringSet[0];
-                String branchData[] = stringSet[1].split("@");
+                String[] branchData = stringSet[1].split("@");
                 newCoordinate.branchDirection = Integer.parseInt(branchData[0]);
                 newCoordinate.branchOdds = Integer.parseInt(branchData[1]);
             }

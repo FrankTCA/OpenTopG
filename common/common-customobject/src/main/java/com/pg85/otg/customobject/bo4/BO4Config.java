@@ -5,11 +5,7 @@ import com.pg85.otg.constants.Constants;
 import com.pg85.otg.constants.SettingsEnums.ConfigMode;
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
-import com.pg85.otg.customobject.bo4.bo4function.BO4BlockFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4BranchFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4EntityFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4RandomBlockFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4WeightedBranchFunction;
+import com.pg85.otg.customobject.bo4.bo4function.*;
 import com.pg85.otg.customobject.bofunctions.BlockFunction;
 import com.pg85.otg.customobject.bofunctions.BranchFunction;
 import com.pg85.otg.customobject.config.CustomObjectConfigFile;
@@ -26,27 +22,20 @@ import com.pg85.otg.interfaces.ICustomObjectManager;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.util.helpers.PerfHelper;
-import com.pg85.otg.util.nbt.NamedBinaryTag;
 import com.pg85.otg.util.bo3.Rotation;
+import com.pg85.otg.util.helpers.PerfHelper;
 import com.pg85.otg.util.helpers.StreamHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.minecraft.DefaultStructurePart;
+import com.pg85.otg.util.nbt.NamedBinaryTag;
 
-import java.io.DataOutput;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class BO4Config extends CustomObjectConfigFile {
@@ -516,9 +505,7 @@ public class BO4Config extends CustomObjectConfigFile {
 
                 ArrayList<BO4BranchFunction> newBranches = new ArrayList<BO4BranchFunction>();
                 if (this.branchesBO4 != null) {
-                    for (BO4BranchFunction branch : this.branchesBO4) {
-                        newBranches.add(branch);
-                    }
+                    Collections.addAll(newBranches, this.branchesBO4);
                 }
                 for (BO4BranchFunction branch : ((BO4) parentBO3).getConfig().branchesBO4) {
                     newBranches.add(branch.rotate(this.inheritBO3Rotation, presetFolderName, otgRootFolder, logger, customObjectManager2, materialReader, manager, modLoadedChecker));
@@ -527,9 +514,7 @@ public class BO4Config extends CustomObjectConfigFile {
 
                 ArrayList<BO4EntityFunction> newEntityData = new ArrayList<BO4EntityFunction>();
                 if (this.entityDataBO4 != null) {
-                    for (BO4EntityFunction entityData : this.entityDataBO4) {
-                        newEntityData.add(entityData);
-                    }
+                    Collections.addAll(newEntityData, this.entityDataBO4);
                 }
                 for (BO4EntityFunction entityData : ((BO4) parentBO3).getConfig().entityDataBO4) {
                     newEntityData.add(entityData.rotate(this.inheritBO3Rotation));
@@ -723,7 +708,7 @@ public class BO4Config extends CustomObjectConfigFile {
             if (this.blocks[block.x][block.z] == null) {
                 this.blocks[block.x][block.z] = new short[columnSizes[block.x][block.z]];
             }
-            this.blocks[block.x][block.z][columnBlockIndex[block.x][block.z]] = (short) block.y;
+            this.blocks[block.x][block.z][columnBlockIndex[block.x][block.z]] = block.y;
 
             this.blocksMaterial[blockIndex] = block.material;
             this.blocksMetaDataName[blockIndex] = block.nbtName;
@@ -1187,7 +1172,7 @@ public class BO4Config extends CustomObjectConfigFile {
         }
     }
 
-    private int bo4DataVersion = 3;
+    private final int bo4DataVersion = 3;
 
     void writeToStream(DataOutput stream, String presetFolderName, Path otgRootFolder, ILogger logger, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker) throws IOException {
         stream.writeInt(this.bo4DataVersion);
@@ -1251,17 +1236,14 @@ public class BO4Config extends CustomObjectConfigFile {
         stream.writeBoolean(this.useCenterForHighestBlock);
 
         stream.writeInt(this.branchesBO4.length);
-        for (BO4BranchFunction func : Arrays.asList(this.branchesBO4)) {
-            if (func instanceof BO4WeightedBranchFunction) {
-                stream.writeBoolean(true); // false For BO4BranchFunction, true for BO4WeightedBranchFunction
-            } else {
-                stream.writeBoolean(false); // false For BO4BranchFunction, true for BO4WeightedBranchFunction
-            }
+        for (BO4BranchFunction func : this.branchesBO4) {
+            // false For BO4BranchFunction, true for BO4WeightedBranchFunction
+            stream.writeBoolean(func instanceof BO4WeightedBranchFunction); // false For BO4BranchFunction, true for BO4WeightedBranchFunction
             func.writeToStream(stream);
         }
 
         stream.writeInt(this.entityDataBO4.length);
-        for (BO4EntityFunction func : Arrays.asList(this.entityDataBO4)) {
+        for (BO4EntityFunction func : this.entityDataBO4) {
             func.writeToStream(stream);
         }
 
@@ -1803,7 +1785,7 @@ public class BO4Config extends CustomObjectConfigFile {
         for (int i = 0; i < newBlocks.size(); i++) {
             block = (BO4BlockFunction) newBlocks.get(i);
 
-            this.blocks[block.x][block.z][columnBlockIndex[block.x][block.z]] = (short) block.y;
+            this.blocks[block.x][block.z][columnBlockIndex[block.x][block.z]] = block.y;
 
             blockIndex = columnBlockIndex[block.x][block.z] + getColumnBlockIndex(columnSizes, block.x, block.z);
 

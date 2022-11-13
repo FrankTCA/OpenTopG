@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.gen.resource.util.PositionHelper;
@@ -13,14 +10,17 @@ import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.MaterialSet;
 
+import java.util.List;
+import java.util.Random;
+
 public class BasaltColumnResource extends FrequencyResourceBase {
-    private int baseSize;
-    private int sizeVariance;
-    private int baseHeight;
-    private int heightVariance;
-    private int minAltitude;
-    private int maxAltitude;
-    private LocalMaterialData material;
+    private final int baseSize;
+    private final int sizeVariance;
+    private final int baseHeight;
+    private final int heightVariance;
+    private final int minAltitude;
+    private final int maxAltitude;
+    private final LocalMaterialData material;
     private final MaterialSet sourceBlocks;
 
     public BasaltColumnResource(IBiomeConfig biomeConfig, List<String> args, ILogger logger, IMaterialReader materialReader)

@@ -1,21 +1,21 @@
 package com.pg85.otg.core.presets;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.pg85.otg.core.config.biome.BiomeConfig;
 import com.pg85.otg.core.config.world.WorldConfig;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.IWorldConfig;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Represents an OTG preset, with all its world and biome configs, stored in /config/OpenTerrainGenerator/Presets/\<PresetName\>/.
  */
 public class Preset {
     private final Path presetFolder;
-    private String presetFolderName;
-    private String shortPresetName;
+    private final String presetFolderName;
+    private final String shortPresetName;
 
     // Note: Since we're not using Supplier<>, we need to be careful about any classes fetching
     // and caching our worldconfig/biomeconfigs etc, or they won't update when reloaded from disk.

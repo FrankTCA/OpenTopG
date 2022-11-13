@@ -1,35 +1,5 @@
 package com.pg85.otg.paper.gen;
 
-import java.lang.reflect.Field;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import com.pg85.otg.paper.util.ObfuscationHelper;
-import com.pg85.otg.util.gen.DecorationArea;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.minecraft.SharedConstants;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-import net.minecraft.core.*;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.*;
-import net.minecraft.world.level.chunk.*;
-import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.structure.*;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.pg85.otg.constants.Constants;
@@ -45,26 +15,53 @@ import com.pg85.otg.interfaces.ILayerSource;
 import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.paper.biome.PaperBiome;
 import com.pg85.otg.paper.presets.PaperPresetLoader;
+import com.pg85.otg.paper.util.ObfuscationHelper;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.gen.ChunkBuffer;
+import com.pg85.otg.util.gen.DecorationArea;
 import com.pg85.otg.util.gen.JigsawStructureData;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
-
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
+import net.minecraft.SharedConstants;
+import net.minecraft.core.*;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.*;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawJunction;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.storage.LevelResource;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class OTGNoiseChunkGenerator extends ChunkGenerator {
     // Create a codec to serialise/deserialise OTGNoiseChunkGenerator
@@ -103,8 +100,8 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator {
     // Used to specify which chunk to regen biomes and structures for
     // Necessary because Spigot calls those methods before we have the chance to inject
     private ChunkCoordinate fixBiomesForChunk = null;
-    private Climate.Sampler sampler;
-    private Registry<NormalNoise.NoiseParameters> noises;
+    private final Climate.Sampler sampler;
+    private final Registry<NormalNoise.NoiseParameters> noises;
 
     public OTGNoiseChunkGenerator(BiomeSource biomeSource, long seed, Registry<StructureSet> structureSetRegistry, Registry<NormalNoise.NoiseParameters> noiseRegistry, Holder<NoiseGeneratorSettings> generatorSettings) {
         this("default", biomeSource, structureSetRegistry, noiseRegistry, seed, generatorSettings);
@@ -138,7 +135,6 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator {
 
         this.router = settings.createNoiseRouter(this.noises, seed);
         this.sampler = new Climate.Sampler(this.router.temperature(), this.router.humidity(), this.router.continents(), this.router.erosion(), this.router.depth(), this.router.ridges(), this.router.spawnTarget());
-
     }
 
     // Method to remove structures which have been disabled in the world config
@@ -510,43 +506,6 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator {
     // Mob spawning on chunk tick
     @Override
     public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureFeatureManager structureManager, MobCategory entityClassification, BlockPos blockPos) {
-		/*if (structureManager.getStructureAt(blockPos, StructureFeature.SWAMP_HUT).isValid())
-		{
-			if (entityClassification == MobCategory.MONSTER)
-			{
-				return StructureFeature.SWAMP_HUT.getSpecialEnemies();
-			}
-
-			if (entityClassification == MobCategory.CREATURE)
-			{
-				return StructureFeature.SWAMP_HUT.getSpecialAnimals();
-			}
-		}
-
-		if (entityClassification == MobCategory.MONSTER)
-		{
-			if (structureManager.getStructureAt(blockPos, false, StructureFeature.PILLAGER_OUTPOST).isValid())
-			{
-				return StructureFeature.PILLAGER_OUTPOST.getSpecialEnemies();
-			}
-
-			if (structureManager.getStructureAt(blockPos, false, StructureFeature.OCEAN_MONUMENT).isValid())
-			{
-				return StructureFeature.OCEAN_MONUMENT.getSpecialEnemies();
-			}
-
-			if (structureManager.getStructureAt(blockPos, true, StructureFeature.NETHER_BRIDGE).isValid())
-			{
-				return StructureFeature.NETHER_BRIDGE.getSpecialEnemies();
-			}
-		}
-
-		return entityClassification == MobCategory.UNDERGROUND_WATER_CREATURE && structureManager.getStructureAt(blockPos, false, StructureFeature.OCEAN_MONUMENT).isValid() ? StructureFeature.OCEAN_MONUMENT.getSpecialUndergroundWaterAnimals() : */
-        /*
-         * Judging by the fact that the methods were removed,
-         * I believe the below method will work regardless of structure.
-         * - Frank
-         */
         return super.getMobsAt(biome, structureManager, entityClassification, blockPos);
     }
 
@@ -750,8 +709,7 @@ public class OTGNoiseChunkGenerator extends ChunkGenerator {
             if (this.hasFeatureChunkInRange(BuiltinStructureSets.WOODLAND_MANSIONS, worldSeed, x, z, 4))
                 return true;
         switch (biome.getBiomeConfig().getRareBuildingType()) {
-            case disabled -> {
-            }
+            case disabled -> {}
             case desertPyramid -> {
                 if (this.hasFeatureChunkInRange(BuiltinStructureSets.DESERT_PYRAMIDS, worldSeed, x, z, 1))
                     return true;

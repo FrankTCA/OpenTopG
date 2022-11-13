@@ -1,8 +1,8 @@
 package com.pg85.otg.gen.noise;
 
-import java.util.Random;
-
 import com.pg85.otg.util.helpers.MathHelper;
+
+import java.util.Random;
 
 // Derived from net.minecraft.world.gen.ImprovedNoiseGenerator
 public class PerlinNoiseSampler {

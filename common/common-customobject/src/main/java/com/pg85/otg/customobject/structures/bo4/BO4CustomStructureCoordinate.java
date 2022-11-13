@@ -1,11 +1,5 @@
 package com.pg85.otg.customobject.structures.bo4;
 
-import com.pg85.otg.util.bo3.Rotation;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-
-import java.nio.file.Path;
-
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
@@ -15,6 +9,11 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IModLoadedChecker;
 import com.pg85.otg.interfaces.IStructuredCustomObject;
+import com.pg85.otg.util.bo3.Rotation;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
+
+import java.nio.file.Path;
 
 /**
  * Represents an object along with its location in the world.
@@ -85,10 +84,9 @@ public class BO4CustomStructureCoordinate extends CustomStructureCoordinate {
         if (otherObject == null) {
             return false;
         }
-        if (!(otherObject instanceof BO4CustomStructureCoordinate)) {
+        if (!(otherObject instanceof BO4CustomStructureCoordinate otherCoord)) {
             return false;
         }
-        BO4CustomStructureCoordinate otherCoord = (BO4CustomStructureCoordinate) otherObject;
         if (otherCoord.x != x) {
             return false;
         }
@@ -101,10 +99,7 @@ public class BO4CustomStructureCoordinate extends CustomStructureCoordinate {
         if (!otherCoord.rotation.equals(rotation)) {
             return false;
         }
-        if (!otherCoord.object.getName().equals(object.getName())) {
-            return false;
-        }
-        return true;
+        return otherCoord.object.getName().equals(object.getName());
     }
 
     /**

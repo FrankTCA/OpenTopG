@@ -1,8 +1,7 @@
 package com.pg85.otg.paper.util;
 
-import org.bukkit.Bukkit;
-
 import com.pg85.otg.interfaces.IModLoadedChecker;
+import org.bukkit.Bukkit;
 
 public class PaperPluginLoadedChecker implements IModLoadedChecker {
     @Override

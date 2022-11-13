@@ -73,7 +73,7 @@ public abstract class OTGEngine {
 
         File pluginConfigFile = Paths.get(getOTGRootFolder().toString(), Constants.PluginConfigFilename).toFile();
         this.pluginConfig = new PluginConfig(
-                FileSettingsReader.read(Constants.PluginConfigFilename, pluginConfigFile, (ILogger) null),
+                FileSettingsReader.read(Constants.PluginConfigFilename, pluginConfigFile, null),
                 this.biomeResourcesManager,
                 this.logger
         );

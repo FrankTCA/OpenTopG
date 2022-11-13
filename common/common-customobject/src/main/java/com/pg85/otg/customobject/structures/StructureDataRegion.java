@@ -4,7 +4,7 @@ import com.pg85.otg.constants.Constants;
 
 class StructureDataRegion {
     private boolean requiresSave = false;
-    private CustomStructure[][] structures = new CustomStructure[Constants.REGION_SIZE][Constants.REGION_SIZE];
+    private final CustomStructure[][] structures = new CustomStructure[Constants.REGION_SIZE][Constants.REGION_SIZE];
 
     boolean requiresSave() {
         return this.requiresSave;

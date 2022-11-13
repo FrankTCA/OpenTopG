@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.util.List;
-import java.util.function.LongFunction;
-
 import com.pg85.otg.constants.SettingsEnums.BiomeMode;
 import com.pg85.otg.constants.SettingsEnums.ImageMode;
 import com.pg85.otg.gen.biome.BiomeData;
@@ -12,6 +9,9 @@ import com.pg85.otg.gen.biome.layers.util.LayerFactory;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
 import com.pg85.otg.interfaces.ILayerSampler;
 import com.pg85.otg.interfaces.ILogger;
+
+import java.util.List;
+import java.util.function.LongFunction;
 
 /**
  * Holds the factory and utils needed for OTG's biome layers to work.

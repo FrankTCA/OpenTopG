@@ -1,10 +1,5 @@
 package com.pg85.otg.paper.commands;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
-
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,7 +7,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,6 +22,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
 public class BiomeCommand extends BaseCommand {
     private static final String[] OPTIONS = new String[]
@@ -103,7 +101,7 @@ public class BiomeCommand extends BaseCommand {
             HolderSet<PlacedFeature> innerList = featureList.get(i);
             source.sendSuccess(new TextComponent(" " + GenerationStep.Decoration.values()[i].toString().toLowerCase(Locale.ROOT) + ":").withStyle(ChatFormatting.GOLD), false);
             for (Holder<PlacedFeature> holder : innerList) {
-                source.sendSuccess(new TextComponent(" - " + holder.value().toString()).withStyle(ChatFormatting.GREEN), false);
+                source.sendSuccess(new TextComponent(" - " + holder.value()).withStyle(ChatFormatting.GREEN), false);
             }
         }
     }

@@ -1,8 +1,15 @@
 package com.pg85.otg.paper.events;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.pg85.otg.constants.Constants;
+import com.pg85.otg.core.OTG;
+import com.pg85.otg.interfaces.ILogger;
+import com.pg85.otg.interfaces.IWorldConfig;
+import com.pg85.otg.paper.OTGPlugin;
+import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
+import com.pg85.otg.paper.gen.OTGPaperChunkGen;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,19 +22,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.SpawnChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.event.world.WorldLoadEvent;
-
-import com.pg85.otg.constants.Constants;
-import com.pg85.otg.core.OTG;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IWorldConfig;
-import com.pg85.otg.paper.OTGPlugin;
-import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
-import com.pg85.otg.paper.gen.OTGPaperChunkGen;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-
-import net.minecraft.server.level.ServerLevel;
 import org.bukkit.permissions.PermissionAttachment;
+
+import java.io.File;
+import java.io.IOException;
 
 public class OTGHandler implements Listener {
     private final SaplingHandler saplingHandler;

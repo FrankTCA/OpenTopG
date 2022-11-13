@@ -1,13 +1,13 @@
 package com.pg85.otg.paper.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandUtil {
 

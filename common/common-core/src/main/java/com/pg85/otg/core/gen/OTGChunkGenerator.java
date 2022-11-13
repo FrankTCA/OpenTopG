@@ -1,11 +1,5 @@
 package com.pg85.otg.core.gen;
 
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.core.presets.Preset;
@@ -18,12 +12,7 @@ import com.pg85.otg.gen.gen.OreVeinGenerator;
 import com.pg85.otg.gen.noise.OctavePerlinNoiseSampler;
 import com.pg85.otg.gen.noise.PerlinNoiseSampler;
 import com.pg85.otg.gen.noise.legacy.NoiseGeneratorPerlinMesaBlocks;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.ICachedBiomeProvider;
-import com.pg85.otg.interfaces.ILayerSource;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.ISurfaceGeneratorNoiseProvider;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.gen.ChunkBuffer;
 import com.pg85.otg.util.gen.DecorationArea;
@@ -33,10 +22,15 @@ import com.pg85.otg.util.helpers.MathHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
-import com.pg85.otg.util.materials.LocalMaterials;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Random;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 /**
  * Generates the base terrain, sets stone/ground/surface blocks and does SurfaceAndGroundControl, generates caves and canyons.
@@ -92,10 +86,10 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider {
     private final Carver ravines;
     // Biome blocks noise
     // TODO: Use new noise?
-    private ThreadLocal<double[]> biomeBlocksNoise = ThreadLocal.withInitial(() -> new double[Constants.CHUNK_SIZE * Constants.CHUNK_SIZE]);
-    private ThreadLocal<Integer> lastX = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
-    private ThreadLocal<Integer> lastZ = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
-    private ThreadLocal<Double> lastNoise = ThreadLocal.withInitial(() -> 0d);
+    private final ThreadLocal<double[]> biomeBlocksNoise = ThreadLocal.withInitial(() -> new double[Constants.CHUNK_SIZE * Constants.CHUNK_SIZE]);
+    private final ThreadLocal<Integer> lastX = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
+    private final ThreadLocal<Integer> lastZ = ThreadLocal.withInitial(() -> Integer.MAX_VALUE);
+    private final ThreadLocal<Double> lastNoise = ThreadLocal.withInitial(() -> 0d);
     private final OreVeinGenerator oreVeinGenerator;
 
     public OTGChunkGenerator(Preset preset, long seed, ILayerSource biomeProvider, IBiome[] biomesById, ILogger logger) {
@@ -278,7 +272,7 @@ public class OTGChunkGenerator implements ISurfaceGeneratorNoiseProvider {
 
         int radius = Math.max(center.getSmoothRadius(), center.getCHCSmoothRadius());
         int areaSize = radius * 2 + 1;
-        IBiomeConfig biomes[] = this.cachedBiomeProvider.getNoiseBiomeConfigsForRegion(noiseX - radius, noiseZ - radius, areaSize);
+        IBiomeConfig[] biomes = this.cachedBiomeProvider.getNoiseBiomeConfigsForRegion(noiseX - radius, noiseZ - radius, areaSize);
         IBiomeConfig biome;
         float heightAt;
         float weightAt;

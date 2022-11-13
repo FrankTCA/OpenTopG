@@ -4,9 +4,7 @@ import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
-
 import net.minecraft.core.BlockPos;
-
 import org.bukkit.entity.Player;
 
 public class WorldEditUtil {

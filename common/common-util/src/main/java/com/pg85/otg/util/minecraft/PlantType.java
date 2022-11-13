@@ -1,14 +1,14 @@
 package com.pg85.otg.util.minecraft;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Holds all small plants (1 or 2 blocks) of Minecraft so that users don't
@@ -93,8 +93,8 @@ public final class PlantType {
 
     private final String name;
     private final String[] aliases;
-    private LocalMaterialData topBlock;
-    private LocalMaterialData bottomBlock;
+    private final LocalMaterialData topBlock;
+    private final LocalMaterialData bottomBlock;
 
     /**
      * Creates a single-block plant with the given name.

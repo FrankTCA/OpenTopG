@@ -13,7 +13,10 @@ import java.util.Random;
  * Represents a single ore vein.
  */
 class Vein {
-    private int x, y, z, size;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final int size;
 
     Vein(int blockX, int blockY, int blockZ, int size) {
         this.x = blockX;
@@ -33,11 +36,7 @@ class Vein {
         // Calculate the ceiled chunk size
         int chunkSize = getChunkSize();
 
-        if (MathHelper.abs(otherChunkX - chunkX) > chunkSize || MathHelper.abs(otherChunkZ - chunkZ) > chunkSize) {
-            return false;
-        }
-
-        return true;
+        return MathHelper.abs(otherChunkX - chunkX) <= chunkSize && MathHelper.abs(otherChunkZ - chunkZ) <= chunkSize;
     }
 
     public void spawn(IWorldGenRegion worldGenRegion, Random random, VeinResource gen) {

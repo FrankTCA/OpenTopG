@@ -1,7 +1,5 @@
 package com.pg85.otg.util.minecraft;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -108,7 +106,7 @@ public enum EntityNames {
     WITHER_SKULL("wither_skull", "witherskull");
 
     // Contains all aliases (alias, internalName)
-    private static ConcurrentHashMap<String, String> MobAliases = new ConcurrentHashMap<String, String>();
+    private static final ConcurrentHashMap<String, String> MobAliases = new ConcurrentHashMap<String, String>();
 
     // Auto-register all aliases in the enum
     static {
@@ -150,10 +148,10 @@ public enum EntityNames {
         }
     }
 
-    private String[] aliases;
-    private String internalMinecraftName;
+    private final String[] aliases;
+    private final String internalMinecraftName;
 
-    private EntityNames(String internalMinecraftName, String... aliases) {
+    EntityNames(String internalMinecraftName, String... aliases) {
         this.internalMinecraftName = internalMinecraftName;
         this.aliases = aliases;
     }

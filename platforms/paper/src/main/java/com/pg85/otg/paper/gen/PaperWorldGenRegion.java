@@ -1,32 +1,9 @@
 package com.pg85.otg.paper.gen;
 
-import java.text.MessageFormat;
-import java.util.Optional;
-import java.util.Random;
-
-import net.minecraft.data.worldgen.features.TreeFeatures;
-import net.minecraft.data.worldgen.placement.CavePlacements;
-import net.minecraft.data.worldgen.placement.EndPlacements;
-import net.minecraft.data.worldgen.placement.TreePlacements;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.level.WorldGenRegion;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.*;
-
 import com.google.gson.JsonSyntaxException;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.ICachedBiomeProvider;
-import com.pg85.otg.interfaces.IEntityFunction;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IWorldConfig;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.paper.materials.PaperMaterialData;
 import com.pg85.otg.paper.util.JsonToNBT;
 import com.pg85.otg.paper.util.PaperNBTHelper;
@@ -40,19 +17,34 @@ import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 import com.pg85.otg.util.minecraft.TreeType;
 import com.pg85.otg.util.nbt.NamedBinaryTag;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.features.TreeFeatures;
+import net.minecraft.data.worldgen.placement.CavePlacements;
+import net.minecraft.data.worldgen.placement.EndPlacements;
+import net.minecraft.data.worldgen.placement.TreePlacements;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+
+import java.text.MessageFormat;
+import java.util.Optional;
+import java.util.Random;
 
 // TODO: Split up worldgenregion into separate classes, one for decoration/worldgen, one for non-worldgen.
 public class PaperWorldGenRegion extends LocalWorldGenRegion {
@@ -252,7 +244,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
         BlockState blockState;
         Block block;
 
-        for (int i = heightMapY; i >= 0; i--) {
+        for (int i = heightMapY; i >= Constants.WORLD_DEPTH; i--) {
             // TODO: mutable
             blockState = chunk.getBlockState(new BlockPos(internalX, i, internalZ));
             block = blockState.getBlock();
@@ -301,13 +293,13 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
                     return i;
                 }
                 if ((findSolid && isLiquid) || (findLiquid && isSolid)) {
-                    return -1;
+                    return Constants.WORLD_DEPTH-1;
                 }
             }
         }
 
         // Can happen if this is a chunk filled with air
-        return -1;
+        return Constants.WORLD_DEPTH-1;
     }
 
     @Override
@@ -341,7 +333,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
         if (biomeConfig.getReplaceBlocks() != null) {
             material = material.parseWithBiomeAndHeight(this.getWorldConfig().getBiomeConfigsHaveReplacement(), biomeConfig.getReplaceBlocks(), y);
         }
-        this.worldGenRegion.setBlock(new BlockPos(x, y, z), ((PaperMaterialData) material).internalBlock(), 3);
+        this.worldGenRegion.setBlock(new BlockPos(x, y, z), ((PaperMaterialData)material).internalBlock(), 3);
     }
 
     @Override

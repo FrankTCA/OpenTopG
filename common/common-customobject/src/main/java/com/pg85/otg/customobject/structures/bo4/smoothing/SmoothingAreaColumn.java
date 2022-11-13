@@ -1,7 +1,5 @@
 package com.pg85.otg.customobject.structures.bo4.smoothing;
 
-import java.util.ArrayList;
-
 import com.pg85.otg.customobject.bo4.BO4Config;
 import com.pg85.otg.customobject.structures.bo4.smoothing.SmoothingAreaBlock.EnumSmoothingBlockType;
 import com.pg85.otg.exceptions.InvalidConfigException;
@@ -14,9 +12,11 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 
+import java.util.ArrayList;
+
 class SmoothingAreaColumn {
-    private int x;
-    private int z;
+    private final int x;
+    private final int z;
     private final ArrayList<SmoothingAreaBlock> blocks = new ArrayList<SmoothingAreaBlock>();
     private SmoothingAreaBlock highestFillingBlock = null;
     private SmoothingAreaBlock lowestCuttingBlock = null;

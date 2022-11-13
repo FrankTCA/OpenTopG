@@ -15,12 +15,7 @@ import com.pg85.otg.customobject.structures.CustomStructureCache;
 import com.pg85.otg.customobject.util.BO3Enums.SpawnHeightEnum;
 import com.pg85.otg.gen.resource.IBasicResource;
 import com.pg85.otg.gen.surface.FrozenSurfaceHelper;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.IChunkDecorator;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.logging.LogCategory;
@@ -45,7 +40,7 @@ public class OTGChunkDecorator implements IChunkDecorator {
     private int decorating = 0;
     private boolean saving;
     private boolean saveRequired;
-    private Object asynChunkDecorationLock = new Object();
+    private final Object asynChunkDecorationLock = new Object();
 
     public OTGChunkDecorator() {
         this.rand = new Random();
@@ -161,24 +156,24 @@ public class OTGChunkDecorator implements IChunkDecorator {
             if (res instanceof ICustomObjectResource) {
                 ((ICustomObjectResource) res).processForChunkDecoration(structureCache, worldGenRegion, this.rand, otgRootFolder, customObjectManager, materialReader, customObjectResourcesManager, modLoadedChecker);
                 if (logger.getLogCategoryEnabled(LogCategory.PERFORMANCE) && (System.currentTimeMillis() - startTime) > 50) {
-                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res.toString() + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
+                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
                 }
             } else if (res instanceof ICustomStructureResource) {
                 ((ICustomStructureResource) res).processForChunkDecoration(structureCache, worldGenRegion, this.rand, otgRootFolder, customObjectManager, materialReader, customObjectResourcesManager, modLoadedChecker);
                 if (logger.getLogCategoryEnabled(LogCategory.PERFORMANCE) && (System.currentTimeMillis() - startTime) > 50) {
-                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res.toString() + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
+                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
                 }
             } else if (res instanceof IBasicResource) {
                 ((IBasicResource) res).processForChunkDecoration(worldGenRegion, this.rand, logger, materialReader);
                 if (logger.getLogCategoryEnabled(LogCategory.PERFORMANCE) && (System.currentTimeMillis() - startTime) > 50) {
-                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res.toString() + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
+                    logger.log(LogLevel.WARN, LogCategory.PERFORMANCE, "Warning: Processing resource " + res + " in biome " + biomeConfig.getName() + " took " + (System.currentTimeMillis() - startTime) + " Ms.");
                 }
             } else if (res instanceof ErroredFunction) {
                 if (logger.getLogCategoryEnabled(LogCategory.DECORATION))
                     if (!((ErroredFunction<IBiomeConfig>) res).isLogged) {
                         ((ErroredFunction<IBiomeConfig>) res).isLogged = true;
                         if (logger.getLogCategoryEnabled(LogCategory.DECORATION))
-                            logger.log(LogLevel.ERROR, LogCategory.DECORATION, "Errored setting ignored for biome " + biomeConfig.getName() + " : " + toString());
+                            logger.log(LogLevel.ERROR, LogCategory.DECORATION, "Errored setting ignored for biome " + biomeConfig.getName() + " : " + this);
                     }
             }
         }
@@ -238,7 +233,7 @@ public class OTGChunkDecorator implements IChunkDecorator {
 
                 y += ((BO3) customObject).getConfig().getSpawnHeightOffset();
                 // This may spawn the structure across chunk borders.
-                ((BO3) customObject).spawnForced(
+                customObject.spawnForced(
                         structureCache,
                         worldGenRegion,
                         this.rand,

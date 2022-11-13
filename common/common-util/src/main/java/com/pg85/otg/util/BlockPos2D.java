@@ -14,9 +14,7 @@ public class BlockPos2D {
             return true;
         }
         if (other instanceof BlockPos2D) {
-            if (((BlockPos2D) other).x == this.x && ((BlockPos2D) other).z == this.z) {
-                return true;
-            }
+            return ((BlockPos2D) other).x == this.x && ((BlockPos2D) other).z == this.z;
         }
         return false;
     }

@@ -1,12 +1,12 @@
 package com.pg85.otg.util.materials;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.helpers.StringHelper;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A material set that accepts special values such as "All" or "Solid". These
@@ -38,7 +38,7 @@ public class MaterialSet {
     private boolean allNonSolidMaterials = false;
 
     private int[] materialIntSet = new int[0];
-    private Set<MaterialSetEntry> materials = new LinkedHashSet<MaterialSetEntry>();
+    private final Set<MaterialSetEntry> materials = new LinkedHashSet<MaterialSetEntry>();
     private Set<MaterialSetEntry> tags = new LinkedHashSet<MaterialSetEntry>();
     private boolean intSetUpToDate = true;
 

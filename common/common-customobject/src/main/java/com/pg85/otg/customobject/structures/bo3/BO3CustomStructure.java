@@ -4,18 +4,9 @@ import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo3.BO3;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
-import com.pg85.otg.customobject.structures.Branch;
-import com.pg85.otg.customobject.structures.CustomStructure;
-import com.pg85.otg.customobject.structures.CustomStructureCache;
-import com.pg85.otg.customobject.structures.CustomStructureCoordinate;
-import com.pg85.otg.customobject.structures.StructuredCustomObject;
+import com.pg85.otg.customobject.structures.*;
 import com.pg85.otg.customobject.util.BO3Enums.SpawnHeightEnum;
-import com.pg85.otg.interfaces.ICustomObject;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IStructuredCustomObject;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.helpers.RandomHelper;
@@ -23,7 +14,9 @@ import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Represents a collection of all {@link CustomObject}s in a structure. It is
@@ -60,8 +53,8 @@ public class BO3CustomStructure extends CustomStructure {
         // Calculate all branches and add them to a list
         this.objectsToSpawn = new LinkedHashMap<ChunkCoordinate, Set<CustomStructureCoordinate>>();
 
-        addToSpawnList((BO3CustomStructureCoordinate) start, object, otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker); // Add the object itself
-        addBranches((BO3CustomStructureCoordinate) start, 1, worldGenRegion, otgRootFolder, customObjectManager, materialReader, manager, modLoadedChecker);
+        addToSpawnList(start, object, otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker); // Add the object itself
+        addBranches(start, 1, worldGenRegion, otgRootFolder, customObjectManager, materialReader, manager, modLoadedChecker);
     }
 
     private void addBranches(BO3CustomStructureCoordinate coordObject, int depth, IWorldGenRegion worldGenRegion, Path otgRootFolder, CustomObjectManager customObjectManager, IMaterialReader materialReader, CustomObjectResourcesManager manager, IModLoadedChecker modLoadedChecker) {
@@ -119,7 +112,7 @@ public class BO3CustomStructure extends CustomStructure {
         Set<CustomStructureCoordinate> objectsInChunk = this.objectsToSpawn.get(worldGenRegion.getDecorationArea().getChunkBeingDecorated());
         if (objectsInChunk != null) {
             for (CustomStructureCoordinate coordObject : objectsInChunk) {
-                BO3 bo3 = ((BO3) ((BO3CustomStructureCoordinate) coordObject).getObject(otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker));
+                BO3 bo3 = ((BO3) coordObject.getObject(otgRootFolder, worldGenRegion.getLogger(), customObjectManager, materialReader, manager, modLoadedChecker));
                 bo3.trySpawnAt(this, structureCache, worldGenRegion, this.random, coordObject.rotation, coordObject.x, getCorrectY(worldGenRegion, coordObject.x, coordObject.y, coordObject.z), coordObject.z, bo3.getConfig().minHeight, bo3.getConfig().maxHeight, coordObject.y);
             }
         }

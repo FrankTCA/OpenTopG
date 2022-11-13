@@ -12,7 +12,9 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.BiomeRegistryNames;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Biomes are spawned in groups so that biomes of the same type are near each
@@ -23,8 +25,8 @@ import java.util.*;
  */
 public final class BiomeGroup extends ConfigFunction<IWorldConfig> {
     private int groupId;
-    private String name;
-    private int groupRarity;
+    private final String name;
+    private final int groupRarity;
     private int generationDepth = 0;
     private double minTemp = 0;
     private double maxTemp = 0;

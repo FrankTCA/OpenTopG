@@ -48,7 +48,7 @@ public class VeinResource extends BiomeResourceBase implements IBasicResource {
      */
     private Vein getVeinStartInChunk(IWorldGenRegion worldGenRegion, int chunkX, int chunkZ) {
         // Create a random generator that is constant for this chunk and vein
-        Random random = RandomHelper.getRandomForCoords(chunkX, chunkZ, this.material.hashCode() * (this.minSizeInBlocks + this.maxSizeInBlocks + 100) + worldGenRegion.getSeed());
+        Random random = RandomHelper.getRandomForCoords(chunkX, chunkZ, (long) this.material.hashCode() * (this.minSizeInBlocks + this.maxSizeInBlocks + 100) + worldGenRegion.getSeed());
 
         if (random.nextDouble() * 100.0 < this.veinRarity) {
             int veinX = chunkX * 16 + random.nextInt(16) + DecorationArea.DECORATION_OFFSET;

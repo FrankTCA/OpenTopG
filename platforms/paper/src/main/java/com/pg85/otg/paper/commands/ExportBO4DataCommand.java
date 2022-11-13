@@ -1,10 +1,5 @@
 package com.pg85.otg.paper.commands;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-
-import org.bukkit.entity.Player;
-
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.constants.SettingsEnums.CustomStructureType;
@@ -26,10 +21,13 @@ import com.pg85.otg.paper.gen.PaperWorldGenRegion;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
+import org.bukkit.entity.Player;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class ExportBO4DataCommand extends BaseCommand {
     private static boolean isRunning = false;
@@ -52,11 +50,10 @@ public class ExportBO4DataCommand extends BaseCommand {
     }
 
     private int exportBO4Data(CommandSourceStack sender) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendSuccess(new TextComponent("\u00a7cOnly players can execute this command!"), false);
             return 0;
         }
-        Player player = (Player) sender;
 
         if (!(sender.getLevel().getChunkSource().getGenerator() instanceof OTGNoiseChunkGenerator)) {
             sender.sendSuccess(new TextComponent("\u00a7cOTG is not enabled in this world!"), false);
@@ -96,8 +93,8 @@ public class ExportBO4DataCommand extends BaseCommand {
                                                     ((BO4) structure).isInvalidConfig = true;
                                                 }
 
-                                                OTG.getEngine().getLogger().log(LogLevel.INFO, LogCategory.MAIN, "Exporting .BO4Data for structure start " + ((BO4) structure).getName());
-                                                boName = ((BO4) structure).getName();
+                                                OTG.getEngine().getLogger().log(LogLevel.INFO, LogCategory.MAIN, "Exporting .BO4Data for structure start " + structure.getName());
+                                                boName = structure.getName();
                                                 BO4Data.generateBO4Data(((BO4) structure).getConfig(), preset.getFolderName(), OTG.getEngine().getOTGRootFolder(), OTG.getEngine().getLogger(), OTG.getEngine().getCustomObjectManager(), OTG.getEngine().getPresetLoader().getMaterialReader(preset.getFolderName()), OTG.getEngine().getCustomObjectResourcesManager(), OTG.getEngine().getModLoadedChecker());
                                                 OTG.getEngine().getCustomObjectManager().getGlobalObjects().unloadCustomObjectFiles();
                                             }

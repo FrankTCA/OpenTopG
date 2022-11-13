@@ -15,7 +15,6 @@ import com.pg85.otg.util.logging.LogLevel;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.MessageFormat;
@@ -117,7 +116,7 @@ public final class FileSettingsWriterBO4 implements SettingsWriterBO4 {
                 builder.append(' ');
             flag = !flag;
         }
-        writer.write("# |" + builder.toString() + "| #");
+        writer.write("# |" + builder + "| #");
         writer.newLine();
         writer.write("# +-----------------------------------------------------------------+ #");
         writer.newLine();

@@ -1,10 +1,10 @@
 package com.pg85.otg.config.io;
 
+import com.pg85.otg.config.settingType.Setting;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.pg85.otg.config.settingType.Setting;
 
 /**
  * Information about the unparsed value of a setting. It contains what was found
@@ -46,7 +46,7 @@ final class RawSettingValue {
         if (settingValue == null || valueType == null) {
             throw new NullPointerException();
         }
-        return new RawSettingValue(settingValue, valueType, -1, Collections.<String>emptyList());
+        return new RawSettingValue(settingValue, valueType, -1, Collections.emptyList());
     }
 
     /**

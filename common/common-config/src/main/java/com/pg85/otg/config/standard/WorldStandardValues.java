@@ -5,11 +5,7 @@ import com.pg85.otg.config.settingType.MaterialSetting;
 import com.pg85.otg.config.settingType.Setting;
 import com.pg85.otg.config.settingType.Settings;
 import com.pg85.otg.constants.Constants;
-import com.pg85.otg.constants.SettingsEnums.BiomeMode;
-import com.pg85.otg.constants.SettingsEnums.ConfigMode;
-import com.pg85.otg.constants.SettingsEnums.CustomStructureType;
-import com.pg85.otg.constants.SettingsEnums.ImageMode;
-import com.pg85.otg.constants.SettingsEnums.ImageOrientation;
+import com.pg85.otg.constants.SettingsEnums.*;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 
@@ -136,7 +132,7 @@ public class WorldStandardValues extends Settings {
             NETHERFOSSIL_SEPARATION = intSetting("NetherFossilSeparation", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     public static final Setting<Long>
-            FIXED_TIME = longSetting("FixedTime", -1l, -1l, 24000);
+            FIXED_TIME = longSetting("FixedTime", -1L, -1L, 24000);
 
     public static final Setting<Boolean>
             FORCE_LAND_AT_SPAWN = booleanSetting("ForceLandAtSpawn", true),

@@ -1,5 +1,33 @@
 package com.pg85.otg.paper.commands;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.pg85.otg.core.OTG;
+import com.pg85.otg.core.objectcreator.ObjectCreator;
+import com.pg85.otg.core.presets.Preset;
+import com.pg85.otg.customobject.structures.StructuredCustomObject;
+import com.pg85.otg.customobject.util.Corner;
+import com.pg85.otg.customobject.util.ObjectType;
+import com.pg85.otg.paper.commands.RegionCommand.Region;
+import com.pg85.otg.paper.commands.arguments.PresetArgument;
+import com.pg85.otg.paper.materials.PaperMaterialData;
+import com.pg85.otg.paper.util.PaperNBTHelper;
+import com.pg85.otg.util.logging.LogCategory;
+import com.pg85.otg.util.logging.LogLevel;
+import com.pg85.otg.util.materials.LocalMaterialData;
+import com.pg85.otg.util.materials.LocalMaterials;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
@@ -7,39 +35,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import com.pg85.otg.core.OTG;
-import com.pg85.otg.core.presets.Preset;
-import com.pg85.otg.core.objectcreator.ObjectCreator;
-import com.pg85.otg.customobject.util.ObjectType;
-import com.pg85.otg.customobject.structures.StructuredCustomObject;
-import com.pg85.otg.customobject.util.Corner;
-import com.pg85.otg.paper.commands.RegionCommand.Region;
-import com.pg85.otg.paper.commands.arguments.PresetArgument;
-import com.pg85.otg.paper.gen.PaperWorldGenRegion;
-import com.pg85.otg.paper.materials.PaperMaterialData;
-import com.pg85.otg.paper.util.PaperNBTHelper;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-import com.pg85.otg.util.materials.LocalMaterialData;
-import com.pg85.otg.util.materials.LocalMaterials;
-import com.pg85.otg.util.nbt.LocalNBTHelper;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.blocks.BlockInput;
-import net.minecraft.commands.arguments.blocks.BlockStateArgument;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class ExportCommand extends BaseCommand {
     public static HashMap<Entity, CommandOptions> configMap = new HashMap<>();

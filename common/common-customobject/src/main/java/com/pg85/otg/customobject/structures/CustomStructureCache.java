@@ -8,16 +8,7 @@ import com.pg85.otg.customobject.structures.bo3.BO3CustomStructure;
 import com.pg85.otg.customobject.structures.bo3.BO3CustomStructureCoordinate;
 import com.pg85.otg.customobject.structures.bo4.BO4CustomStructure;
 import com.pg85.otg.customobject.structures.bo4.CustomStructurePlotter;
-import com.pg85.otg.interfaces.IBiomeConfig;
-import com.pg85.otg.interfaces.IChunkDecorator;
-import com.pg85.otg.interfaces.ICustomObjectManager;
-import com.pg85.otg.interfaces.ICustomObjectResourcesManager;
-import com.pg85.otg.interfaces.ICustomStructureGen;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IStructuredCustomObject;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.FifoMap;
 import com.pg85.otg.util.helpers.RandomHelper;
@@ -43,12 +34,12 @@ public class CustomStructureCache {
     private final long worldSeed;
 
     // BO3
-    private FifoMap<ChunkCoordinate, BO3CustomStructure> bo3StructureCache;
+    private final FifoMap<ChunkCoordinate, BO3CustomStructure> bo3StructureCache;
 
     // BO4
 
     // Contains bo4StructureCache of plotted but not yet decorated branches
-    private CustomStructurePlotter plotter;
+    private final CustomStructurePlotter plotter;
 
     // Common
 

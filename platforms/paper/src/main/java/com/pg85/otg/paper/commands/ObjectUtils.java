@@ -1,21 +1,15 @@
 package com.pg85.otg.paper.commands;
 
-import java.nio.file.Path;
-import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
+import com.pg85.otg.core.objectcreator.ObjectCreator;
 import com.pg85.otg.core.presets.Preset;
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.bofunctions.BlockFunction;
-import com.pg85.otg.core.objectcreator.ObjectCreator;
-import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.customobject.structures.StructuredCustomObject;
 import com.pg85.otg.customobject.util.BoundingBox;
 import com.pg85.otg.customobject.util.Corner;
+import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.paper.gen.MCWorldGenRegion;
 import com.pg85.otg.paper.gen.OTGPaperChunkGen;
 import com.pg85.otg.paper.gen.PaperWorldGenRegion;
@@ -23,10 +17,14 @@ import com.pg85.otg.paper.util.PaperNBTHelper;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.gen.LocalWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterials;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+
+import java.nio.file.Path;
+import java.util.List;
 
 public class ObjectUtils {
     /**

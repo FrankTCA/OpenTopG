@@ -1,9 +1,5 @@
 package com.pg85.otg.customobject.structures.bo4;
 
-import java.nio.file.Path;
-import java.util.Random;
-import java.util.Stack;
-
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo4.BO4;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
@@ -17,6 +13,10 @@ import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.helpers.RandomHelper;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
+
+import java.nio.file.Path;
+import java.util.Random;
+import java.util.Stack;
 
 class BranchDataItem {
     private static int BranchDataItemCounter = -1;
@@ -35,9 +35,9 @@ class BranchDataItem {
     int maxDepth = 0;
 
     private boolean minimumSize = false;
-    private Random random;
-    private Stack<BranchDataItem> children = new Stack<BranchDataItem>();
-    private String startBO3Name;
+    private final Random random;
+    private final Stack<BranchDataItem> children = new Stack<BranchDataItem>();
+    private final String startBO3Name;
 
     BranchDataItem(Random random, BranchDataItem parent, BO4CustomStructureCoordinate branch, String startBO3Name, int currentDepth, int maxDepth, boolean minimumSize) {
         this.random = random;

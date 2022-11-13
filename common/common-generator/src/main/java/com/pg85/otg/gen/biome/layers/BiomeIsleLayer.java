@@ -1,14 +1,14 @@
 package com.pg85.otg.gen.biome.layers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pg85.otg.gen.biome.layers.type.DiagonalCrossSamplingLayer;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BiomeIsleLayer implements DiagonalCrossSamplingLayer {
     public static class IslesList {
-        private List<Isle> isles = new ArrayList<>();
+        private final List<Isle> isles = new ArrayList<>();
 
         public List<Isle> getIsles() {
             return this.isles;

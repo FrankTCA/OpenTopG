@@ -1,13 +1,5 @@
 package com.pg85.otg.core.config.world;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.OptionalLong;
-
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.config.biome.BiomeGroup;
 import com.pg85.otg.config.biome.BiomeGroupManager;
@@ -24,6 +16,10 @@ import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.minecraft.BiomeRegistryNames;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * WorldConfig.ini classes
@@ -350,7 +346,7 @@ public class WorldConfig extends WorldConfigBase {
         // Dimension settings
 
         long fixedTime = reader.getSetting(WorldStandardValues.FIXED_TIME, logger);
-        this.fixedTime = fixedTime == -1l ? OptionalLong.empty() : OptionalLong.of(fixedTime);
+        this.fixedTime = fixedTime == -1L ? OptionalLong.empty() : OptionalLong.of(fixedTime);
         this.hasSkyLight = reader.getSetting(WorldStandardValues.HAS_SKYLIGHT, logger);
         this.hasCeiling = reader.getSetting(WorldStandardValues.HAS_CEILING, logger);
         this.ultraWarm = reader.getSetting(WorldStandardValues.ULTRA_WARM, logger);

@@ -4,14 +4,14 @@ import com.pg85.otg.constants.Constants;
 
 public class BO3Enums {
     // The spawn height
-    public static enum SpawnHeightEnum {
+    public enum SpawnHeightEnum {
         randomY,
         highestBlock,
         highestSolidBlock
     }
 
     // How an object should be extended to a surface
-    public static enum ExtrudeMode {
+    public enum ExtrudeMode {
         None(-1, -1),
         BottomDown(Constants.WORLD_HEIGHT - 1, Constants.WORLD_DEPTH),
         TopUp(Constants.WORLD_DEPTH, Constants.WORLD_HEIGHT - 1);
@@ -41,7 +41,7 @@ public class BO3Enums {
     }
 
     // What to do when outside the source block
-    public static enum OutsideSourceBlock {
+    public enum OutsideSourceBlock {
         dontPlace,
         placeAnyway
     }

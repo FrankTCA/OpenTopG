@@ -1,14 +1,14 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.config.biome.BiomeResourceBase;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
+
+import java.util.List;
+import java.util.Random;
 
 // Frequency resources uses frequency and rarity settings to spawn in each chunk being decorated.
 // Within the 2x2 chunk decoration area, a 16x16 area in the center (8 blocks margin on each side)

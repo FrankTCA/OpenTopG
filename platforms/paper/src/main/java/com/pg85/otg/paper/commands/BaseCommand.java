@@ -1,7 +1,6 @@
 package com.pg85.otg.paper.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;

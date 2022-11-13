@@ -285,10 +285,10 @@ public abstract class CustomObjectConfigFunction<T> {
      */
     @Deprecated
     public final void setValid(boolean valid) {
-        if (valid == false) {
+        if (!valid) {
             throw new UnsupportedOperationException("Use the invalidate method");
         }
-        if (valid == true && !isValid()) {
+        if (valid && !isValid()) {
             throw new UnsupportedOperationException("Revalidating objects is no longer supported");
         }
         // So (valid == true && isValid()), so it's safe to do nothing

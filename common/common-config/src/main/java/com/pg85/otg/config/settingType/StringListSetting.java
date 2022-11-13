@@ -13,7 +13,7 @@ import java.util.List;
  * ", " between each string.
  */
 class StringListSetting extends Setting<List<String>> {
-    private String[] defaultValue;
+    private final String[] defaultValue;
 
     StringListSetting(String name, String... defaultValue) {
         super(name);

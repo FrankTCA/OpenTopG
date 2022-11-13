@@ -45,7 +45,7 @@ public final class SurfaceGeneratorSetting extends Setting<SurfaceGenerator> {
      * @param name Name of the setting.
      * @return The newly created setting.
      */
-    private static final Setting<SurfaceGenerator> surfaceGeneratorSetting(String name) {
+    private static Setting<SurfaceGenerator> surfaceGeneratorSetting(String name) {
         return new SurfaceGeneratorSetting(name);
     }
 }

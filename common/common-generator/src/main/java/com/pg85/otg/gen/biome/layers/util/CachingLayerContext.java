@@ -1,9 +1,9 @@
 package com.pg85.otg.gen.biome.layers.util;
 
-import java.util.Random;
-
 import com.pg85.otg.gen.noise.PerlinNoiseSampler;
 import com.pg85.otg.util.helpers.MathHelper;
+
+import java.util.Random;
 
 public class CachingLayerContext implements LayerSampleContext<CachingLayerSampler> {
     private final int cacheCapacity;

@@ -1,12 +1,5 @@
 package com.pg85.otg.config.biome;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.pg85.otg.config.ConfigFunction;
 import com.pg85.otg.config.ErroredFunction;
 import com.pg85.otg.config.io.IConfigFunctionProvider;
@@ -15,8 +8,15 @@ import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldConfig;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class BiomeResourcesManager implements IConfigFunctionProvider {
-    private Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
+    private final Map<String, Class<? extends ConfigFunction<?>>> configFunctions;
 
     public BiomeResourcesManager(Map<String, Class<? extends ConfigFunction<?>>> configFunctions) {
         // Also store in this class
