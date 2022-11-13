@@ -1,18 +1,12 @@
 package com.pg85.otg.util.nbt;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
+
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NBTHelper {
     // A list of already loaded meta Tags. The path is the key, a NBT Tag is the value.

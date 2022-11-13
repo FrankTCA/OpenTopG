@@ -1,7 +1,5 @@
 package com.pg85.otg.util.minecraft;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

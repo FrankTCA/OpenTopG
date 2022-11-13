@@ -4,8 +4,6 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.pg85.otg.core.OTG;
 import com.pg85.otg.exceptions.InvalidConfigException;
-import com.pg85.otg.fabric.materials.FabricLegacyMaterials;
-import com.pg85.otg.fabric.materials.FabricMaterialData;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.FifoMap;
 import com.pg85.otg.util.logging.LogCategory;
@@ -13,7 +11,6 @@ import com.pg85.otg.util.logging.LogLevel;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterialTag;
 import com.pg85.otg.util.minecraft.BlockNames;
-
 import net.minecraft.ResourceLocationException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;

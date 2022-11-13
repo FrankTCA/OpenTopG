@@ -1,11 +1,5 @@
 package com.pg85.otg.customobject.bo3;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.constants.SettingsEnums.ConfigMode;
 import com.pg85.otg.customobject.CustomObjectManager;
@@ -15,17 +9,13 @@ import com.pg85.otg.customobject.bo3.checks.BO3Check;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.config.io.FileSettingsReaderBO4;
 import com.pg85.otg.customobject.config.io.FileSettingsWriterBO4;
-import com.pg85.otg.customobject.util.ObjectType;
-import com.pg85.otg.customobject.structures.Branch;
-import com.pg85.otg.customobject.structures.CustomStructure;
-import com.pg85.otg.customobject.structures.CustomStructureCache;
-import com.pg85.otg.customobject.structures.CustomStructureCoordinate;
-import com.pg85.otg.customobject.structures.StructuredCustomObject;
+import com.pg85.otg.customobject.structures.*;
 import com.pg85.otg.customobject.structures.bo3.BO3CustomStructure;
 import com.pg85.otg.customobject.structures.bo3.BO3CustomStructureCoordinate;
-import com.pg85.otg.customobject.util.BoundingBox;
 import com.pg85.otg.customobject.util.BO3Enums.OutsideSourceBlock;
 import com.pg85.otg.customobject.util.BO3Enums.SpawnHeightEnum;
+import com.pg85.otg.customobject.util.BoundingBox;
+import com.pg85.otg.customobject.util.ObjectType;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
@@ -38,6 +28,12 @@ import com.pg85.otg.util.gen.DecorationArea;
 import com.pg85.otg.util.helpers.MathHelper;
 import com.pg85.otg.util.helpers.RandomHelper;
 import com.pg85.otg.util.materials.LocalMaterialData;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 public class BO3 implements StructuredCustomObject {
     private BO3Config settings;

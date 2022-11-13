@@ -1,11 +1,10 @@
 package com.pg85.otg.paper.api;
 
-import java.util.Optional;
-
+import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.paper.gen.OTGPaperChunkGen;
 import org.bukkit.Location;
 
-import com.pg85.otg.interfaces.IBiomeConfig;
+import java.util.Optional;
 
 public class OTGPaperAPI {
     public static IBiomeConfig getOTGBiome(Location location) {

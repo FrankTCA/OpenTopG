@@ -1,13 +1,12 @@
 package com.pg85.otg.gen.noise;
 
+import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
-
-import com.google.common.collect.ImmutableList;
-
-import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
-import it.unimi.dsi.fastutil.ints.IntSortedSet;
 
 // Derived from net.minecraft.world.gen.PerlinNoiseGenerator
 // The name is mis-mapped in MCP, it is indeed simplex noise.

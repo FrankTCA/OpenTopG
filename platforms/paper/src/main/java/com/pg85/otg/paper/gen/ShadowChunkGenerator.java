@@ -1,10 +1,20 @@
 package com.pg85.otg.paper.gen;
 
-import java.util.*;
-
-import com.google.common.collect.ImmutableCollection;
+import com.pg85.otg.constants.Constants;
+import com.pg85.otg.core.gen.OTGChunkGenerator;
+import com.pg85.otg.interfaces.IBiome;
+import com.pg85.otg.interfaces.ICachedBiomeProvider;
 import com.pg85.otg.paper.biome.PaperBiome;
-import net.minecraft.core.Holder;
+import com.pg85.otg.paper.materials.PaperMaterialData;
+import com.pg85.otg.util.BlockPos2D;
+import com.pg85.otg.util.ChunkCoordinate;
+import com.pg85.otg.util.FifoMap;
+import com.pg85.otg.util.gen.JigsawStructureData;
+import com.pg85.otg.util.materials.LocalMaterialData;
+import com.pg85.otg.util.materials.LocalMaterials;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,36 +23,15 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-
-import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
+import net.minecraft.world.level.chunk.ProtoChunk;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import org.bukkit.craftbukkit.v1_18_R2.generator.CraftChunkData;
 
-import com.pg85.otg.constants.Constants;
-import com.pg85.otg.core.gen.OTGChunkGenerator;
-import com.pg85.otg.interfaces.IBiome;
-import com.pg85.otg.interfaces.ICachedBiomeProvider;
-import com.pg85.otg.paper.materials.PaperMaterialData;
-import com.pg85.otg.util.BlockPos2D;
-import com.pg85.otg.util.ChunkCoordinate;
-import com.pg85.otg.util.FifoMap;
-import com.pg85.otg.util.gen.JigsawStructureData;
-import com.pg85.otg.util.materials.LocalMaterialData;
-import com.pg85.otg.util.materials.LocalMaterials;
-
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
-//import net.minecraft.world.level.levelgen.StructureSettings;
-//import net.minecraft.world.level.levelgen.WorldgenRandom;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import java.util.*;
 //import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**

@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.gen.resource.util.PositionHelper;
@@ -12,6 +9,9 @@ import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.MaterialSet;
+
+import java.util.List;
+import java.util.Random;
 
 public class BasaltColumnResource extends FrequencyResourceBase {
     private int baseSize;

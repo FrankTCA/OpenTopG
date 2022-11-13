@@ -5,7 +5,6 @@ import com.pg85.otg.core.OTG;
 import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;

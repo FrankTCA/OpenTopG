@@ -2,21 +2,12 @@ package com.pg85.otg.customobject.bo3;
 
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectLoader;
-import com.pg85.otg.customobject.bo3.bo3function.BO3BlockFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3BranchFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3EntityFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3MinecraftObjectFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3RandomBlockFunction;
-import com.pg85.otg.customobject.bo3.bo3function.BO3WeightedBranchFunction;
-import com.pg85.otg.customobject.bo3.checks.BlockCheck;
-import com.pg85.otg.customobject.bo3.checks.BlockCheckNot;
-import com.pg85.otg.customobject.bo3.checks.LightCheck;
-import com.pg85.otg.customobject.bo3.checks.ModCheck;
-import com.pg85.otg.customobject.bo3.checks.ModCheckNot;
+import com.pg85.otg.customobject.bo3.bo3function.*;
+import com.pg85.otg.customobject.bo3.checks.*;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.interfaces.ILogger;
 
-import java.io.*;
+import java.io.File;
 
 public class BO3Loader implements CustomObjectLoader {
     public BO3Loader(CustomObjectResourcesManager registry) {

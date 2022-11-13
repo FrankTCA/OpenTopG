@@ -1,10 +1,10 @@
 package com.pg85.otg.util.biome;
 
-import java.util.List;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.helpers.StringHelper;
+
+import java.util.List;
 
 public class SimpleColorSet extends ColorSet {
 

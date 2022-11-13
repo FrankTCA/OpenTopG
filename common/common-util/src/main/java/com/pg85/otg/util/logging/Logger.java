@@ -1,9 +1,9 @@
 package com.pg85.otg.util.logging;
 
+import com.pg85.otg.interfaces.ILogger;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import com.pg85.otg.interfaces.ILogger;
 
 public abstract class Logger implements ILogger {
     protected LogLevel minimumLevel = LogLevel.INFO;

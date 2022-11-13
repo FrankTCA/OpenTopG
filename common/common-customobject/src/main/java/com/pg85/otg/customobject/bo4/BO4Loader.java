@@ -1,16 +1,12 @@
 package com.pg85.otg.customobject.bo4;
 
-import java.io.File;
-
 import com.pg85.otg.customobject.CustomObject;
 import com.pg85.otg.customobject.CustomObjectLoader;
-import com.pg85.otg.customobject.bo4.bo4function.BO4BlockFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4BranchFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4EntityFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4RandomBlockFunction;
-import com.pg85.otg.customobject.bo4.bo4function.BO4WeightedBranchFunction;
+import com.pg85.otg.customobject.bo4.bo4function.*;
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.interfaces.ILogger;
+
+import java.io.File;
 
 public class BO4Loader implements CustomObjectLoader {
     public BO4Loader(CustomObjectResourcesManager registry) {

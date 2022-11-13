@@ -1,12 +1,12 @@
 package com.pg85.otg.fabric.util;
 
-import java.util.Stack;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import net.minecraft.nbt.*;
+
+import java.util.Stack;
+import java.util.regex.Pattern;
 
 // TODO: most methods used to throw an NBTException, but that no longer exists
 // log proper warnings/errors and make sure return values are picked up properly.

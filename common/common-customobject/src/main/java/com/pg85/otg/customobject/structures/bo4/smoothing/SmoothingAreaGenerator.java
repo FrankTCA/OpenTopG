@@ -1,14 +1,5 @@
 package com.pg85.otg.customobject.structures.bo4.smoothing;
 
-import java.awt.geom.Point2D;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.pg85.otg.customobject.CustomObjectManager;
 import com.pg85.otg.customobject.bo4.BO4;
 import com.pg85.otg.customobject.bo4.BO4Config;
@@ -26,6 +17,15 @@ import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.materials.LocalMaterialData;
+
+import java.awt.geom.Point2D;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SmoothingAreaGenerator {
     // A smoothing area is drawn around all outer blocks (or blocks neighbouring air) on the lowest layer of blocks in each BO3 of this branching structure that has a SmoothRadius set greater than 0.

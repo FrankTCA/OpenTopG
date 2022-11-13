@@ -1,10 +1,5 @@
 package com.pg85.otg.paper.commands;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
-
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -21,22 +16,19 @@ import com.pg85.otg.paper.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.paper.gen.PaperWorldGenRegion;
 import com.pg85.otg.util.ChunkCoordinate;
 import com.pg85.otg.util.bo3.Rotation;
-import com.pg85.otg.util.logging.LogCategory;
-import com.pg85.otg.util.logging.LogLevel;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.storage.LevelResource;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
 public class SpawnCommand extends BaseCommand {
     public SpawnCommand() {

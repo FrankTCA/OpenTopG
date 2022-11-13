@@ -1,15 +1,15 @@
 package com.pg85.otg.customobject.bo4.bo4function;
 
-import java.io.DataOutput;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import com.pg85.otg.customobject.bo4.BO4Config;
 import com.pg85.otg.customobject.bofunctions.EntityFunction;
 import com.pg85.otg.customobject.structures.bo4.BO4CustomStructureCoordinate;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.util.bo3.Rotation;
 import com.pg85.otg.util.helpers.StreamHelper;
+
+import java.io.DataOutput;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Represents an entity in a BO3.

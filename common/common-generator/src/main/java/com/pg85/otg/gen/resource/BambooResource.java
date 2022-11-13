@@ -1,8 +1,5 @@
 package com.pg85.otg.gen.resource;
 
-import java.util.List;
-import java.util.Random;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IBiomeConfig;
 import com.pg85.otg.interfaces.ILogger;
@@ -11,6 +8,9 @@ import com.pg85.otg.interfaces.IWorldGenRegion;
 import com.pg85.otg.util.materials.LocalMaterialData;
 import com.pg85.otg.util.materials.LocalMaterials;
 import com.pg85.otg.util.materials.MaterialSet;
+
+import java.util.List;
+import java.util.Random;
 
 public class BambooResource extends FrequencyResourceBase {
     private final double podzolChance;

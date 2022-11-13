@@ -1,11 +1,11 @@
 package com.pg85.otg.config.settingType;
 
-import java.util.ArrayList;
-
 import com.pg85.otg.exceptions.InvalidConfigException;
 import com.pg85.otg.interfaces.IMaterialReader;
 import com.pg85.otg.util.helpers.StringHelper;
 import com.pg85.otg.util.materials.LocalMaterialData;
+
+import java.util.ArrayList;
 
 /**
  * Reads and writes a material. Materials are read using

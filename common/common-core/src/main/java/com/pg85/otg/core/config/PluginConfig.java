@@ -1,13 +1,13 @@
 package com.pg85.otg.core.config;
 
-import java.nio.file.Path;
-
 import com.pg85.otg.config.io.IConfigFunctionProvider;
 import com.pg85.otg.config.io.SettingsMap;
 import com.pg85.otg.config.standard.PluginConfigStandardValues;
 import com.pg85.otg.config.standard.WorldStandardValues;
 import com.pg85.otg.interfaces.ILogger;
 import com.pg85.otg.interfaces.IMaterialReader;
+
+import java.nio.file.Path;
 
 /**
  * OTG.ini / PluginConfig classes

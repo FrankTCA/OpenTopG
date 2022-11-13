@@ -1,9 +1,9 @@
 package com.pg85.otg.gen.biome.layers;
 
-import static com.pg85.otg.gen.biome.layers.BiomeLayers.LAND_BIT;
-
 import com.pg85.otg.gen.biome.layers.type.DiagonalCrossSamplingLayer;
 import com.pg85.otg.gen.biome.layers.util.LayerSampleContext;
+
+import static com.pg85.otg.gen.biome.layers.BiomeLayers.LAND_BIT;
 
 /**
  * Fuzzes the edge of land and ocean by adding islands and adding ocean.

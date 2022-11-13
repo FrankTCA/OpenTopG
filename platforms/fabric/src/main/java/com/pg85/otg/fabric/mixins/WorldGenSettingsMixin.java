@@ -1,43 +1,20 @@
 package com.pg85.otg.fabric.mixins;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.core.OTG;
-import com.pg85.otg.fabric.biome.OTGBiomeProvider;
 import com.pg85.otg.fabric.dimensions.OTGDimensionTypeHelper;
-import com.pg85.otg.fabric.gen.OTGNoiseChunkGenerator;
-import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
-import net.fabricmc.fabric.mixin.datagen.DynamicRegistryManagerAccessor;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.worldgen.SurfaceRuleData;
-import net.minecraft.data.worldgen.TerrainProvider;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.dedicated.DedicatedServerProperties.WorldGenProperties;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import org.apache.logging.log4j.LogManager;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Random;
-import java.util.logging.Logger;
 
 @Mixin(WorldGenSettings.class)
 public abstract class WorldGenSettingsMixin {

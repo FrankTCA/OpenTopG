@@ -1,25 +1,5 @@
 package com.pg85.otg.fabric.dimensions;
 
-import java.util.OptionalLong;
-import java.util.Random;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.Supplier;
-
-import com.pg85.otg.fabric.biome.OTGBiomeProvider;
-import com.pg85.otg.fabric.gen.OTGNoiseChunkGenerator;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,31 +13,48 @@ import com.pg85.otg.core.config.dimensions.DimensionConfig;
 import com.pg85.otg.core.config.dimensions.DimensionConfig.OTGDimension;
 import com.pg85.otg.core.config.dimensions.DimensionConfig.OTGOverWorld;
 import com.pg85.otg.core.presets.Preset;
+import com.pg85.otg.fabric.biome.OTGBiomeProvider;
+import com.pg85.otg.fabric.gen.OTGNoiseChunkGenerator;
 import com.pg85.otg.interfaces.IWorldConfig;
 import com.pg85.otg.util.logging.LogCategory;
 import com.pg85.otg.util.logging.LogLevel;
-
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.ParameterList;
 import net.minecraft.world.level.biome.Climate.ParameterPoint;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.DebugLevelSource;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map.Entry;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class OTGDimensionTypeHelper
 {

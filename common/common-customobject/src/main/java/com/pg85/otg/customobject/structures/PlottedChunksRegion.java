@@ -1,8 +1,8 @@
 package com.pg85.otg.customobject.structures;
 
-import java.util.Arrays;
-
 import com.pg85.otg.constants.Constants;
+
+import java.util.Arrays;
 
 public class PlottedChunksRegion {
     private boolean requiresSave = false;

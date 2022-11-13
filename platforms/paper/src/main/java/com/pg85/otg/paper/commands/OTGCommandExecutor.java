@@ -1,14 +1,13 @@
 package com.pg85.otg.paper.commands;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 
 public class OTGCommandExecutor {
     private static final List<BaseCommand> commands = new ArrayList<>();

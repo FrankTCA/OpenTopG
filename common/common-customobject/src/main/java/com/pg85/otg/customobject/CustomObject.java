@@ -2,11 +2,7 @@ package com.pg85.otg.customobject;
 
 import com.pg85.otg.customobject.config.CustomObjectResourcesManager;
 import com.pg85.otg.customobject.structures.CustomStructureCache;
-import com.pg85.otg.interfaces.ICustomObject;
-import com.pg85.otg.interfaces.ILogger;
-import com.pg85.otg.interfaces.IMaterialReader;
-import com.pg85.otg.interfaces.IModLoadedChecker;
-import com.pg85.otg.interfaces.IWorldGenRegion;
+import com.pg85.otg.interfaces.*;
 import com.pg85.otg.util.bo3.Rotation;
 
 import java.nio.file.Path;

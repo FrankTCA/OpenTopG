@@ -6,7 +6,6 @@ import com.pg85.otg.util.materials.LocalMaterialTag;
 import com.pg85.otg.util.materials.MaterialProperties;
 import com.pg85.otg.util.materials.MaterialProperty;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;

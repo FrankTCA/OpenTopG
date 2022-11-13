@@ -2,10 +2,8 @@ package com.pg85.otg.paper.materials;
 
 import com.pg85.otg.constants.Constants;
 import com.pg85.otg.util.materials.LocalMaterialTag;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
