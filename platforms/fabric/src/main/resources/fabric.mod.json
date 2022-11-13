@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "id": "otg",
   "version": "${version}",
-  "name": "Example Mod",
+
+  "name": "OpenTerrainGenerator",
   "description": "OTG: Generate anything!",
   "authors": [
     "Team OTG"
@@ -11,17 +12,25 @@
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
+
   "license": "MIT",
   "icon": "OTGlogo.png",
+
   "environment": "*",
   "entrypoints": {
     "main": [
       "com.pg85.otg.fabric.OTGPlugin"
+    ],
+    "fabric-datagen": [
+      "com.pg85.otg.fabric.util.FabricDataGenerator"
     ]
   },
   "mixins": [
     "otg-fabric.mixins.json"
   ],
+
+  "accessWidener": "otg-fabric.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric": "*",
