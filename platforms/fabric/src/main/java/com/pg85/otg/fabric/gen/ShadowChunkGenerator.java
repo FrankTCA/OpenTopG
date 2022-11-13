@@ -55,17 +55,12 @@ import java.util.stream.Stream;
  * which unfortunately is done in a non-thread-safe/blocking manner, necessitating
  * the use of a WorldGenRegion.
  */
-public class ShadowChunkGenerator
-{
+public class ShadowChunkGenerator {
     // TODO: Add a setting to the worldconfig for the size of these caches?
     private final FifoMap<BlockPos2D, LocalMaterialData[]> unloadedBlockColumnsCache = new FifoMap<BlockPos2D, LocalMaterialData[]>(1024);
     private final FifoMap<ChunkCoordinate, ChunkAccess> unloadedChunksCache = new FifoMap<ChunkCoordinate, ChunkAccess>(512);
     private final FifoMap<ChunkCoordinate, Integer> hasVanillaStructureChunkCache = new FifoMap<ChunkCoordinate, Integer>(2048);
     private final FifoMap<ChunkCoordinate, Integer> hasVanillaNoiseStructureChunkCache = new FifoMap<ChunkCoordinate, Integer>(2048);
-    private final int minY;
-    private final int maxY;
-
-    private final Object workerLock = new Object();
 
 	/*static Field heightMaps;
 	static Field light;
@@ -94,15 +89,12 @@ public class ShadowChunkGenerator
     @SuppressWarnings("unused")
     private int cacheMisses = 0;
 
-    public ShadowChunkGenerator(int minY, int maxY) {
-        this.minY = minY;
-        this.maxY = maxY;
+    public ShadowChunkGenerator() {
     }
 
-    private FabricChunkBuffer getUnloadedChunk(OTGChunkGenerator otgChunkGenerator, Random random, ChunkCoordinate chunkCoordinate, ServerLevel level)
-    {
+    private FabricChunkBuffer getUnloadedChunk(OTGChunkGenerator otgChunkGenerator, int worldHeightCap, Random random, ChunkCoordinate chunkCoordinate, ServerLevel level) {
         // Make a dummy chunk, we'll fill this with base terrain data ourselves, without touching any MC worldgen logic.
-        // As an optimisation, we cache the dummy chunk in a limited size FIFO cache. Later when MC requests the chunk 
+        // As an optimisation, we cache the dummy chunk in a limited size FIFO cache. Later when MC requests the chunk
         // during world generation, we swap the dummy chunk's data into the real chunk.
         ProtoChunk chunk = new ProtoChunk(new ChunkPos(chunkCoordinate.getChunkX(), chunkCoordinate.getChunkZ()), null, level, level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), null);
         FabricChunkBuffer buffer = new FabricChunkBuffer(chunk);
@@ -116,23 +108,21 @@ public class ShadowChunkGenerator
         ObjectList<JigsawStructureData> structures = new ObjectArrayList<>(10);
         ObjectList<JigsawStructureData> junctions = new ObjectArrayList<>(32);
 
-        otgChunkGenerator.populateNoise(random, buffer, buffer.getChunkCoordinate(), structures, junctions);
+        otgChunkGenerator.populateNoise(worldHeightCap, random, buffer, buffer.getChunkCoordinate(), structures, junctions);
         return buffer;
     }
 
-    public ChunkAccess getChunkFromCache(ChunkCoordinate chunkCoord)
-    {
+    public ChunkAccess getChunkFromCache(ChunkCoordinate chunkCoord) {
         ChunkAccess cachedChunk = this.unloadedChunksCache.get(chunkCoord);
-        if(cachedChunk != null)
-        {
+        if (cachedChunk != null) {
             return cachedChunk;
         } else {
             return null;
         }
     }
 
-    public void fillWorldGenChunkFromShadowChunk(ChunkAccess chunk, ChunkAccess cachedChunk)
-    {
+    // Is this used?
+    /*public void fillWorldGenChunkFromShadowChunk(ChunkAccess chunk, ChunkAccess cachedChunk) {
         ChunkCoordinate chunkCoord = ChunkCoordinate.fromChunkCoords(chunk.getPos().x, chunk.getPos().z);
         // Re-use base terrain generated via shadowgen for worldgen.
         ((ProtoChunk)chunk).sections = ((ProtoChunk)cachedChunk).sections;
@@ -144,19 +134,16 @@ public class ShadowChunkGenerator
         {
             this.unloadedChunksCache.remove(chunkCoord);
         }
-    }
+    }*/
 
     public void fillWorldGenChunkFromShadowChunk(ChunkCoordinate chunkCoord, ChunkAccess chunk, ChunkAccess cachedChunk)
     {
         // TODO: This is experimental and may be slower than not cloning it
 
-        for (int x = 0; x < Constants.CHUNK_SIZE; x++)
-        {
-            for (int z = 0; z < Constants.CHUNK_SIZE; z++)
-            {
+        for (int x = 0; x < Constants.CHUNK_SIZE; x++) {
+            for (int z = 0; z < Constants.CHUNK_SIZE; z++) {
                 int endY = cachedChunk.getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG).getFirstAvailable(x, z);
-                for (int y = minY; y <= endY; y++)
-                {
+                for (int y = Constants.WORLD_DEPTH; y <= endY; y++) {
                     BlockPos pos = new BlockPos(x, y, z);
                     chunk.setBlockState(pos, cachedChunk.getBlockState(pos), false);
                 }
@@ -168,8 +155,7 @@ public class ShadowChunkGenerator
         this.unloadedChunksCache.remove(chunkCoord);
     }
 
-    public void setChunkGenerated(ChunkCoordinate chunkCoord)
-    {
+    public void setChunkGenerated(ChunkCoordinate chunkCoord) {
         this.cacheMisses++;
         //OTG.log(LogMarker.INFO, "Cache miss " + + this.cacheMisses);
     }
@@ -183,31 +169,24 @@ public class ShadowChunkGenerator
     // has been (temporarily?) replaced by OTGNoiseChunkGenerator::checkHasVanillaStructure
     // It has not been tested whether this approach or that approach is faster
     // -auth
-    public boolean checkHasVanillaStructureWithoutLoading(ServerLevel serverWorld, ChunkGenerator chunkGenerator, BiomeSource biomeProvider, ChunkCoordinate chunkCoordinate, ICachedBiomeProvider cachedBiomeProvider, boolean noiseAffectingStructuresOnly)
-    {
+    public boolean checkHasVanillaStructureWithoutLoading(ServerLevel serverWorld, ChunkGenerator chunkGenerator, BiomeSource biomeProvider, ChunkCoordinate chunkCoordinate, ICachedBiomeProvider cachedBiomeProvider, boolean noiseAffectingStructuresOnly) {
         // Since we can't check for structure components/references, only structure starts,
         // we'll keep a safe distance away from any vanilla structure start points.
         int radiusInChunks = 5;
         ProtoChunk chunk;
         ChunkPos chunkpos;
-        if (serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())
-        {
+        if (serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures()) {
             List<ChunkCoordinate> chunksToHandle = new ArrayList<>();
-            Map<ChunkCoordinate,Integer> chunksHandled = new HashMap<>();
-            if(noiseAffectingStructuresOnly)
-            {
-                synchronized(this.hasVanillaNoiseStructureChunkCache)
-                {
-                    if(checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaNoiseStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle))
-                    {
+            Map<ChunkCoordinate, Integer> chunksHandled = new HashMap<>();
+            if (noiseAffectingStructuresOnly) {
+                synchronized(this.hasVanillaNoiseStructureChunkCache) {
+                    if (checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaNoiseStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle)) {
                         return true;
                     }
                 }
             } else {
-                synchronized(this.hasVanillaStructureChunkCache)
-                {
-                    if(checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle))
-                    {
+                synchronized(this.hasVanillaStructureChunkCache) {
+                    if (checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle)) {
                         return true;
                     }
                 }
@@ -216,7 +195,7 @@ public class ShadowChunkGenerator
             @SuppressWarnings("unchecked")
             ArrayList<StructureFeature<?>>[] structuresPerDistance = new ArrayList[radiusInChunks];
             structuresPerDistance[4] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-                    new StructureFeature<?>[] {
+                    new StructureFeature<?>[]{
                             StructureFeature.VILLAGE,
                             StructureFeature.END_CITY,
                             StructureFeature.BASTION_REMNANT,
@@ -227,7 +206,7 @@ public class ShadowChunkGenerator
             structuresPerDistance[3] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
             structuresPerDistance[2] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
             structuresPerDistance[1] = new ArrayList<StructureFeature<?>>(Arrays.asList(
-                    new StructureFeature<?>[] {
+                    new StructureFeature<?>[]{
                             StructureFeature.JUNGLE_TEMPLE,
                             StructureFeature.DESERT_PYRAMID,
                             StructureFeature.RUINED_PORTAL,
@@ -241,18 +220,16 @@ public class ShadowChunkGenerator
             structuresPerDistance[0] = new ArrayList<StructureFeature<?>>(Arrays.asList(new StructureFeature<?>[]{}));
             Set<Biome> biomesInArea = new HashSet<>();
 
-            for(ChunkCoordinate chunkToHandle : chunksToHandle)
-            {
+            for (ChunkCoordinate chunkToHandle : chunksToHandle) {
                 chunk = new ProtoChunk(new ChunkPos(chunkToHandle.getChunkX(), chunkToHandle.getChunkZ()), null, serverWorld, serverWorld.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), null);
                 chunkpos = chunk.getPos();
                 biomesInArea.add(((FabricBiome) cachedBiomeProvider.getNoiseBiome((chunkpos.x << 2) + 2, (chunkpos.z << 2) + 2)).getBiome());
             }
 
-            for(ChunkCoordinate chunkToHandle : chunksToHandle)
-            {
+            for (ChunkCoordinate chunkToHandle : chunksToHandle) {
                 chunk = new ProtoChunk(new ChunkPos(chunkToHandle.getChunkX(), chunkToHandle.getChunkZ()), null, serverWorld, serverWorld.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), null);
                 chunkpos = chunk.getPos();
-                int distance = (int)Math.floor(Math.sqrt(Math.pow (chunkToHandle.getChunkX() - chunkCoordinate.getChunkX(), 2) + Math.pow (chunkToHandle.getChunkZ() - chunkCoordinate.getChunkZ(), 2)));
+                int distance = (int)Math.floor(Math.sqrt(Math.pow(chunkToHandle.getChunkX() - chunkCoordinate.getChunkX(), 2) + Math.pow(chunkToHandle.getChunkZ() - chunkCoordinate.getChunkZ(), 2)));
 
                 // Borrowed from STRUCTURE_STARTS phase of chunkgen, only determines structure start point
                 // based on biome and resource settings (distance etc). Does not plot any structure components.
@@ -263,22 +240,17 @@ public class ShadowChunkGenerator
                 ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(biome.getBiomeConfig().getRegistryKey().toResourceLocationString()));
                 // TODO: This only checks for villages for now, needs reworking. The forge approach won't work.
                 ArrayList<ResourceKey<StructureSet>> structures = new ArrayList<>();
-                for (ResourceKey<StructureSet> structure : structures)
-                {
+                for (ResourceKey<StructureSet> structure : structures) {
                     //if(structure.feature.step() == Decoration.SURFACE_STRUCTURES)
                     {
-                        for(int i = structuresPerDistance.length - 1; i > 0; i--)
-                        {
+                        for (int i = structuresPerDistance.length - 1; i > 0; i--) {
                             ArrayList<StructureFeature<?>> structuresAtDistance = structuresPerDistance[i];
                             //if(structuresAtDistance.contains(structure.feature))
                             {
-                                if(hasStructureStart(structure, chunkGenerator, serverWorld.getSeed(), chunkpos, i))
-                                {
+                                if (hasStructureStart(structure, chunkGenerator, serverWorld.getSeed(), chunkpos, i)) {
                                     chunksHandled.put(chunkToHandle, i);
-                                    if(i >= distance)
-                                    {
-                                        synchronized(this.hasVanillaStructureChunkCache)
-                                        {
+                                    if (i >= distance) {
+                                        synchronized(this.hasVanillaStructureChunkCache) {
                                             this.hasVanillaStructureChunkCache.putAll(chunksHandled);
                                         }
                                         return true;
@@ -292,15 +264,12 @@ public class ShadowChunkGenerator
 
                 chunksHandled.putIfAbsent(chunkToHandle, 0);
             }
-            if(noiseAffectingStructuresOnly)
-            {
-                synchronized(this.hasVanillaNoiseStructureChunkCache)
-                {
+            if (noiseAffectingStructuresOnly) {
+                synchronized(this.hasVanillaNoiseStructureChunkCache) {
                     this.hasVanillaNoiseStructureChunkCache.putAll(chunksHandled);
                 }
             } else {
-                synchronized(this.hasVanillaStructureChunkCache)
-                {
+                synchronized(this.hasVanillaStructureChunkCache) {
                     this.hasVanillaStructureChunkCache.putAll(chunksHandled);
                 }
             }
@@ -308,23 +277,16 @@ public class ShadowChunkGenerator
         return false;
     }
 
-    private boolean checkHasVanillaStructureWithoutLoadingCache(FifoMap<ChunkCoordinate, Integer> cache, ChunkCoordinate chunkCoordinate, int radiusInChunks, List<ChunkCoordinate> chunksToHandle)
-    {
-        for (int cycle = 0; cycle < radiusInChunks; ++cycle)
-        {
-            for (int xOffset = -cycle; xOffset <= cycle; ++xOffset)
-            {
-                for (int zOffset = -cycle; zOffset <= cycle; ++zOffset)
-                {
-                    int distance = (int)Math.floor(Math.sqrt(Math.pow (xOffset, 2) + Math.pow (zOffset, 2)));
-                    if (distance == cycle)
-                    {
+    private boolean checkHasVanillaStructureWithoutLoadingCache(FifoMap<ChunkCoordinate, Integer> cache, ChunkCoordinate chunkCoordinate, int radiusInChunks, List<ChunkCoordinate> chunksToHandle) {
+        for (int cycle = 0; cycle < radiusInChunks; ++cycle) {
+            for (int xOffset = -cycle; xOffset <= cycle; ++xOffset) {
+                for (int zOffset = -cycle; zOffset <= cycle; ++zOffset) {
+                    int distance = (int)Math.floor(Math.sqrt(Math.pow(xOffset, 2) + Math.pow(zOffset, 2)));
+                    if (distance == cycle) {
                         ChunkCoordinate searchChunk = ChunkCoordinate.fromChunkCoords(chunkCoordinate.getChunkX() + xOffset, chunkCoordinate.getChunkZ() + zOffset);
                         Integer result = cache.get(searchChunk);
-                        if(result != null)
-                        {
-                            if(result.intValue() > 0 && result.intValue() >= distance)
-                            {
+                        if (result != null) {
+                            if (result.intValue() > 0 && result.intValue() >= distance) {
                                 return true;
                             }
                         } else {
@@ -338,8 +300,7 @@ public class ShadowChunkGenerator
     }
 
     // Taken from PillagerOutpostStructure.isNearVillage
-    private boolean hasStructureStart(ResourceKey<StructureSet> structureFeature, ChunkGenerator chunkGenerator, long seed, ChunkPos chunkPos, int radius)
-    {
+    private boolean hasStructureStart(ResourceKey<StructureSet> structureFeature, ChunkGenerator chunkGenerator, long seed, ChunkPos chunkPos, int radius) {
         return chunkGenerator.hasFeatureChunkInRange(structureFeature, seed, chunkPos.x, chunkPos.z, radius);
     }
 
@@ -349,9 +310,8 @@ public class ShadowChunkGenerator
     // resources used for worldgen or bo4 shadowgen, since the chunks aren't actually supposed to generate in the world.
     // We won't get any density based smoothing applied to noisegen for vanilla structures, but that's ok for /otg mapterrain.
 
-    public FabricChunkBuffer getChunkWithoutLoadingOrCaching(OTGChunkGenerator otgChunkGenerator, Random random, ChunkCoordinate chunkCoordinate, ServerLevel level)
-    {
-        return getUnloadedChunk(otgChunkGenerator, random, chunkCoordinate, level);
+    public FabricChunkBuffer getChunkWithoutLoadingOrCaching(OTGChunkGenerator otgChunkGenerator, int worldHeightCap, Random random, ChunkCoordinate chunkCoordinate, ServerLevel level) {
+        return getUnloadedChunk(otgChunkGenerator, worldHeightCap, random, chunkCoordinate, level);
     }
 
     // BO4's / Smoothing Areas
@@ -359,39 +319,34 @@ public class ShadowChunkGenerator
     // BO4's and smoothing areas may do material and height checks in unloaded chunks during decoration.
     // Shadowgen is used to do this without causing cascades. Shadowgenned chunks are requested on-demand for the worldgen thread (BO4's).
 
-    private LocalMaterialData[] getBlockColumnInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, Random worldRandom, int x, int z, ServerLevel level)
-    {
+    private LocalMaterialData[] getBlockColumnInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, int worldHeightCap, Random worldRandom, int x, int z, ServerLevel level) {
         BlockPos2D blockPos = new BlockPos2D(x, z);
         ChunkCoordinate chunkCoord = ChunkCoordinate.fromBlockCoords(x, z);
 
         // Get internal coordinates for block in chunk
-        byte blockX = (byte) (x & 0xF);
-        byte blockZ = (byte) (z & 0xF);
+        byte blockX = (byte) (x &= 0xF);
+        byte blockZ = (byte) (z &= 0xF);
 
         LocalMaterialData[] cachedColumn = this.unloadedBlockColumnsCache.get(blockPos);
 
-        if (cachedColumn != null)
-        {
+        if (cachedColumn != null) {
             return cachedColumn;
         }
 
         ChunkAccess chunk = getChunkFromCache(chunkCoord);
-        if (chunk == null)
-        {
+        if (chunk == null) {
             // Generate a chunk without loading/decorating it
-            chunk = getUnloadedChunk(otgChunkGenerator, worldRandom, chunkCoord, level).getChunk();
+            chunk = getUnloadedChunk(otgChunkGenerator, worldHeightCap, worldRandom, chunkCoord, level).getChunk();
             this.unloadedChunksCache.put(chunkCoord, chunk);
         }
-        int totalHeight = otgChunkGenerator.getMaxY() - otgChunkGenerator.getMinY();
-        cachedColumn = new LocalMaterialData[totalHeight];
 
-        LocalMaterialData[] blocksInColumn = new LocalMaterialData[totalHeight];
+        cachedColumn = new LocalMaterialData[Constants.WORLD_HEIGHT];
+
+        LocalMaterialData[] blocksInColumn = new LocalMaterialData[Constants.WORLD_HEIGHT];
         BlockState blockInChunk;
-        for (int y = otgChunkGenerator.getMinY(); y <= otgChunkGenerator.getMaxY(); y++)
-        {
+        for (short y = Constants.WORLD_DEPTH; y < Constants.WORLD_HEIGHT; y++) {
             blockInChunk = chunk.getBlockState(new BlockPos(blockX, y, blockZ));
-            if (blockInChunk != null)
-            {
+            if (blockInChunk != null) {
                 blocksInColumn[y] = FabricMaterialData.ofBlockData(blockInChunk);
             } else {
                 break;
@@ -402,34 +357,28 @@ public class ShadowChunkGenerator
         return blocksInColumn;
     }
 
-    public LocalMaterialData getMaterialInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, Random worldRandom, int x, int y, int z, ServerLevel level)
-    {
-        LocalMaterialData[] blockColumn = getBlockColumnInUnloadedChunk(otgChunkGenerator, worldRandom, x, z, level);
+    public LocalMaterialData getMaterialInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, int worldHeightCap, Random worldRandom, int x, int y, int z, ServerLevel level) {
+        LocalMaterialData[] blockColumn = getBlockColumnInUnloadedChunk(otgChunkGenerator, worldHeightCap, worldRandom, x, z, level);
         return blockColumn[y];
     }
 
-    public int getHighestBlockYInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, Random worldRandom, int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, ServerLevel level)
-    {
+    public int getHighestBlockYInUnloadedChunk(OTGChunkGenerator otgChunkGenerator, int worldHeightCap, Random worldRandom, int x, int z, boolean findSolid, boolean findLiquid, boolean ignoreLiquid, boolean ignoreSnow, ServerLevel level) {
         int height = -1;
 
-        LocalMaterialData[] blockColumn = getBlockColumnInUnloadedChunk(otgChunkGenerator, worldRandom, x, z, level);
+        LocalMaterialData[] blockColumn = getBlockColumnInUnloadedChunk(otgChunkGenerator, worldHeightCap, worldRandom, x, z, level);
         FabricMaterialData material;
         boolean isLiquid;
         boolean isSolid;
 
-        for (int y = 255; y >= 0; y--)
-        {
+        for (int y = 255; y >= 0; y--) {
             material = (FabricMaterialData) blockColumn[y];
             isLiquid = material.isLiquid();
             isSolid = material.isSolid() || (!ignoreSnow && material.isMaterial(LocalMaterials.SNOW));
-            if (!(isLiquid && ignoreLiquid))
-            {
-                if ((findSolid && isSolid) || (findLiquid && isLiquid))
-                {
+            if (!(isLiquid && ignoreLiquid)) {
+                if ((findSolid && isSolid) || (findLiquid && isLiquid)) {
                     return y;
                 }
-                if ((findSolid && isLiquid) || (findLiquid && isSolid))
-                {
+                if ((findSolid && isLiquid) || (findLiquid && isSolid)) {
                     return -1;
                 }
             }

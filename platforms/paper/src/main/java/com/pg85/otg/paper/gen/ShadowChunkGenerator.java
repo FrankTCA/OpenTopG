@@ -176,7 +176,7 @@ public class ShadowChunkGenerator {
         for (int x = 0; x < Constants.CHUNK_SIZE; x++) {
             for (int z = 0; z < Constants.CHUNK_SIZE; z++) {
                 int endY = cachedChunk.getOrCreateHeightmapUnprimed(Types.WORLD_SURFACE_WG).getFirstAvailable(x, z);
-                for (int y = 0; y <= endY; y++) {
+                for (int y = Constants.WORLD_DEPTH; y <= endY; y++) {
                     BlockPos pos = new BlockPos(x, y, z);
                     chunk.setBlockState(pos, cachedChunk.getBlockState(pos), false);
                 }
@@ -212,13 +212,13 @@ public class ShadowChunkGenerator {
             List<ChunkCoordinate> chunksToHandle = new ArrayList<>();
             Map<ChunkCoordinate, Integer> chunksHandled = new HashMap<>();
             if (noiseAffectingStructuresOnly) {
-                synchronized (this.hasVanillaNoiseStructureChunkCache) {
+                synchronized(this.hasVanillaNoiseStructureChunkCache) {
                     if (checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaNoiseStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle)) {
                         return true;
                     }
                 }
             } else {
-                synchronized (this.hasVanillaStructureChunkCache) {
+                synchronized(this.hasVanillaStructureChunkCache) {
                     if (checkHasVanillaStructureWithoutLoadingCache(this.hasVanillaStructureChunkCache, chunkCoordinate, radiusInChunks, chunksToHandle)) {
                         return true;
                     }
@@ -262,7 +262,7 @@ public class ShadowChunkGenerator {
             for (ChunkCoordinate chunkToHandle : chunksToHandle) {
                 chunk = new ProtoChunk(new ChunkPos(chunkToHandle.getChunkX(), chunkToHandle.getChunkZ()), null, serverWorld, serverWorld.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY), null);
                 chunkpos = chunk.getPos();
-                int distance = (int) Math.floor(Math.sqrt(Math.pow(chunkToHandle.getChunkX() - chunkCoordinate.getChunkX(), 2) + Math.pow(chunkToHandle.getChunkZ() - chunkCoordinate.getChunkZ(), 2)));
+                int distance = (int)Math.floor(Math.sqrt(Math.pow(chunkToHandle.getChunkX() - chunkCoordinate.getChunkX(), 2) + Math.pow(chunkToHandle.getChunkZ() - chunkCoordinate.getChunkZ(), 2)));
 
                 // Borrowed from STRUCTURE_STARTS phase of chunkgen, only determines structure start point
                 // based on biome and resource settings (distance etc). Does not plot any structure components.
@@ -283,7 +283,7 @@ public class ShadowChunkGenerator {
                                 if (hasStructureStart(structure, chunkGenerator, serverWorld.getSeed(), chunkpos, i)) {
                                     chunksHandled.put(chunkToHandle, i);
                                     if (i >= distance) {
-                                        synchronized (this.hasVanillaStructureChunkCache) {
+                                        synchronized(this.hasVanillaStructureChunkCache) {
                                             this.hasVanillaStructureChunkCache.putAll(chunksHandled);
                                         }
                                         return true;
@@ -298,11 +298,11 @@ public class ShadowChunkGenerator {
                 chunksHandled.putIfAbsent(chunkToHandle, 0);
             }
             if (noiseAffectingStructuresOnly) {
-                synchronized (this.hasVanillaNoiseStructureChunkCache) {
+                synchronized(this.hasVanillaNoiseStructureChunkCache) {
                     this.hasVanillaNoiseStructureChunkCache.putAll(chunksHandled);
                 }
             } else {
-                synchronized (this.hasVanillaStructureChunkCache) {
+                synchronized(this.hasVanillaStructureChunkCache) {
                     this.hasVanillaStructureChunkCache.putAll(chunksHandled);
                 }
             }
@@ -314,7 +314,7 @@ public class ShadowChunkGenerator {
         for (int cycle = 0; cycle < radiusInChunks; ++cycle) {
             for (int xOffset = -cycle; xOffset <= cycle; ++xOffset) {
                 for (int zOffset = -cycle; zOffset <= cycle; ++zOffset) {
-                    int distance = (int) Math.floor(Math.sqrt(Math.pow(xOffset, 2) + Math.pow(zOffset, 2)));
+                    int distance = (int)Math.floor(Math.sqrt(Math.pow(xOffset, 2) + Math.pow(zOffset, 2)));
                     if (distance == cycle) {
                         ChunkCoordinate searchChunk = ChunkCoordinate.fromChunkCoords(chunkCoordinate.getChunkX() + xOffset, chunkCoordinate.getChunkZ() + zOffset);
                         Integer result = cache.get(searchChunk);
@@ -373,11 +373,11 @@ public class ShadowChunkGenerator {
             this.unloadedChunksCache.put(chunkCoord, chunk);
         }
 
-        cachedColumn = new LocalMaterialData[256];
+        cachedColumn = new LocalMaterialData[Constants.WORLD_HEIGHT];
 
-        LocalMaterialData[] blocksInColumn = new LocalMaterialData[256];
+        LocalMaterialData[] blocksInColumn = new LocalMaterialData[Constants.WORLD_HEIGHT];
         BlockState blockInChunk;
-        for (short y = 0; y < 256; y++) {
+        for (short y = Constants.WORLD_DEPTH; y < Constants.WORLD_HEIGHT; y++) {
             blockInChunk = chunk.getBlockState(new BlockPos(blockX, y, blockZ));
             if (blockInChunk != null) {
                 blocksInColumn[y] = PaperMaterialData.ofBlockData(blockInChunk);

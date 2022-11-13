@@ -252,7 +252,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
         BlockState blockState;
         Block block;
 
-        for (int i = heightMapY; i >= 0; i--) {
+        for (int i = heightMapY; i >= Constants.WORLD_DEPTH; i--) {
             // TODO: mutable
             blockState = chunk.getBlockState(new BlockPos(internalX, i, internalZ));
             block = blockState.getBlock();
@@ -301,13 +301,13 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
                     return i;
                 }
                 if ((findSolid && isLiquid) || (findLiquid && isSolid)) {
-                    return -1;
+                    return Constants.WORLD_DEPTH-1;
                 }
             }
         }
 
         // Can happen if this is a chunk filled with air
-        return -1;
+        return Constants.WORLD_DEPTH-1;
     }
 
     @Override
@@ -341,7 +341,7 @@ public class PaperWorldGenRegion extends LocalWorldGenRegion {
         if (biomeConfig.getReplaceBlocks() != null) {
             material = material.parseWithBiomeAndHeight(this.getWorldConfig().getBiomeConfigsHaveReplacement(), biomeConfig.getReplaceBlocks(), y);
         }
-        this.worldGenRegion.setBlock(new BlockPos(x, y, z), ((PaperMaterialData) material).internalBlock(), 3);
+        this.worldGenRegion.setBlock(new BlockPos(x, y, z), ((PaperMaterialData)material).internalBlock(), 3);
     }
 
     @Override

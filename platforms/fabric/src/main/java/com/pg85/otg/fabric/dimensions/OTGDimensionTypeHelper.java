@@ -297,8 +297,8 @@ public class OTGDimensionTypeHelper
                 worldConfig.getBedWorks(),
                 worldConfig.getRespawnAnchorWorks(),
                 worldConfig.getHasRaids(),
-                worldConfig.getWorldMinY(),
-                worldConfig.getWorldMaxY()+1,
+                Constants.WORLD_DEPTH,
+                Constants.WORLD_HEIGHT,
                 worldConfig.getLogicalHeight(),
                 TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(worldConfig.getInfiniburn())),
                 new ResourceLocation(worldConfig.getEffectsLocation()),
@@ -352,9 +352,9 @@ public class OTGDimensionTypeHelper
         {
             folder.mkdirs();
         }
-        int worldHeight = worldConfig.getWorldMaxY()-worldConfig.getWorldMinY();
+        int worldHeight = Constants.WORLD_HEIGHT;
         // TODO: Make height/min_y configurable? Add name?
-        data = "{ \"name\": \"\", \"height\": "+worldHeight+",\"min_y\": "+worldConfig.getWorldMinY()+", \"ultrawarm\": " + worldConfig.getUltraWarm() + ", \"infiniburn\": \"" + worldConfig.getInfiniburn() + "\", \"logical_height\": " + worldConfig.getLogicalHeight() + ", \"has_raids\": " + worldConfig.getHasRaids() + ", \"respawn_anchor_works\": " + worldConfig.getRespawnAnchorWorks() + ", \"bed_works\": " + worldConfig.getBedWorks() + ", \"piglin_safe\": " + worldConfig.getPiglinSafe() + ", \"natural\": " + worldConfig.getNatural() + ", \"coordinate_scale\": " + worldConfig.getCoordinateScale() + ", \"ambient_light\": " + worldConfig.getAmbientLight() + ", \"has_skylight\": " + worldConfig.getHasSkyLight() + ", \"has_ceiling\": " + worldConfig.getHasCeiling() + ", \"effects\": \"" + worldConfig.getEffectsLocation() + "\"" + (worldConfig.getFixedTime().isPresent() ? ", \"fixed_time\": " + worldConfig.getFixedTime().getAsLong() : "") + " }";
+        data = "{ \"name\": \"\", \"height\": "+worldHeight+",\"min_y\": "+Constants.WORLD_DEPTH+", \"ultrawarm\": " + worldConfig.getUltraWarm() + ", \"infiniburn\": \"" + worldConfig.getInfiniburn() + "\", \"logical_height\": " + worldConfig.getLogicalHeight() + ", \"has_raids\": " + worldConfig.getHasRaids() + ", \"respawn_anchor_works\": " + worldConfig.getRespawnAnchorWorks() + ", \"bed_works\": " + worldConfig.getBedWorks() + ", \"piglin_safe\": " + worldConfig.getPiglinSafe() + ", \"natural\": " + worldConfig.getNatural() + ", \"coordinate_scale\": " + worldConfig.getCoordinateScale() + ", \"ambient_light\": " + worldConfig.getAmbientLight() + ", \"has_skylight\": " + worldConfig.getHasSkyLight() + ", \"has_ceiling\": " + worldConfig.getHasCeiling() + ", \"effects\": \"" + worldConfig.getEffectsLocation() + "\"" + (worldConfig.getFixedTime().isPresent() ? ", \"fixed_time\": " + worldConfig.getFixedTime().getAsLong() : "") + " }";
         try(
                 FileOutputStream fos = new FileOutputStream(file);
                 BufferedOutputStream bos = new BufferedOutputStream(fos)
