@@ -39,7 +39,7 @@ public class ForgeMaterialReader implements IMaterialReader {
         }
 
         try {
-            localMaterial = materialFromString(material);
+            localMaterial = materialFromString(material,null,null);
         } catch (InvalidConfigException ex) {
             // Happens when a non existing block name is used.
             if (OTG.getEngine().getLogger().getLogCategoryEnabled(LogCategory.CONFIGS)) {
@@ -97,8 +97,10 @@ public class ForgeMaterialReader implements IMaterialReader {
                     OTG.getEngine().getLogger().log(LogLevel.ERROR, LogCategory.CONFIGS, "Invalid material " + material + ". Exception: " + ex.getMessage() + ". Replacing with blank.");
                 }
             }
-
-            this.cachedMaterials.put(material, localMaterial);
+            //if block is not recognise it will not be put in cache.
+            if (localMaterial != defaultBlock) {
+                this.cachedMaterials.put(material, localMaterial);
+            }
 
             return localMaterial;
         }
