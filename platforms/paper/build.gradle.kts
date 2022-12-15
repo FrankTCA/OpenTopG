@@ -2,7 +2,7 @@ plugins {
     `java-library`
     id("platform-conventions")
     id("io.papermc.paperweight.userdev") version "1.3.6"
-    id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
+    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
 repositories {
@@ -17,14 +17,14 @@ java {
 dependencies {
     //paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 
-    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.19-R0.1-SNAPSHOT")
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.19.3-R0.1-SNAPSHOT")
 
     implementation(project(":common:common-core"))
 
-    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.7") {
+    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.12") {
         exclude("org.yaml")
     }
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.7")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.12")
     // May need to temporarily shutdown worldedit as not available for 1.19 yet
 }
 
