@@ -6,10 +6,8 @@
 [![Discord][discord-shield]][discord-url]
 
 <br />
-<div align="center">
-  <a href="https://github.com/PG85/OpenTerrainGenerator">
-    <img src="logo.png" alt="Logo" width="291" height="100">
-  </a>
+
+<h1>This project is no longer maintained. Please go to <a href="https://github.com/Aaron-Speedy/SpeedyTerrainMod">SpeedyTerrainMod</a> for a reliable fork.</h1>
 
 <h3 align="center">OpenTerrainGenerator by Team OTG</h3>
 
